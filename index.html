@@ -21,6 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 
 :root {
@@ -47,6 +48,9 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:var(--bg0);color:var(--text1);font-family:var(--font);font-size:14px;-webkit-font-smoothing:antialiased}
 #app{height:100vh;display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative;overflow:hidden}
+@media (min-width: 768px) {
+  #app{max-width:100%;overflow:visible;}
+}
 /* STATUS BAR */
 .status-bar{height:44px;background:var(--bg0);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0}
 .status-time{font-size:15px;font-weight:600;letter-spacing:.3px}
@@ -113,8 +117,11 @@ label{font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bot
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .slide-up{animation:slideUp .3s ease-out both}
 /* DETAIL SCREEN */
-.detail-screen{position:absolute;inset:0;background:var(--bg0);z-index:50;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.32,.72,0,1)}
+.detail-screen{position:fixed;inset:0;background:var(--bg0);z-index:98;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.32,.72,0,1)}
 .detail-screen.open{transform:translateX(0)}
+@media (min-width: 768px) {
+  .detail-screen{left:220px;top:56px;z-index:98;}
+}
 .detail-header{padding:12px 16px 10px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);background:var(--bg0);flex-shrink:0}
 .detail-body{flex:1;overflow-y:auto;padding:16px}
 .detail-body::-webkit-scrollbar{display:none}
@@ -128,7 +135,7 @@ label{font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bot
 .parts-sent{background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:10px}
 /* LOGIN */
 .login-screen{position:absolute;inset:0;background:var(--bg0);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px}
-.login-logo{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px}
+.login-logo{margin-bottom:16px;display:flex;align-items:center;justify-content:center}
 .login-title{font-size:26px;font-weight:600;margin-bottom:6px;letter-spacing:-.3px}
 .login-sub{font-size:14px;color:var(--text2);margin-bottom:36px;text-align:center}
 .login-card{width:100%;background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px}
@@ -184,29 +191,23 @@ select option{background:var(--bg2);color:var(--text1)}
 
 /* ── DESKTOP RESPONSIVE ─────────────────────────────────────────────────── */
 @media (min-width: 768px) {
-  #desktop-sidebar { display: flex !important; flex-direction: column; width: 220px; height: 100vh; position: fixed; top: 0; left: 0; background: #111318; border-right: 1px solid rgba(255,255,255,.07); z-index: 100; }
-  #desktop-topbar  { display: flex !important; position: fixed; top: 0; left: 220px; right: 0; height: 56px; background: #111318; border-bottom: 1px solid rgba(255,255,255,.07); z-index: 99; align-items: center; justify-content: space-between; padding: 0 24px; }
-  #desktop-content { display: block !important; position: fixed; top: 56px; left: 220px; right: 0; bottom: 0; overflow-y: auto; padding: 24px; background: #0a0c12; }
-  #main-screen { display: none !important; }
-  .nav-bar { display: none !important; }
-  .status-bar { display: none !important; }
+  #desktop-sidebar { flex-direction: column; width: 220px; height: 100vh; position: fixed; top: 0; left: 0; background: #111318; border-right: 1px solid rgba(255,255,255,.07); z-index: 100; }
+  #desktop-topbar  { position: fixed; top: 0; left: 220px; right: 0; height: 56px; background: #111318; border-bottom: 1px solid rgba(255,255,255,.07); z-index: 99; align-items: center; justify-content: space-between; padding: 0 24px; }
+  #desktop-content { position: fixed; top: 56px; left: 220px; right: 0; bottom: 0; overflow-y: auto; padding: 24px; background: #0a0c12; }
   .sidebar-item { display: flex; align-items: center; gap: 12px; padding: 11px 20px; cursor: pointer; color: rgba(255,255,255,.45); font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; background: none; border-top: none; border-right: none; border-bottom: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
   .sidebar-item:hover { color: rgba(255,255,255,.8); background: rgba(255,255,255,.04); }
   .sidebar-item.active { color: #fff; border-left-color: #4f8ef7; background: rgba(79,142,247,.08); }
   .sidebar-item svg { width: 18px; height: 18px; flex-shrink: 0; }
   .sidebar-badge { margin-left: auto; min-width: 18px; height: 18px; border-radius: 9px; background: #f06060; color: #fff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
-  .desktop-only { display: block !important; }
-  .mobile-only { display: none !important; }
-  .hero-bar { display: none !important; }
+  .desktop-only { display: block; }
+  .mobile-only { display: none; }
+  .hero-bar { display: none; }
+  .nav-bar { display: none; }
+  .status-bar { display: none; }
 }
 
 @media (max-width: 767px) {
   #desktop-sidebar { display: none !important; }
-  #desktop-topbar  { display: none !important; }
-  #desktop-content { display: none !important; }
-  .desktop-only { display: none !important; }
-}
-
   #desktop-topbar  { display: none !important; }
   #desktop-content { display: none !important; }
   .desktop-only { display: none !important; }
@@ -238,7 +239,7 @@ select option{background:var(--bg2);color:var(--text1)}
       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Smart Electric" style="height:36px;width:auto;object-fit:contain">
       <div>
         <div style="font-size:13px;font-weight:600">Smart Electric Service Pro</div>
-        <div style="font-size:11px;color:var(--text3)">smartelectricservicepro.netlify.app</div>
+        <div style="font-size:11px;color:var(--text3)">smartservice-byz.pages.dev</div>
       </div>
     </div>
     <div class="ios-step">
@@ -267,7 +268,7 @@ select option{background:var(--bg2);color:var(--text1)}
   <div id="desktop-sidebar" style="display:none">
     <div style="padding:0 20px 20px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:8px">
       
-      <img id="sidebar-logo" style="display:none" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Smart Electric" style="height:36px;width:auto;object-fit:contain;margin-bottom:10px">
+      <img id="sidebar-logo" src="data:image/webp;base64,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" alt="Smart Electric" style="height:36px;width:auto;object-fit:contain;margin-bottom:10px;filter:brightness(0) invert(1)">
       <div style="font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.8px;font-weight:600">SERVICE PRO</div>
     </div>
     <div style="flex:1;overflow-y:auto;padding:4px 0">
@@ -287,6 +288,19 @@ select option{background:var(--bg2);color:var(--text1)}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
         Parts
         <span class="sidebar-badge" id="sb-parts-badge" style="display:none"></span>
+      </button>
+      <button class="sidebar-item" id="sb-clients" onclick="desktopNav('clients')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Clients
+      </button>
+      <button class="sidebar-item" id="sb-completed" onclick="desktopNav('completed')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Completed
+      </button>
+      <button class="sidebar-item" id="sb-inbox" onclick="desktopNav('inbox')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Inbox
+        <span class="sidebar-badge" id="sb-inbox-badge" style="display:none">0</span>
       </button>
       <button class="sidebar-item" id="sb-profile" onclick="desktopNav('profile')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -314,6 +328,10 @@ select option{background:var(--bg2);color:var(--text1)}
     <div style="display:flex;align-items:center;gap:12px">
       <div style="font-size:12px;color:rgba(255,255,255,.4)" id="desktop-clock"></div>
       <div style="width:1px;height:20px;background:rgba(255,255,255,.1)"></div>
+      <button onclick="openNewJobModal()" style="padding:7px 16px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:6px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New job
+      </button>
       <div class="av" style="width:32px;height:32px;font-size:11px" id="desktop-av">AD</div>
     </div>
   </div>
@@ -324,6 +342,9 @@ select option{background:var(--bg2);color:var(--text1)}
     <div id="desktop-view-open" class="desktop-view" style="display:none"></div>
     <div id="desktop-view-map"  class="desktop-view" style="display:none"></div>
     <div id="desktop-view-parts" class="desktop-view" style="display:none"></div>
+    <div id="desktop-view-clients" class="desktop-view" style="display:none"></div>
+    <div id="desktop-view-completed" class="desktop-view" style="display:none"></div>
+    <div id="desktop-view-inbox" class="desktop-view" style="display:none"></div>
     <div id="desktop-view-profile" class="desktop-view" style="display:none"></div>
   </div>
 
@@ -340,10 +361,9 @@ select option{background:var(--bg2);color:var(--text1)}
   <!-- LOGIN SCREEN -->
   <div class="login-screen" id="login-screen">
     <div class="login-logo" style="background:none;border-radius:0;width:auto;height:auto;padding:0">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Smart Electric logo" style="height:90px;width:auto;object-fit:contain">
+      <img src="data:image/webp;base64,UklGRvoiAABXRUJQVlA4IO4iAABwewCdASqQAZgAPlEijkUjoiEVadVgOAUEsTd+NCQBa9cAB+gGpEgj+o/oncgWr7R/Pv25/vnvP1t++/3H9a+xPuF6W8zDnP/s/4b8pPmh/Xv1e9wH5n/4X93/f/6AP1n/23909cD1Cfs36gP6L/hf+1/lveY/3/7M+5//C/5/2AP7b/j///64HsMegJ+6fpq/uX8IP9i/4f7e+1R///3z+AD11uj36qf4T0dd8H4/+vfjj6r+M30L7acmyJl8e+9/6H/A+e/6++Jf5X+x/sH7BH4d/If8L+VXof7NC1n7D+wF7N/TP93/dv3m/xfxs/a+ZP83+3fuAfrL/r/a/vp/TvYF/nn9k9Ab/2/0noV/RP8v/6/9d8CX8x/uP/U9c32Z+jn+4P//O99APJ86+ZFNALSTkzgXk5nn8cL/2Ivb5TP/yDLuG6AeT519APJ6s5uEDSRF9bRP69cEj36Z+Cq6bH3++hsb/756ufn3/++3v/nOSEsZQ0T5u5fNhU9P9A6E/9Rp5uL1/7TfjcHv//n6K/7jz2B7S8Z0y//1D/2wG2V8hywPJ86+gHkNPcLd+W9Nf/ZgTE9Xsz+P/RR9hd1f/+Ay/6sWf79vef+qLtj/a8HB1EwiHwmV+66R4SEOJ4++fxY1to280AVnSInA1QHSLrM5IGA1qXCftQ539IFM5r4CqMubDoLr9wSbelo4WJ2aa9lTI0vAGGSR6rqImsCcA+UuJHKW+wnh/7V6GRc7F62PL/y0N8/xUkP8OPJ2zAHlGs1OW1vmCUclQt9g04iLwPUmERA/nxV4dDOPExuQgJNAEjy95PqoBFq4ZElQKPlrC7lyfXYD+py+bMzRYDdXtZhYKxtz6ET47aVwLo3GqMH1Phyt+J+2y6mAvgmG7G4Oh8QLUSgCFdXLretRYw9PKVr13juZwmK0whqWOhbosXUoC928ALvHklD1oVnbIbQEoiS5Yl2fvi7HFimd3OzQJjFbYY3TFbQWNPcK4wyW/dQN9n8UAWJ5IThPPA5XTlR2KxYmXzr6MfClftjd/9T41xXJSlyBiv1N8tG7q9sUy0Nk/I5ho2cNYTLRJQQFlhMkLHQQvPCXJZ50A7d1kqLKS5nZFVvCcnzIHV8wAKO0gxHOdHVc9N3F2pnZrrYp7S0FIPOwpFvnbw2F4wUgTrMAdlLDGhhGCQtaoDffZqTJ4pA+TmlAD58ZKDM7HG9GwLOl43QTr9a16pnanzQJWz0ZGCOT2iBaWtZzsNFSvsDJgT/sKFaslZwQ9J83YS40ccdYbTSf9HbfQCHo0utk53EOan3jmoJ8omjyu2sy+dfQDyfOvKAA/v+Q+ACVSUi1e2R6xQfhdgA05sBNYn/poPYNRbz2+nvrLWTkMfWZxFBUGesmqaxuyLYwodtwiBOwJlbuv2cfyrtCStvXNSqCK82RiP8K59hh0To67WnjbxC8aaaCkoWOnv+ZUuItOlPkvCqUzJdGCeh8D3NTIco6c9P/Mgo3G1Hljn1RvhYooVA6YFNQdO0P1V+zRf4ZQxi9rI89YQAgpgOUhopEdQbdWQo7KtMueqc6Fp8AAAAELj1rD0u2LB/JCYupR35zUZgLp0nIkmswRso7eoR5Sm/KyujpX+SSa4itXQOlOtmuALk5a4e6vbFNYBWhWwdgZ0+UhpvsgHcus7Pug/XcDebFWywanTH+RlGClQc/Sm/HpAEPAIxC/Gb9v4X4s+/ICs/Jd4LsVpT6saUCAP5Hjm8Ny/MCTceruzAqe00YBSEHbcJ8KhYpJPd5LkmT1h+FlWODMtI0LAd9N40Wsb2BaGtHwl9qSGSLTKrggwcWHCY/F4ZFnk+sLZL0YmfRHvma73bXU+It0UpYKZXrhCRlH7u+coJRVfBshConZImZQF3mFY1mRCt7Qj0CwF0RE/55g9RnkbFvLSkYqUh1ss0+5M9Xt4WKTDHgSQjz/Vteavp/odLkz8xV9qpfH5hrIfMX5NiLh4OLsrrVcpXaT5lnL7olM3R4WSTzYgsm8AV/LVMb8QOUyL/QNZWA7pov8yizkAWZVR43gmOrdHyZYcD1vEceM/g9KBSYB8KmWi3nB5RT4yztOQREUvV761vuA8riz/7C23BhiHr61bcuTRWYZerPZmObbDjyMYZKkpKWOV/vNPUsIDTvYBtbeqDVtO2OhmwZ3BldV91Qt+203hPXIBQHa9G3zyRh3RMIAswIwAAAEijBnr7/6u+baT+D0VG/4U9vEB9g8q2MyCDR4KE8RpjF64mjXbAOvOE0x2QZcjwMlJkrKvdnCyMsHs4JkhIVgcndVCCOxlrQwFynMk7aA5Sx7X0dKZ4aGxdRtX8mhQxfnYvs+joP+qKA7IBrVv3AE4TRXsBBi5Rx4HhQNiRzmZlbiXrv0S7HLywwYgshy47/PRuhW2e/JlNRDy98La00YAT5A2gBKR2b6Fs3wWVwgfyqPf/9XuFwX8bbHojJqz6URTm7B1tmag/HCBu8R9uKEQ9CLItWlUrWWwMy0Hp1Mtby1bOm0CX5s0s1tqt5LNhZ8BjDE7ouNcVtncH94OpAvQAvhkK5iCT1SgxGDi5+R4pFgSIFHRhRTipXFR818imLlisMHh3aTmXmqWlx77XfPs2BBPJaQXOA7OD8DTuQ8KIitYLeoL/+tfLnRlLAqAfkCjm2iH7FXI4Ty7YsPhFiLO+Um+lfBPXfNqnKVh0qisRWK5If4adzuN+zKyrJphmBzu8HOCfBOWUTxMUYkvyp8Zs3lMYL03g5YEPB9ZawQgYjZzrC9BNqBDd01Bjk/kh7eWZeVuU5+okPJ2Ya7N7QVtH9QXS3mHU5X/kO2nvhRDE3Mf0IbLUm7xcQhZONW7x0PEAoNqcLM/+VnqDv8WGneC6exCEeBbgSMWth4LoEqgAQC62dZ/5YaXVk8J4AAASk9WqlYnp4LI+GDJz0S4ECE4RVlLKR1iVIygosK5369uGZL7yo6AwznkMvXO3Jpw3Ak6fhrXX3SOVoJ34m+2XKVMI3jOd4k6MUmCF5TGFejqYRgVCAYrSYbNVAG67yMJlRfh8KM7jMheykcmj1aW4PQT/QvS+FWw+SIP+5PFqwJ/kiE8xnK8bmZCuA47SsRie0abXuMMp8CKGSVKvPfGXcJGhNVgA7ROaUmZEZMztGh2FZI7akeDJEm42VFn0Oh/b5qrl5kPgSM/Z7mycLSbEFvFD1EtWlAc/h/L+Z1wed0HDh3tPSUevlI1QEwLIikAvTNuhjDcvOkMomeBKNu4sdIXWE6FdtwYMYobWN3p2rLJyXbE1NgMAyxlVfmeqrDwc54QgGOpV2qvN3btljrpe/y4Q7afjkOtPe9NqsCUH8ilrIGKBPurl/mjpoWsGMeWZIel1zm3jEyjxoBSsFunMZgkKJa/qdGvsJGlD60h6F4xVHcvKpah3J3g8WX8GAjVjJmwLTI5E9a4D+wr0Kd9eqTz0fCo58hCUCbbl9x2240vm/tpRWruJ0i7Tlf3W6za4qun0kYFmZchVP7PDmnMEZPL3QXDjBHibXy/7hQUU3ZLCPrVIB/8dBTwG4lw6K6C6CzUbcJlqxP2FOA5CDOQft5HuV3R2L39c9MwyuDBDLGDYEEBLDo4+Nj7aoxecZOaSR3QkquwNqkah4GigLMOeVr2MYsPngnCcUGIxFUQDQ757Khf0RSBNPnC5AAqqzQKhhs27boBLP62RQT3I6Dv9H23yNPcEW1lLB75+/uIqG9LdZKClnOe4R+qF14srBVjlOs5f6j9zyqsaRbMmaf9sFbb7ObDPbqnUueFkd0EVdl7Eexv8Wg33hKc2Fb8EnQIuW1GP775lh96fe35Wh0NfTUC+eXbOjekgU8PHvb+rkqCU48w2vVumhv/axCOWe7b156CFyuSMYm0yz/Q6j8LZu6IyINsUqG3Dhmz7CDCsj2jQqaVxl4giwVexEGO2+uL7PkX1eEWsYWJ6eVyzzaGfgBac0OvMJAHBO9umkWYpJA0l26hfm+cm+UVuWOaj8wvPm1Dfv+iiJ7s912T1/B8ttnAzT84zoT//MZ7qTIQsx/xwcoGKhvyTrtpsd3kiKck2aE0Nf9vnxcs9OYfngQETwOxj1aSubuGWJww8SWO1dmgRdaAvOJp57qUcCGCxH6CvXmrS+OsHi6CiAMDh+vnfNnRyVd2sCT0EVUfOWb4HU+4chBCBVsCtSqBQE7cad7JNKt/m7HDqIQAxJfq5dWlqfgLn99oN6lKsp47ucp8kEiIZ18tlpZlIUUOhtuuKuDleYjP8eAmO2APIKJdmH26Dr9mv0drKHkpCyv5BOdJvSxiCcRbj5iVOVAmZKMlbvoC+X19ovBDg9q6Pf0utQNlovTaXonz5bJdFd9R2afV8xWZh++/2Nz75ILmIISYjG1OcEjbN00GuOmNbLgz5gqsD2tzBuEwHBMoZCtl8fZ0CEg3hplfRl7bNlCouvRkFW0OvokT9jsleho250RfuRXso0yj0//syI98RpaWF16Cexm3Qiwi7AZlqTP7H145HDwpJVHzy2/Lp841xxmSNW5bdpi2qBwRvz+mG1XTC/44uk1lPx7Zr5e8KvRku+hvX6bswsbbCeTDHfExnUZFp49Y98XsFtUi2iYAAv0wPSz+BkPEGQTGnCr8N4uJI53oB8I06292iSUQCvhI4y6ZG4MTVEspnV9DtoV1S3+pq2rR2bFPsBDYjKhMcgTRf9NqAxht0ArszVdX7VUcCMe2oQsV5VzTVapvOb76lxjV/hPMX5x8L/gLKMdSCkiwFkIgcNs3mWWgzYO7KzFCIMJUJs7R+vtD6Umdzc5CRb7a4+yJTKQua0sYu8H3i2yqiHbqWpEzq21c1DmOB3Qe7j643nbxvSUaA1d1LtHCi23fRju6xF67iJq2PFi3TOImbkX0j/Sxy/e0CDlT2FGSITC5oO2B99AM7yYD4Nj+sEiHw1fK8+yzGyYuh1Ep9afI+pA1woqGz3M/c0BESEKt48ksqKGiA84AgQZ/VUmidYJiug4Rj9K/HYuxqridGZGS2ER25OQSwO8yr4NAJOObQLo9dEwDACNmyECmRbuM+pD1SN24d5Md7IZ6D/dwcZY/i47UEykFCJVZjWSe3pXapMHAaX6IY0/oNcZxH2qU9obCF5dW+8fCKVcSqLc98+x2T7SFGDdw+lT7++nvwEeD2NGCh//3//xa5lguyN/640EEG99e+nhtbtdSt1vPt1ZnSJ6BAwbq9/YgNvB16KtwO2UdRKuT4sDwqEBdi354FVC6GOSLkw9FVL9X3hX9UlHLMRfcTmOJ/IyLzJc022Xy2Cl70ZmgCC0p6mYQurS/pc87KNScrClkXedgLzPmk4KwiZaiBw+1buUeBUJYOQkwI0beK6lx6TVXkxAcGlvOtTy04DkLZ8E4lUBEE5HtsAC+tL5q0mkSDKZ53FSDpZZvmCuvjvY1FXNayofcKjnIrXB77Obnawq+mJiWz/wlNArk56zqb9nwBqmH4QACzjMGBzL71dyaAIIjAzGiJnLCzPfrik3nl/NAeE8Am3laVoOkKoujQk5qQNTr2wcnUtCe4ywHkJTyM7B6Lf5pgtdCr1+tIhYezts8slgFwq/MGC8HPBlfjcOSqEHbqOEnqgGZTlGJSFyyr4L9gLWC1YRRKeNrzBg7FhZYaspdWsQ0pTYDL4F1+Ap5mE8z2BBqADS+1BaK0iCSFb/qnksKNjte0zmJsO44yd9NggEWNTrPFendVfH1tfi7cSXLHEMgl5VA/uAt1T0KmpNq7xJjvvt3M6ndQ/D0xsi1X00OwBYO06TFH3PSzR1dBY2/V/8bdlLgUN5poct25Mx61Fq23eQpPNvQCep5Uq8GBrWT3VYkKHppeBJ4LDajOGLz9ZGGQ9XkNyJ5DT4dzdtsSnzWA3fcq1Y/fy+SuzUtJKphWF6c4UXat/yOT6nxZzIolJZWtNCPxVBDsOt8NqdnJ5Q3zxcIUtyOOfoWslNSxmFa+9XvYU5gEsnuZ1cb93k3UqOCNi4DTgxRJryH4L3VD79OabBUKbaSaA++3Txmg8aigQTgPX4XU2LwQ6QMusHF8NFaaxV/duwI2TyTG+tjymL2xIPMJkD2jUI7L2YiZ77xE+NLgkxIIgNGqVVnc5hnN2KyEoGUQae/avFKhYKgIP0OI+PSvxWIzJ6lQdONg/S1r5HVH92KFwPT+qtA5yZCcBAGd+De8D5EgLfJwchzzE4x0VKtQu5WZ14fI3cO65ggaBlLeNZWAbK+MsnbMTHzDj8wviZVXfGifbSIOHUM7oUqL/wd0f4UIH9Lna54Ql+dh2We5RunN4pOYp2z3xFzPaGIzNG8a1tymkw8T1UzS400FedZszkyXNOYTdq4cSi3VJz6NIjRlVa2LJp99h343lQdWplkNgeP7SgpqModhnUWdmM1cxPzJP57ehha1AWdgjCA1+V5xZUfYZsktOHa8tvQEELr3ispcf0LtGAV6WLMGjzFRWv2DA7hVSg+POkDtYqzzfL28+glfuzz03IjfGqS97wIDCqoq/pOl9rePCbYxVxZT1ufO+xrMJ1aEBqL/ufYs2oxWsV6bjg5zMsGCZZW3+UCLbFOocRX/GEirGXwVG1NNwgf4IvA99CrQ7siDgC7DKUlIXO4wuBTXKAQwszsYjNCkmku3LlosE0cKqfP7UE6EUm8LnAk4HllEB5HrnOwnUUm0MN8vQHX8DkCvuTIAPnIxPNlU9ZQ02thNbJX9NYBf68FlZkVpOFt/wYRowXoo3Au37wKM4NuZzeaMjTnATTezGnk62QM9HpXEmakvxMrHiMpCOTZc/UZvBc9P4EYL1reNH5ryhW+ZYJxcRcfN0V5kzE+WEYZNIMM+5TddA7rhTwbeKQ3jvqGw6bmcgJKJcNiDqaTgqfdTzBOQIcxlNBPcMK0iwPvWkgeKaFh/yj4x9ypEr5UfM3Qc2z+tXTTv2djv6wpdyIjFmzFG5QVn7nMiFX6Qcl9iljcRQV/+gt4aq7II3gUWGNW0SK8AiVQySBxls5rILLLA4FtTI9sLm9zu3IDJP14Uflm5McSaKyEh5C6Z88P8G2o1KlsH+Nm+e6Xfgkzgjuhta4450tvDrMUyzivqTIC8KgWg9EWPoAAGlgZSCToDj1W3tqEzITOpfHAboGKNU1IIEk2f1Fp5fyY2gQOe7nTkh4cvXhzbnt+d7tLJL6eTgpAzATu10l20yfmBnBPoaF9DfgPgSnhuhubgp9zVZxJH7jLyZCGWmi6nDihuVEODI/HG0BaoqwrnaqaacImOnWKWJqJ6QK1g1uLZ7ttcsvmvTUGUZh7lD/mNn/NNQx/SI2XYu1lEF1M6ZF5WFyKTJ5N2/Csx97Bi/vgeRfev1FXZX5w2V9B5ob0onjfvMBkjaXhPxbPJSUN6Dq7FR8lTr1PhIST07p7sBAadXiUM7299jVm0drtgz+eXePxNqEbGxLb700G4GJvqo+4/d5VIIp1uEHkd47L4Dl1WJobMKLKIyzclkg347ae0TSMnH2ja9XPPCjbDVVRqSMyHO6EZKAENZ+EDUIsRSCNCdrYP7FO89Okv59amQnEYcWBtLukvBFgxM/pY2B6N4cEXpqn/ahR5/BqHGNi6YYKxTPRq87f8P7GCuAoKiNRDbdjvM/0H5Kpvrvq3jAFIQDGqzc7kaa5EfkSpCpfshXtJ7feTTO9eTo58ebW8xJROPkDF2dMo2QP3UXb9Rn6VG9tO/FDFvofzmh/XnptRnmzfQKXgdUx+vQG+/P0Yq2Fu6XaVlpY5sSUrlqCq1KFFW89cLUYhOlUGVXMn++yA2l86VfaH8GofRP3bG8sdnwAYMjarA3HgTrZ6RHuEiURr/D8UvoBXK7nnFzS3T5Qkss1mEnFrx052ixrx5bgtq+3lwjLE0Fwp5gKrqRrLLGoYGdHaBQ2o/qwq2c58/UyqzcVPOFyeBHWJgkhwlY1sfOV3Uo0kXf1xxWWmdIrc9m+tz+Xec3zgtLmAnIKY3SAw8MTTU8/ei3cAwHVjv6J3eQqP/fxD5OXrcYDzprubmKk4a3FVv737ynNk5aX1jvtxzqxceCv7rHKxsDFWLzpxT1P0bQS4xeWZBOUlKXGyON+TFzO/4devh3rAvCydoN+52jHQ7pWKL1top3bRMfF4HarQfttK83QLBYq5jxytx4APKUohtM9oSsNYXyCLc6A1NqM+uU+zGcrqEU2Yyecfum1ndbbuw5k+9SwzSEvfPu9g4qOvUomUXZ74Qyjj4Odw0kO4aLsUAbY7UkkeB85guYKRRfiG0eDGIh2TFwjxgB6M/klAd28/kqu7dzSpSzoBSwh3hoW7xLu1IUoYoRAgRJGZ1hZsydfB11skY2jEZ8tJdAHpm89pY9P9obNe2Duf+at+Qn1KY3dU+c6X/RqQ4uJ5C3mZgMWXDFQmoadWIKlnYjFqTUs5WM8QDjqFPbVdCsBJq0dKmhdy3BaSjzieGyI1YtgVkkzZwOxUlrxw7D9GbRZiCETzRVyaW4zrwQm7NCyHBql14ma03KQtglE0dZ1AVU09mXJ2LlbKrlkghW0DyGVpOxRg4dX0R37MJCJcJuSfRXXhmBWj8ZeM0P1/IP10saWXoQAXRufZFcDuL6dH1Hm19WOjE5qcABOwGt6OAwt99f6PH79QKR5uU7xiK+L+P9rx+Tw3Ks7Uf/HBFpyqy3cX9JEFoFNuyWbt0FmtAjGcuLYWxNJlUaa+Hym9w6NhmHGq5LFGuP4mPkGPvl6s2PeC6ll7QdBVLqI1XetTT3Sgpy/+6Cs3wxwEHOS+DWUozfusRuhqBNPSL/PrdRyvsKtyuRVQB8w1kNIUE3ntixlHO3aws5/xVUKgzdiD2tXZdMn2RPZfwT3/Isp70CL8lnOsjapjFpeKIDZ7K75cbrspX4fycglQoWLKNLMqIe/+IjZX6TH7daUHktop/UIANw2M4uBof7iYXU2gL3rHxdcVOUIRjXMqHRBNekvfoBaLw6MXYcK3jx1b/h9tN2+wyaM3+T7mszk5/f11QL8U7p0HYXh3b4xnNlMoUzh9sDs/aa9MHAz5Ylp79VGNBam3BOV6c+tV1kanwBNhC5Lm6Y7c5xlZKLRV33G8zzgr+N1YyzHADPjEqEBM9fnOjjvJ1vnu9r6ihkJgnJaU6hr+z8KOC7QJ3/NqNNUmM8Fr8t9eRK2jJ6iQMpvHMLAdEMHv4VSpCASJFnkKzEJg5wxrSBs8PonahGtupa0WmtI+s0zywaOv91L+U03zWK801B2oEAlI2YM410bpaiY+uEb0HgNDYu04Es6UPWpgs596BhNTahBYa6HfBO/q3JqsCpfL2ExifykUKOJZE1npsLSVN+pKIwR+b9W71gnbGd3sGqDfTwLKgzT+fY8FTt2zslS/pilmYcEv0xj1qGWsHVZyk1NVI1GuuKHYfh+K2VP4uadLfH/QUpR7YdraXw7nDq8CxMm1XemwilNTQrECCeAFna0u8Eh3Vvk82GkMyrRBd9qLu9bqYa7Xr4CTe0l/ZREbMXOlMbqqJw5ArRK6pMJzS9VGQB92MA1sESoeGlmdPtanSViOoUAzLSaB35JmRcn0KF1EDDJfipRO79lThSQchAs/r1mEuWfd1UgY2qEpnu8ugKyF+5qNTxjw4AEQvpAgCaMnHOhEM3+OKrvWMpIyTdgCIp3Y2z84pnhryiOtnfjXgX6DQF1QOc+wi5AQ/OjBSx75tyvlL4Z91MYo3WL4DJK40XmvEttcu7FGzYSRnhmc9oWIM7OKpBKgZjEwH5aAWe5bG+W9qKtwHg+7eo/ma5mXjeNsMcN8fS5njYNF7JyNeH/ElWMzS/whS/8ttM/P4UfZPJTAB5X3V/zYiPqBTXInoPKunjUHsneV94WiTnLvjWLVLYfVe1mRoUUXQpLYM42RZWrPVYOeOdM3ix3Hg8EqzmdiEWJOhgR96oqT6Ydp5SowbjiqSCQ51TEc4euF4yIWlBjZ5QkJijJoMeU8FNus3vzqffyPMB8+Auw/7z4g3pUt5kUoJ6WnI+ybeNu/ph5kO8a6Bxc3mcJ9mKBps4NEI7PEeFbmeN0seitjxFvC3ndDIWwMZ4K4x4SwBA3W1mwGAGpPOfvp5BSZST1Y+U77nBrDinj5BlO+I1jGRXaO7Cw4TX0eLyHGlwEaKHDACFTbAGOW8K8NtfxkaCvPqN34aKyQNo4uOkpAb+e0kZuqVQC37CudH3bFmIGBhez91hkY9iZ6ubF9LYOashZ+tA2IlLSOIaN+NWRg2shrWr2N1joRp+57RUmFsEoy5vIUqTBb36tP42GPp9IPGhmjUq90jdto07+FVF3tGjTqzZnkPhXQvRSPvLRfzjwZm9wo8vHV6GTGR1coMA4rFnIQpVIA0S/7+j8B2cKXiQ53AZHwEDvN6eA6+EmCIECswUlBozONGELw7Q/5/yf1UXzPjMzzZ+2x13Xs9R8+m+2G0Bg4j1Us2evAJeFehzskiH7JArgKHVArF2u7x6hgXBEoHolvziVYJ2vktQGITo1mcevQ1vGsBv6H9EhsQ8O8aZz1sMFTEUYFjLkXjN7Qo7kLIItH4H/obAB1U99YReW6A00Nce8M+tDn2IbxFJI8I6M7O2dKynvvuWGMjATflkLMPTe8zU3wNJfH0RYAAuUChAnnwbKd1DFRwK/BvBQYbHMlHzcK3tOV0YOLJEVTpFuQXC8auWLVDOIYeZ+ody+FnctfQDwaeNng/NfySW5/XRat5dfoH0BF1yZFDIkMEu9qSsgJM4hP/yUJdKjfOiysgpfaunA1PPSuVXUaRo7I7Hxb9AzAAiM8pFOpWtIKRQSYNlzi/62pMhV92UC1PiyrOY5HBYiQ6aMlvcVvtFxc4d53aOWio/CjvZ1w+mX/Mp0rk/RElisrZhjPfbbVIj7aSLv1Uk2SWR7RTTg9AA/rN1rPu6AEeEkbooR3AC1tyeYpZ2E4lGMoFtoTrp6UugdEYRUOfJNzOyQLLPUk0xLrRpyGPj4DYzf25Rm0gvSH8fgQIQf74ozDUvkaSGEWiFtHWIN7BZMw/yuwNwgzOtb8GQoXqRJ4Z2TaWJpY7wYZkF8Oi1nMWLK7SJPcVnUd/CPwsR2dEOlZUPTUw8/JRtHbWMXTOrsJkR8Mr7BOKWyog6ym7t/GAkXQG4VCUp7cG5Ezwb3KJ+4J9G+ti0nv54T0e39RtAeeG9j0Z1a7X9gBgWal7JQNysLd5jG4Ib+cpjHKhZMxkJsORoEUbLB4ofORqeF7WrmfIAcae/UmjKUlQHS4N64FsVtV/NKPCT6KJFR5YnBaK5cuQcR1elyHoo2CjJO5pT3fwL4V9MqGkZ4HonOhJ4yNUEMBBaA/14aUlK00cO7E7gFM1px7lpNbkK/fyIongBfWc1qSsFagm74W+2yjkEqVcuwC50y5VIEbNOK1yyPItunQOCNBNIy5poZz7t33aDPNrQ2PF/+5OWQJkh+VxH/MrGdYrTfgX3GKx2Ys8HzVIQZxRjskHQn1B11dTg6b5ygkTaq/SfBVrE2VIAPLTss/qNOQskAoTJSstTOwVXn3J3KIzNtHeyoJeT/uOQqlEfL/Gdg+2TQRe5wR7lXmVj2vHOGH9x2i747Pv80qWhWKqwz+cYetonywI42yt7/G7nKkpdFooXsFg4RnibLTEXkjj5fi2B0jacsRWVo0mwAAAAAAAAMAfb99OZFGdxuh9f6wR0OIsp1mOheQ/3Fiz/N0q6nt2iAcPAA/Cahk5XUsi0Ex69UC1sV/Lrwsy0KCgAAI1rKmtZZIF1mf6NjVam1mPUPEEA8px0hPaBqA6BAg5yzq9+09tbpVurIUggMmC7th2Pwcn+8gy/7u6xNsW7xDRH592M5adNxc4P0GU/L5fLGgDL9++FN4zXZbLNaxN8LY7aO9/fPT2i9WW99t9F/rmi8d/PJNIY6jqEwCBVOTN+04/JuZIAAAAAA==" alt="Smart Electric" style="height:90px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,.3))">
     </div>
-    <h1 class="login-title" style="font-size:20px;margin-top:4px">Service Pro</h1>
-    <p class="login-sub">Field service management<br>for your team</p>
+    <p class="login-sub" style="margin-top:8px">Field service management</p>
     <div class="login-card">
       <div id="login-error" style="display:none;background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.3);border-radius:var(--r-sm);padding:8px 12px;font-size:12px;color:var(--red);margin-bottom:12px"></div>
       <div class="field">
@@ -355,10 +375,27 @@ select option{background:var(--bg2);color:var(--text1)}
         <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')attemptLogin()">
       </div>
       <button class="btn btn-primary" style="margin-top:4px" onclick="attemptLogin()">Sign in</button>
+      <button onclick="openForgotPassword()" style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;margin-top:12px;font-family:var(--font);text-decoration:underline">Forgot password?</button>
+    </div>
+
+    <!-- FORGOT PASSWORD MODAL -->
+    <div id="forgot-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:center;justify-content:center;padding:20px">
+      <div style="width:100%;max-width:360px;background:var(--bg1);border-radius:16px;border:1px solid var(--border2);padding:24px">
+        <div style="font-size:16px;font-weight:600;margin-bottom:6px">Reset password</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:18px">Enter your email and we'll send a reset link.</div>
+        <div id="forgot-msg" style="display:none;padding:10px 14px;border-radius:var(--r-sm);font-size:13px;margin-bottom:14px"></div>
+        <div class="field" style="margin-bottom:14px">
+          <input type="email" id="forgot-email" placeholder="your@smartelectric.ca">
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="closeForgotPassword()" class="btn btn-ghost" style="flex:1;padding:11px">Cancel</button>
+          <button onclick="submitForgotPassword()" class="btn btn-primary" style="flex:2;padding:11px">Send reset link</button>
+        </div>
+      </div>
     </div>
 
     <!-- REMOVE TECH CONFIRM -->
-    <div id="remove-tech-modal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:center;justify-content:center;padding:20px">
+    <div id="remove-tech-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:center;justify-content:center;padding:20px">
       <div style="width:100%;max-width:320px;background:var(--bg1);border-radius:var(--r);border:1px solid var(--border2);padding:20px">
         <div style="font-size:15px;font-weight:600;margin-bottom:6px">Remove technician?</div>
         <div style="font-size:13px;color:var(--text2);margin-bottom:16px" id="remove-tech-msg">This will revoke their app access.</div>
@@ -382,6 +419,7 @@ select option{background:var(--bg2);color:var(--text1)}
             <div style="font-size:13px;color:var(--text2);margin-top:2px" id="hero-date">Today</div>
           </div>
           <div style="display:flex;align-items:center;gap:8px">
+            <button onclick="openNewJobModal()" id="hero-new-job-btn" style="display:none;padding:6px 12px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ New job</button>
             <div class="av" style="width:40px;height:40px;background:rgba(79,142,247,.2);color:var(--accent)" id="hero-av">AD</div>
           </div>
         </div>
@@ -400,7 +438,7 @@ select option{background:var(--bg2);color:var(--text1)}
 
     <!-- OPEN CALLS -->
     <div id="tab-open" class="tab-content screen" style="display:none">
-      <div style="padding:14px">
+      <div style="padding:14px;padding-bottom:80px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
           <div style="font-size:17px;font-weight:600">Open calls</div>
           <span id="open-count-badge" class="pill pill-new">0 unassigned</span>
@@ -411,23 +449,22 @@ select option{background:var(--bg2);color:var(--text1)}
 
     <!-- MAP -->
     <div id="tab-map" class="tab-content screen" style="display:none">
-      <div style="position:relative;height:calc(100vh - 180px)">
-        <canvas id="map-canvas"></canvas>
-        <div style="position:absolute;top:10px;left:10px;right:10px;display:flex;gap:8px;justify-content:space-between">
-          <div style="background:rgba(15,17,23,.85);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:var(--r-sm);padding:7px 12px;font-size:12px;font-weight:500;flex:1" id="map-job-label">Select a job</div>
-          <button onclick="locateMe()" style="background:rgba(15,17,23,.85);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:var(--r-sm);padding:7px 12px;font-size:12px;font-weight:500;cursor:pointer;color:var(--accent);white-space:nowrap" id="locate-btn">📍 Locate</button>
+      <div style="position:relative;height:calc(100vh - 120px)">
+        <div id="map-container" style="width:100%;height:100%;background:#1a1f2e"></div>
+        <!-- Search bar -->
+        <div style="position:absolute;top:10px;left:10px;right:10px;z-index:1000;display:flex;gap:6px">
+          <div style="flex:1;position:relative">
+            <input type="text" id="map-search-input" placeholder="Search address or client…" autocomplete="off"
+              style="width:100%;box-sizing:border-box;padding:9px 12px;background:rgba(15,17,23,.95);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:var(--r-sm);font-size:13px;color:var(--text1);font-family:var(--font)"
+              oninput="mapSearchInput(this.value)" onkeydown="if(event.key==='Enter')mapGeocode(this.value)">
+            <div id="map-search-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg1);border:1px solid var(--border2);border-radius:var(--r-sm);z-index:1001;max-height:200px;overflow-y:auto;margin-top:4px;box-shadow:0 8px 24px rgba(0,0,0,.5)"></div>
+          </div>
+          <button onclick="locateMe()" style="background:rgba(15,17,23,.95);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:var(--r-sm);padding:9px 12px;font-size:13px;cursor:pointer;color:var(--accent);white-space:nowrap">📍 Me</button>
         </div>
-        <div style="position:absolute;bottom:10px;right:10px;display:flex;flex-direction:column;gap:6px">
-          <button onclick="zmIn()" style="width:36px;height:36px;background:rgba(15,17,23,.85);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:var(--r-sm);cursor:pointer;font-size:18px;color:var(--text1)">+</button>
-          <button onclick="zmOut()" style="width:36px;height:36px;background:rgba(15,17,23,.85);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:var(--r-sm);cursor:pointer;font-size:18px;color:var(--text1)">−</button>
-        </div>
-        <div style="position:absolute;bottom:10px;left:10px;right:56px">
+        <!-- Job pills -->
+        <div style="position:absolute;bottom:14px;left:10px;right:10px;z-index:1000">
           <div id="map-job-pills" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px"></div>
         </div>
-      </div>
-      <div style="background:var(--bg1);border-top:1px solid var(--border);padding:12px 14px;display:flex;gap:8px">
-        <button class="btn btn-primary" style="flex:2;padding:11px" onclick="openNav()">🧭 Navigate</button>
-        <button class="btn btn-ghost" style="flex:1;padding:11px" onclick="openGMaps()">Maps ↗</button>
       </div>
     </div>
 
@@ -442,6 +479,37 @@ select option{background:var(--bg2);color:var(--text1)}
     </div>
 
     <!-- PROFILE -->
+    <div id="tab-clients" class="tab-content screen" style="display:none">
+      <div style="padding:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div class="sec-head" style="margin:0">Clients</div>
+          <button onclick="openAddClientModal()" style="padding:6px 14px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:var(--green);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add client</button>
+        </div>
+        <div style="margin-bottom:12px">
+          <input type="text" id="client-search-input" placeholder="Search clients..." oninput="filterClientList(this.value)" style="width:100%;box-sizing:border-box">
+        </div>
+        <div id="clients-list"></div>
+      </div>
+    </div>
+
+    <div id="tab-completed" class="tab-content screen" style="display:none">
+      <div style="padding:14px">
+        <div class="sec-head">Completed Jobs</div>
+        <input type="text" id="completed-search" placeholder="Search by client name…" oninput="renderCompletedJobs(this.value)" style="width:100%;box-sizing:border-box;margin-bottom:12px">
+        <div id="completed-jobs-list"></div>
+      </div>
+    </div>
+
+    <div id="tab-inbox" class="tab-content screen" style="display:none">
+      <div style="padding:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div class="sec-head" style="margin:0">Inbox</div>
+          <button onclick="loadInbox()" style="background:var(--bg3);border:1px solid var(--border);padding:5px 10px;border-radius:20px;color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--font)">↻ Refresh</button>
+        </div>
+        <div id="inbox-list"></div>
+      </div>
+    </div>
+
     <div id="tab-profile" class="tab-content screen" style="display:none">
       <div style="padding:16px">
         <div class="card" style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
@@ -469,11 +537,11 @@ select option{background:var(--bg2);color:var(--text1)}
         <div class="sec-head">Settings</div>
         <div class="card">
           <div class="info-row"><span class="info-label">QuickBooks</span><span style="font-size:11px;color:var(--green)">Connected ✓</span></div>
-          <div class="info-row" id="ms365-settings-row">
+          <div class="info-row" id="ms365-settings-row" style="display:none">
             <span class="info-label">Microsoft 365 email</span>
             <button onclick="openM365Modal()" id="ms365-status-btn" style="font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3);color:var(--amber);font-weight:600;cursor:pointer;font-family:var(--font)">Not connected</button>
           </div>
-          <div class="info-row" id="twilio-settings-row">
+          <div class="info-row" id="twilio-settings-row" style="display:none">
             <span class="info-label">Twilio SMS &amp; voice</span>
             <button onclick="openTwilioModal()" id="twilio-status-btn" style="font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3);color:var(--amber);font-weight:600;cursor:pointer;font-family:var(--font)">Not connected</button>
           </div>
@@ -486,7 +554,26 @@ select option{background:var(--bg2);color:var(--text1)}
     </div>
   </div>
 
-  <!-- BOTTOM NAV -->
+  <!-- ACCOUNT SETUP SCREEN (invite link) -->
+  <div class="login-screen" id="setup-screen" style="display:none">
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="width:56px;height:56px;background:rgba(62,207,142,.15);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px">⚡</div>
+      <div style="font-size:22px;font-weight:700;margin-bottom:6px">Set up your account</div>
+      <div style="font-size:14px;color:var(--text2)" id="setup-welcome-msg">Welcome to Smart Electric Service Pro</div>
+    </div>
+    <div style="width:100%;max-width:360px;display:flex;flex-direction:column;gap:14px">
+      <div id="setup-error" style="display:none;background:rgba(240,96,96,.12);border:1px solid rgba(240,96,96,.3);border-radius:var(--r-sm);padding:10px 14px;font-size:13px;color:var(--red)"></div>
+      <div class="field">
+        <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">NEW PASSWORD</label>
+        <input type="password" id="setup-password" placeholder="At least 8 characters" autocomplete="new-password">
+      </div>
+      <div class="field">
+        <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">CONFIRM PASSWORD</label>
+        <input type="password" id="setup-password2" placeholder="Repeat password" autocomplete="new-password">
+      </div>
+      <button class="btn btn-primary" style="padding:14px;font-size:15px;margin-top:4px" onclick="submitSetup()">Create password & sign in</button>
+    </div>
+  </div>
   <nav class="nav-bar" id="main-nav" style="display:none">
     <button class="nav-item active" id="nav-home" onclick="switchTab('home')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -504,6 +591,19 @@ select option{background:var(--bg2);color:var(--text1)}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
       <span class="nav-label">Parts</span>
       <div class="nav-badge" id="parts-badge" style="display:none"></div>
+    </button>
+    <button class="nav-item" id="nav-clients" onclick="switchTab('clients')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      <span class="nav-label">Clients</span>
+    </button>
+    <button class="nav-item" id="nav-completed" onclick="switchTab('completed')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span class="nav-label">Done</span>
+    </button>
+    <button class="nav-item" id="nav-inbox" onclick="switchTab('inbox')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <span class="nav-label">Inbox</span>
+      <span id="nav-inbox-badge" style="display:none;position:absolute;top:4px;right:8px;background:#f06060;color:#fff;font-size:9px;font-weight:700;border-radius:20px;padding:1px 5px">0</span>
     </button>
     <button class="nav-item" id="nav-profile" onclick="switchTab('profile')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -540,7 +640,7 @@ select option{background:var(--bg2);color:var(--text1)}
   </div>
 
   <!-- ADD USER MODAL -->
-  <div id="add-tech-modal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:flex-end;padding:0">
+  <div id="add-tech-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:flex-end;padding:0">
     <div style="width:100%;background:var(--bg1);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 16px 36px;animation:slideUp .3s ease-out;max-height:92vh;overflow-y:auto">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
         <div style="font-size:16px;font-weight:600">Add user</div>
@@ -589,7 +689,7 @@ select option{background:var(--bg2);color:var(--text1)}
   </div>
 
   <!-- EDIT USER MODAL -->
-  <div id="edit-user-modal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:flex-end;padding:0">
+  <div id="edit-user-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:flex-end;padding:0">
     <div style="width:100%;background:var(--bg1);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 16px 36px;animation:slideUp .3s ease-out">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <div style="font-size:16px;font-weight:600">Edit user</div>
@@ -606,7 +706,7 @@ select option{background:var(--bg2);color:var(--text1)}
   </div>
 
   <!-- TWILIO MODAL -->
-  <div id="twilio-modal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:flex-end;padding:0">
+  <div id="twilio-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:flex-end;padding:0">
     <div style="width:100%;background:var(--bg1);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 16px 36px;animation:slideUp .3s ease-out;max-height:92vh;overflow-y:auto">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <div style="display:flex;align-items:center;gap:10px">
@@ -666,7 +766,7 @@ select option{background:var(--bg2);color:var(--text1)}
   </div>
 
   <!-- MICROSOFT 365 MODAL -->
-  <div id="m365-modal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:flex-end;padding:0">
+  <div id="m365-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:flex-end;padding:0">
     <div style="width:100%;background:var(--bg1);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 16px 36px;animation:slideUp .3s ease-out;max-height:92vh;overflow-y:auto">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <div style="display:flex;align-items:center;gap:10px">
@@ -744,20 +844,164 @@ select option{background:var(--bg2);color:var(--text1)}
     </div>
   </div>
 
+  <!-- NEW JOB MODAL -->
+  <div id="new-job-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:center;justify-content:center;padding:20px">
+    <div style="width:100%;max-width:540px;background:var(--bg1);border-radius:16px;border:1px solid var(--border2);padding:24px;max-height:90vh;overflow-y:auto;overflow-x:visible;animation:slideUp .3s ease-out">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div style="font-size:16px;font-weight:600">New job</div>
+        <button onclick="closeNewJobModal()" style="background:var(--bg3);border:1px solid var(--border);width:28px;height:28px;border-radius:50%;cursor:pointer;color:var(--text2);font-size:14px;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="field">
+          <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">JOB TITLE</label>
+          <input type="text" id="nj-title" placeholder="e.g. Panel upgrade, Furnace inspection">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="field" style="position:relative">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">CLIENT NAME</label>
+            <input type="text" id="nj-client" placeholder="e.g. R. Penner" autocomplete="off" oninput="this.style.border='';searchClients(this.value)">
+            <div id="nj-client-suggestions" style="display:none;position:fixed;background:var(--bg1);border:1px solid var(--border2);border-radius:var(--r-sm);z-index:9999;max-height:200px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.4);width:calc(100% - 72px)"></div>
+          </div>
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">CLIENT PHONE</label>
+            <input type="tel" id="nj-phone" placeholder="(204) 555-0100">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">ADDRESS</label>
+            <input type="text" id="nj-address" placeholder="123 Main St">
+          </div>
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">CITY</label>
+            <input type="text" id="nj-city" placeholder="Carberry">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">SCHEDULED TIME</label>
+            <input type="time" id="nj-time" style="font-size:13px">
+          </div>
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">DUE DATE (OPTIONAL)</label>
+            <input type="date" id="nj-due">
+          </div>
+        </div>
+        <div class="field" id="nj-tech-field">
+          <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">ASSIGN TECHNICIAN</label>
+          <select id="nj-tech" style="width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font)">
+            <option value="">— Unassigned —</option>
+          </select>
+        </div>
+        <div class="field">
+          <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">PRIORITY</label>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <button onclick="selectNewJobPriority('normal')" id="njp-normal" style="flex:1;padding:8px;border-radius:var(--r-sm);background:rgba(62,207,142,.15);border:1.5px solid #5ce0a8;color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">Normal</button>
+            <button onclick="selectNewJobPriority('urgent')" id="njp-urgent" style="flex:1;padding:8px;border-radius:var(--r-sm);background:var(--bg3);border:1.5px solid var(--border2);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">Urgent</button>
+            <button onclick="selectNewJobPriority('overdue')" id="njp-overdue" style="flex:1;padding:8px;border-radius:var(--r-sm);background:var(--bg3);border:1.5px solid var(--border2);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">Overdue</button>
+          </div>
+        </div>
+        <div class="field">
+          <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">REFERENCE PHOTO <span style="font-weight:400">(optional)</span></label>
+          <div style="background:var(--bg3);border:1px dashed var(--border2);border-radius:var(--r-sm);padding:14px;text-align:center;cursor:pointer" onclick="document.getElementById('nj-photo-input').click()">
+            <div id="nj-photo-preview" style="font-size:13px;color:var(--text3)">📷 Tap to add a reference photo</div>
+          </div>
+          <input type="file" id="nj-photo-input" accept="image/*" capture="environment" style="display:none" onchange="previewNewJobPhoto(this)">
+        </div>
+        <div class="field">
+          <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">NOTES / BRIEF</label>
+          <textarea id="nj-brief" placeholder="Job description or special instructions..." style="width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font);resize:vertical;min-height:72px;box-sizing:border-box"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:20px">
+        <button onclick="closeNewJobModal()" class="btn btn-ghost" style="flex:1;padding:12px">Cancel</button>
+        <button onclick="confirmNewJob()" class="btn btn-primary" style="flex:2;padding:12px">Create job</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENT DETAIL SCREEN -->
+  <div class="detail-screen" id="client-detail">
+    <div class="detail-header">
+      <button class="back-btn" onclick="closeClientDetail()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="client-detail-title">Client</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px" id="client-detail-sub"></div>
+      </div>
+      <button onclick="openEditClientModal(currentClientId)" style="padding:6px 12px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--font)">Edit</button>
+    </div>
+    <div class="detail-body" id="client-detail-body"></div>
+  </div>
+
+  <!-- ADD / EDIT CLIENT MODAL -->
+  <div id="client-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:center;justify-content:center;padding:20px">
+    <div style="width:100%;max-width:500px;background:var(--bg1);border-radius:16px;border:1px solid var(--border2);padding:24px;max-height:90vh;overflow-y:auto;animation:slideUp .25s ease-out">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div style="font-size:16px;font-weight:600" id="client-modal-title">Add client</div>
+        <button onclick="closeClientModal()" style="background:var(--bg3);border:1px solid var(--border);width:28px;height:28px;border-radius:50%;cursor:pointer;color:var(--text2);font-size:14px;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="field">
+          <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">COMPANY / FARM NAME <span style="font-weight:400">(optional)</span></label>
+          <input type="text" id="cm-company" placeholder="e.g. Penner Farms, ABC Contracting" oninput="this.style.border=''">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">FIRST NAME</label>
+            <input type="text" id="cm-first" placeholder="e.g. Robert" oninput="this.style.border=''">
+          </div>
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">LAST NAME</label>
+            <input type="text" id="cm-last" placeholder="e.g. Penner">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">PHONE</label>
+            <input type="tel" id="cm-phone" placeholder="(204) 555-0100">
+          </div>
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">EMAIL</label>
+            <input type="email" id="cm-email" placeholder="client@email.com">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px">
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">ADDRESS</label>
+            <input type="text" id="cm-address" placeholder="123 Main St">
+          </div>
+          <div class="field">
+            <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">CITY</label>
+            <input type="text" id="cm-city" placeholder="Carberry">
+          </div>
+        </div>
+        <div class="field">
+          <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">NOTES</label>
+          <textarea id="cm-notes" placeholder="e.g. Gate code #1234, dogs on property, prefers morning appointments..." style="width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font);resize:vertical;min-height:72px;box-sizing:border-box"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:20px">
+        <button onclick="closeClientModal()" class="btn btn-ghost" style="flex:1;padding:12px">Cancel</button>
+        <button onclick="confirmSaveClient()" class="btn btn-primary" style="flex:2;padding:12px" id="client-modal-save-btn">Save client</button>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST -->
   <div id="toast"></div>
 </div>
 
 <script>
 // ── DATA ─────────────────────────────────────────────────────────────────────
-const JOBS = [
+let JOBS = [
   {id:0,title:'Furnace inspection',client:'Margaret Olson',phone:'(204) 555-0183',address:'412 Elm St',city:'Carberry',time:'8:00 AM',tech:'Dale K.',techPhone:'(204) 555-9001',brief:'Annual inspection. 2017 Carrier unit.',status:'progress',refPhotos:2,techUpdate:'',techPhotos:0,partsUsed:[],partsReq:[],partsSent:false,dueDate:null,overrides:{},jx:.38,jy:.42},
   {id:1,title:'A/C unit service',client:'Tom Hadley',phone:'(204) 555-0247',address:'88 Birch Cres',city:'Carberry',time:'11:30 AM',tech:'Dale K.',techPhone:'(204) 555-9001',brief:'Unit not cooling properly.',status:'review',refPhotos:1,techUpdate:'Replaced clogged filter and cleaned evaporator coils. Unit now cooling properly.',techPhotos:2,partsUsed:['16x20 filter','Foil tape'],partsReq:[],partsSent:false,dueDate:null,overrides:{},jx:.62,jy:.35},
   {id:2,title:'Hot water heater',client:'Sandra Friesen',phone:'(204) 555-0391',address:'7 Maple Ave',city:'Carberry',time:'2:00 PM',tech:'Dale K.',techPhone:'(204) 555-9001',brief:'No hot water since yesterday.',status:'new',refPhotos:0,techUpdate:'',techPhotos:0,partsUsed:[],partsReq:[],partsSent:false,dueDate:null,overrides:{},jx:.28,jy:.60},
   {id:3,title:'Boiler check',client:'R. Penner',phone:'(204) 555-0112',address:'14 Oak Blvd',city:'Carberry',time:'9:00 AM',tech:'Sarah M.',techPhone:'(204) 555-9002',brief:'',status:'done',refPhotos:1,techUpdate:'Serviced boiler, replaced gasket.',techPhotos:1,partsUsed:['Pressure gasket'],partsReq:[],partsSent:false,dueDate:null,overrides:{},jx:.55,jy:.55},
   {id:4,title:'Gas line inspect',client:'H. Wiebe',phone:'(204) 555-0521',address:'9 Birch Ave',city:'Wawanesa',time:'9:30 AM',tech:'Rick T.',techPhone:'(204) 555-9003',brief:'',status:'overdue',refPhotos:0,techUpdate:'',techPhotos:0,partsUsed:[],partsReq:['3/4 gas valve','Teflon tape'],partsSent:true,dueDate:null,overrides:{},jx:.20,jy:.30},
 ];
-
 const OPEN_CALLS = [
   {id:0,title:'Furnace no heat',client:'P. Sawatzky',address:'34 Oak Blvd',time:'ASAP',priority:'urgent',desc:'No heat since last night. Family with young children.',requests:[],status:'open'},
   {id:1,title:'A/C not cooling',client:'B. Penner',address:'12 Willow Dr',time:'Today PM',priority:'routine',desc:'Unit runs but not cooling. Possible low refrigerant.',requests:['Sarah M.'],status:'open'},
@@ -778,12 +1022,18 @@ const TECHS_ADMIN = [
 ];
 
 
-const TECHS_LIST = [
+let TECHS_LIST = [
   {name:'Dale K.',  phone:'(204) 555-9001', av:'DK', bg:'rgba(79,142,247,.2)',  tc:'#7bb3ff',  role:'tech', pendingSetup:false},
   {name:'Sarah M.', phone:'(204) 555-9002', av:'SM', bg:'rgba(62,207,142,.15)', tc:'#5ce0a8', role:'tech', pendingSetup:false},
   {name:'Rick T.',  phone:'(204) 555-9003', av:'RT', bg:'rgba(245,166,35,.15)', tc:'#f5c56a',  role:'tech', pendingSetup:false},
   {name:'Jen W.',   phone:'(204) 555-9004', av:'JW', bg:'rgba(167,139,250,.15)',tc:'#c4b0ff', role:'office', pendingSetup:false},
 ];
+
+// Helper: get job by ID (not array index)
+function jobById(id) { return JOBS.find(x=>x.id===id); }
+function jobIdxById(id) { return JOBS.findIndex(x=>x.id===id); }
+function setJob(id, updates) { const i=jobIdxById(id); if(i>=0) Object.assign(JOBS[i],updates); }
+
 // ── STATE ────────────────────────────────────────────────────────────────────
 let currentRole = 'tech';
 let currentUser = null;
@@ -880,10 +1130,10 @@ const DEMO_USERS = [
 
 // Tab permissions per role
 const ROLE_TABS = {
-  admin:  ['home','open','map','parts','profile'],
-  office: ['home','open','map','parts','profile'],
-  tech:   ['home','map','profile'],
-  parts:  ['home','parts','profile'],
+  admin:  ['home','open','map','parts','clients','completed','inbox','profile'],
+  office: ['home','open','map','parts','clients','completed','inbox','profile'],
+  tech:   ['home','open','map','clients','completed','profile'],
+  parts:  ['home','parts','clients','completed','profile'],
 };
 
 // What each role sees on the home screen
@@ -987,7 +1237,7 @@ function applyLogin(user) {
   if (deskAv) { deskAv.textContent=user.av; deskAv.style.background=user.bg; deskAv.style.color=user.tc; }
 
   // Apply nav visibility on sidebar too
-  const sbTabs = {home:'sb-home',open:'sb-open',map:'sb-map',parts:'sb-parts',profile:'sb-profile'};
+  const sbTabs = {home:'sb-home',open:'sb-open',map:'sb-map',parts:'sb-parts',clients:'sb-clients',completed:'sb-completed',inbox:'sb-inbox',profile:'sb-profile'};
   const allowed = ROLE_TABS[user.role] || ['home','profile'];
   Object.entries(sbTabs).forEach(([tab, id]) => {
     const el = document.getElementById(id);
@@ -999,13 +1249,31 @@ function applyLogin(user) {
   // Land on correct default tab
   const defaultTab = user.role === 'parts' ? 'parts' : 'home';
   desktopTab = defaultTab;
-  setTimeout(initLayout, 0);
   switchTab(defaultTab);
   updateHomeCounts();
   renderJobList();
   renderOpenCalls();
-  if(user.role === 'admin' || user.role === 'office') { checkM365Status(); checkTwilioStatus(); }
+  if(user.role === 'admin' || user.role === 'office') {
+    checkM365Status(); checkTwilioStatus();
+    const r1 = document.getElementById('ms365-settings-row');
+    const r2 = document.getElementById('twilio-settings-row');
+    if(r1) r1.style.display = 'flex';
+    if(r2) r2.style.display = 'flex';
+    loadInbox();
+    // Poll for new messages every 2 minutes
+    if(window._inboxPollInterval) clearInterval(window._inboxPollInterval);
+    window._inboxPollInterval = setInterval(loadInbox, 120000);
+  }
+  const heroNewJobBtn = document.getElementById('hero-new-job-btn');
+  if(heroNewJobBtn) heroNewJobBtn.style.display = (user.role==='admin'||user.role==='office') ? 'block' : 'none';
   renderPartsList();
+  loadUsers();
+  loadClients();
+  loadJobs();
+  setTimeout(function() {
+    initLayout();
+    if (IS_DESKTOP()) renderDesktopView(desktopTab);
+  }, 100);
 }
 
 function applyNavPermissions(role) {
@@ -1048,8 +1316,11 @@ function switchTab(tab) {
   const navEl = document.getElementById('nav-'+tab);
   if(tabEl) tabEl.style.display='block';
   if(navEl) navEl.classList.add('active');
-  if(tab==='map') { setTimeout(drawMap,50); }
+  if(tab==='map') { setTimeout(onMapTabOpen, 50); }
   if(tab==='profile') { renderTeamSection(); }
+  if(tab==='clients') { renderClientList(document.getElementById('client-search-input')?.value||''); }
+  if(tab==='completed') { renderCompletedJobs(); }
+  if(tab==='inbox') { loadInbox(); }
   cancelAnimationFrame(animFrame);
 }
 
@@ -1065,19 +1336,18 @@ function updateHomeCounts() {
 }
 
 function renderJobList() {
-  // Techs see only their own jobs; parts coordinator sees all for context; admin/office see all
   const myName = currentUser ? currentUser.name : 'Dale K.';
   const jobs = (currentRole==='tech') ? JOBS.filter(j=>j.tech===myName)
              : (currentRole==='parts') ? JOBS.filter(j=>j.status!=='done')
              : JOBS;
   document.getElementById('job-list-home').innerHTML = jobs.map(j=>{
-    const dialNum = j.phone.replace(/\D/g,'');
-    return `<div class="card" style="margin-bottom:10px">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;cursor:pointer" onclick="openJob(${j.id})">
+    const dialNum = (j.phone||'').replace(/\D/g,'');
+    return `<div class="card" style="margin-bottom:10px;cursor:pointer" onclick="openJob(${j.id})">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">
         <div style="font-size:14px;font-weight:600">${j.title}</div>
         ${spill(j.status)}
       </div>
-      <div style="font-size:12px;color:var(--text2);display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;cursor:pointer" onclick="openJob(${j.id})">
+      <div style="font-size:12px;color:var(--text2);display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px">
         <span>👤 ${j.client}</span>
         <span>📍 ${j.address}</span>
         <span>🕐 ${j.time}</span>
@@ -1086,10 +1356,10 @@ function renderJobList() {
         ${j.dueDate?`<span style="color:${isDueSoon(j.dueDate)?'var(--red)':isDueToday(j.dueDate)?'var(--amber)':'var(--green)'}">📅 ${formatDue(j.dueDate)}</span>`:''}
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border)">
-        <span style="font-size:12px;color:var(--text3)">${j.phone}</span>
-        <div style="display:flex;gap:7px">
-          <a href="tel:${dialNum}" onclick="event.stopPropagation()" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;background:rgba(62,207,142,.12);border:1px solid rgba(62,207,142,.25);color:var(--green);font-size:12px;font-weight:600;text-decoration:none">📞 Call</a>
-          <a href="sms:${dialNum}" onclick="event.stopPropagation()" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.25);color:var(--accent);font-size:12px;font-weight:600;text-decoration:none">💬 Text</a>
+        <span style="font-size:12px;color:var(--text3)">${j.phone||''}</span>
+        <div style="display:flex;gap:7px" onclick="event.stopPropagation()">
+          ${dialNum?`<a href="tel:${dialNum}" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;background:rgba(62,207,142,.12);border:1px solid rgba(62,207,142,.25);color:var(--green);font-size:12px;font-weight:600;text-decoration:none">📞 Call</a>
+          <a href="sms:${dialNum}" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.25);color:var(--accent);font-size:12px;font-weight:600;text-decoration:none">💬 Text</a>`:''}
         </div>
       </div>
       ${j.partsSent?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><span class="pill pill-parts">📦 Parts requested</span></div>`:''}
@@ -1121,7 +1391,7 @@ function showSmsConfirm(j, t) {
   const msg = `Hi ${t.name.split(' ')[0]}, you've been assigned a new job: ${j.title} at ${j.address} (${j.client}) — ${j.time}.${dueStr} Open Smart Electric Service Pro for details.`;
   const modal = document.createElement('div');
   modal.id = 'sms-modal';
-  modal.style.cssText = 'position:absolute;inset:0;background:rgba(0,0,0,.65);z-index:300;display:flex;align-items:flex-end;padding:0';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;display:flex;align-items:flex-end;padding:0';
   modal.innerHTML = `
     <div style="width:100%;background:var(--bg1);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 16px 32px;animation:slideUp .3s ease-out">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
@@ -1199,12 +1469,12 @@ function isDueSoon(dateStr) {
   return due < today;
 }
 function setDueDate(val) {
-  JOBS[currentJobId].dueDate = val || null;
+  jobById(currentJobId).dueDate = val || null;
   renderDetail();
   if(val) toast('Due date set — ' + formatDue(val));
 }
 function clearDueDate() {
-  JOBS[currentJobId].dueDate = null;
+  jobById(currentJobId).dueDate = null;
   renderDetail();
   toast('Due date cleared', 'warning');
 }
@@ -1218,8 +1488,10 @@ function showDuePicker() {
 function openJob(id) {
   currentJobId = id;
   editingField = null;
-  tempUsedTags = [...JOBS[id].partsUsed];
-  tempReqTags  = [...JOBS[id].partsReq];
+  const j = JOBS.find(x=>x.id===id);
+  if(!j) return;
+  tempUsedTags = [...(j.partsUsed||[])];
+  tempReqTags  = [...(j.partsReq||[])];
   renderDetail();
   document.getElementById('job-detail').classList.add('open');
 }
@@ -1234,7 +1506,7 @@ function closeDetail() {
 }
 
 function renderDetail() {
-  const j = JOBS[currentJobId];
+  const j = jobById(currentJobId);
   document.getElementById('detail-title').textContent = j.title;
   document.getElementById('detail-pill').innerHTML = spill(j.status);
 
@@ -1331,9 +1603,10 @@ function renderDetail() {
             <textarea id="used-ta" rows="2" style="flex:1;font-size:12px;min-height:52px" placeholder="Speak parts…"></textarea>
             <div class="mic-wrap"><div class="mic-ring ${micActive.used?'pulse':''}"></div><button class="mic-btn ${micActive.used?'on':''}" onclick="toggleMic('used')" style="font-size:14px">🎤</button></div>
           </div>
-          <div style="display:flex;gap:5px;margin-top:6px">
-            <input id="used-inp" type="text" placeholder="Type a part…" style="flex:1;font-size:12px;padding:6px 9px" onkeydown="if(event.key==='Enter')addUsed()">
+          <div style="display:flex;gap:5px;margin-top:6px;position:relative">
+            <input id="used-inp" type="text" placeholder="Type a part…" style="flex:1;font-size:12px;padding:6px 9px" onkeydown="if(event.key==='Enter')addUsed()" oninput="showPartsSuggestions('used-inp','used-parts-drop',this.value)">
             <button onclick="addUsed()" style="padding:0 10px;border-radius:var(--r-sm);background:var(--bg3);border:1px solid var(--border2);color:var(--text1);font-size:16px;cursor:pointer">+</button>
+            <div id="used-parts-drop" style="display:none;position:absolute;top:100%;left:0;right:40px;background:var(--bg1);border:1px solid var(--border2);border-radius:var(--r-sm);z-index:50;max-height:160px;overflow-y:auto;box-shadow:0 6px 20px rgba(0,0,0,.4)"></div>
           </div>
           <div id="used-tags" style="margin-top:6px">${tempUsedTags.map((t,i)=>`<span class="tag tag-green" style="cursor:pointer" onclick="removeUsed(${i})">${t} ✕</span>`).join('')}</div>` :
           `<div>${(j.partsUsed.length?j.partsUsed:[]).map(p=>`<span class="tag tag-green">${p}</span>`).join('')||'<span style="font-size:11px;color:var(--text3)">None</span>'}</div>`
@@ -1367,12 +1640,13 @@ function renderDetail() {
             <textarea id="req-ta" rows="2" style="flex:1;font-size:12px;min-height:52px" placeholder="Speak parts needed…"></textarea>
             <div class="mic-wrap"><div class="mic-ring ${micActive.req?'pulse':''}"></div><button class="mic-btn ${micActive.req?'on':''}" onclick="toggleMic('req')" style="font-size:14px">🎤</button></div>
           </div>
-          <div style="display:flex;gap:5px;margin-bottom:8px">
-            <input id="req-inp" type="text" placeholder="Type a part needed…" style="flex:1;font-size:12px;padding:6px 9px" onkeydown="if(event.key==='Enter')addReq()">
+          <div style="display:flex;gap:5px;margin-bottom:8px;position:relative">
+            <input id="req-inp" type="text" placeholder="Type a part needed…" style="flex:1;font-size:12px;padding:6px 9px" onkeydown="if(event.key==='Enter')addReq()" oninput="showPartsSuggestions('req-inp','req-parts-drop',this.value)">
             <button onclick="addReq()" style="padding:0 10px;border-radius:var(--r-sm);background:var(--bg3);border:1px solid var(--border2);color:var(--text1);font-size:16px;cursor:pointer">+</button>
+            <div id="req-parts-drop" style="display:none;position:absolute;top:100%;left:0;right:40px;background:var(--bg1);border:1px solid var(--border2);border-radius:var(--r-sm);z-index:50;max-height:160px;overflow-y:auto;box-shadow:0 6px 20px rgba(0,0,0,.4)"></div>
           </div>
           <div id="req-tags" style="margin-bottom:8px">${tempReqTags.map((t,i)=>`<span class="tag tag-amber" style="cursor:pointer" onclick="removeReq(${i})">${t} ✕</span>`).join('')}</div>
-          <button onclick="sendPartsReq()" class="btn btn-amber" style="padding:10px">📦 Send to parts coordinator</button>` :
+          <button onclick="sendPartsReq()" class="btn btn-amber" style="padding:12px;width:100%;font-size:14px;font-weight:600">📦 Send to parts coordinator</button>` :
           `<div style="font-size:12px;color:var(--text3)">No parts required</div>`
       }
     </div>` : '';
@@ -1417,7 +1691,7 @@ function renderDetail() {
   const canCall = (currentRole==='admin'||currentRole==='office') && j.tech && !isDone;
   const isUrgent = j.status==='overdue' || j.status==='new';
   const callBtn = canCall ? `<div style="margin-top:8px">
-    <button onclick="${j.status==='overdue'?`callOverdueAlert(${j.id})`:`callUrgentAlert(${j.id})`}" style="width:100%;padding:10px;border-radius:var(--r-sm);background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.25);color:var(--red);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:7px">
+    <button onclick="${j.status==='overdue'?'callOverdueAlert('+j.id+')':'callUrgentAlert('+j.id+')'}" style="width:100%;padding:10px;border-radius:var(--r-sm);background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.25);color:var(--red);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:7px">
       📞 ${j.status==='overdue'?'Call tech — overdue escalation':'Call tech — urgent alert'}
     </button>
   </div>` : '';
@@ -1512,7 +1786,7 @@ function cancelEdit() {
 }
 function saveField(field) {
   const val = document.getElementById('edit-inp-'+field)?.value?.trim();
-  const j = JOBS[currentJobId];
+  const j = jobById(currentJobId);
   if(val && val !== j[field]) j.overrides[field] = val;
   else delete j.overrides[field];
   editingField = null;
@@ -1520,17 +1794,18 @@ function saveField(field) {
   toast(`${field.charAt(0).toUpperCase()+field.slice(1)} updated for this job only`,'warning');
 }
 function revertField(field) {
-  delete JOBS[currentJobId].overrides[field];
+  const _jj=jobById(currentJobId); if(_jj&&_jj.overrides) delete _jj.overrides[field];
   renderDetail();
 }
 function revertAll() {
-  JOBS[currentJobId].overrides = {};
+  const _jo=jobById(currentJobId); if(_jo) _jo.overrides={};
   renderDetail();
   toast('Reverted to QuickBooks values');
 }
 function startJob(id) {
-  const j = JOBS[id];
-  const clientName = (j.overrides && j.overrides.client) || j.client;
+  const j = jobById(id);
+  if(!j) return;
+  const clientName = (j.overrides && j.overrides.name) || j.client;
   const clientPhone = (j.overrides && j.overrides.phone) || j.phone;
   const techFirst = j.tech ? j.tech.split(' ')[0] : 'Your technician';
   const dialNum = clientPhone.replace(/\D/g,'');
@@ -1541,7 +1816,7 @@ function startJob(id) {
   if(existing) existing.remove();
   const modal = document.createElement('div');
   modal.id = 'arrival-modal';
-  modal.style.cssText = 'position:absolute;inset:0;background:rgba(0,0,0,.65);z-index:300;display:flex;align-items:flex-end;padding:0';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;display:flex;align-items:flex-end;padding:0';
   modal.innerHTML = `
     <div style="width:100%;background:var(--bg1);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 16px 32px;animation:slideUp .3s ease-out">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
@@ -1585,8 +1860,7 @@ function closeArrivalModal() {
 
 function startJobNoSms(id) {
   closeArrivalModal();
-  JOBS[id].status = 'progress';
-  JOBS[id].arrivedAt = new Date().toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});
+  const _sj=jobById(id); if(_sj){_sj.status='progress';_sj.arrivedAt=new Date().toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});}
   renderDetail();
   updateHomeCounts();
   renderJobList();
@@ -1597,17 +1871,16 @@ async function startJobWithSms(id) {
   const msgEl = document.getElementById('arrival-msg');
   const message = msgEl ? msgEl.value.trim() : null;
   closeArrivalModal();
-  JOBS[id].status = 'progress';
-  JOBS[id].arrivedAt = new Date().toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});
-  JOBS[id].arrivalSmsSent = true;
+  const _swj=jobById(id); if(_swj){_swj.status='progress';_swj.arrivedAt=new Date().toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});_swj.arrivalSmsSent=true;}
   renderDetail();
   updateHomeCounts();
   renderJobList();
   toast('Job started — texting client ✓');
   // Real Twilio SMS
-  const j = JOBS[id];
+  const j = jobById(id);
+  if(!j) return;
   const clientPhone = (j.overrides&&j.overrides.phone)||j.phone;
-  const clientName  = (j.overrides&&j.overrides.client)||j.client;
+  const clientName  = (j.overrides&&j.overrides.name)||j.client;
   try {
     await apiCall('/sms/arrival', {
       method: 'POST',
@@ -1617,31 +1890,33 @@ async function startJobWithSms(id) {
 }
 function submitReview(id) {
   const notesEl = document.getElementById('notes-ta');
-  const notes = notesEl ? notesEl.value.trim() : JOBS[id].techUpdate;
+  const notes = notesEl ? notesEl.value.trim() : jobById(id)?.techUpdate;
   if(!notes){toast('Add notes before submitting','warning');return;}
-  const oldStatus = JOBS[id].status;
-  JOBS[id].status='review';
-  JOBS[id].techUpdate=notes;
-  JOBS[id].partsUsed=[...tempUsedTags];
+  const _rj=jobById(id); const oldStatus=_rj?_rj.status:'';
+  if(_rj){_rj.status='review';_rj.techUpdate=notes;_rj.partsUsed=[...tempUsedTags];}
   renderDetail();
   toast('Submitted for review — admin notified');
+  // Save to backend
+  submitReviewApi(id, notes, tempUsedTags);
   // Email admin/office about status change
   const admins = TECHS_LIST.filter(u=>u.role==='admin'||u.role==='office');
-  admins.forEach(u=>{ if(u.email) emailJobStatus(JOBS[id], u.name, u.email, oldStatus, 'review'); });
+  admins.forEach(u=>{ if(u.email) emailJobStatus(jobById(id), u.name, u.email, oldStatus, 'review'); });
 }
 function addUsed() {
   const v = document.getElementById('used-inp')?.value?.trim();
   if(!v) return;
-  v.split(',').map(x=>x.trim()).filter(Boolean).forEach(x=>{if(!tempUsedTags.includes(x))tempUsedTags.push(x);});
+  v.split(',').map(x=>x.trim()).filter(Boolean).forEach(x=>{if(!tempUsedTags.includes(x)){tempUsedTags.push(x);savePart(x);}});
   document.getElementById('used-inp').value='';
+  const d=document.getElementById('used-parts-drop'); if(d) d.style.display='none';
   rerenderTags();
 }
 function removeUsed(i) { tempUsedTags.splice(i,1); rerenderTags(); }
 function addReq() {
   const v = document.getElementById('req-inp')?.value?.trim();
   if(!v) return;
-  v.split(',').map(x=>x.trim()).filter(Boolean).forEach(x=>{if(!tempReqTags.includes(x))tempReqTags.push(x);});
+  v.split(',').map(x=>x.trim()).filter(Boolean).forEach(x=>{if(!tempReqTags.includes(x)){tempReqTags.push(x);savePart(x);}});
   document.getElementById('req-inp').value='';
+  const d=document.getElementById('req-parts-drop'); if(d) d.style.display='none';
   rerenderReqTags();
 }
 function removeReq(i) { tempReqTags.splice(i,1); rerenderReqTags(); }
@@ -1655,12 +1930,12 @@ function rerenderReqTags() {
 }
 function sendPartsReq() {
   if(!tempReqTags.length){toast('Add at least one part','warning');return;}
-  JOBS[currentJobId].partsReq=[...tempReqTags];
-  JOBS[currentJobId].partsSent=true;
+  jobById(currentJobId).partsReq=[...tempReqTags];
+  jobById(currentJobId).partsSent=true;
   renderDetail();
   toast('Parts request sent to Linda P.');
   // Email parts coordinators
-  const j = JOBS[currentJobId];
+  const j = jobById(currentJobId);
   const partsReqObj = { job: j.title, client: j.client, tech: j.tech, parts: tempReqTags, notes: j.techUpdate, urgent: j.status==='overdue' };
   TECHS_LIST.filter(u=>u.role==='parts'||u.role==='admin').forEach(u=>{
     if(u.email) emailPartsUpdate(partsReqObj, u.email, u.name, 'submitted');
@@ -1949,7 +2224,7 @@ async function markReceived(id) {
 
 // ── Admin: approve job complete → SMS to customer ─────────────────────────────
 async function approveJobComplete(id) {
-  const j = JOBS[id];
+  const j = jobById(id); if(!j) return;
   const oldStatus = j.status;
   j.status = 'done';
   j.completedAt = new Date().toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});
@@ -1958,7 +2233,9 @@ async function approveJobComplete(id) {
   renderJobList();
   toast('Job marked complete — texting customer ✓');
   const clientPhone = (j.overrides&&j.overrides.phone)||j.phone;
-  const clientName  = (j.overrides&&j.overrides.client)||j.client;
+  const clientName  = (j.overrides&&j.overrides.name)||j.client;
+  // Save to backend
+  approveJobApi(id);
   // SMS to customer
   try {
     await apiCall('/sms/job-complete', {
@@ -1966,30 +2243,32 @@ async function approveJobComplete(id) {
       body: JSON.stringify({ clientPhone, clientName, job: j, techName: j.tech })
     });
   } catch(e) { console.warn('[sms] job-complete failed:', e.message); }
-  // Email admins about status change
+  // Email tech about completion
   const tech = TECHS_LIST.find(x=>x.name===j.tech);
   if(tech?.email) emailJobStatus(j, tech.name, tech.email, oldStatus, 'done');
 }
 
 function rejectReview(id) {
-  JOBS[id].status = 'progress';
+  const _rej=jobById(id); if(_rej) _rej.status='progress';
   renderDetail();
   updateHomeCounts();
-  renderJobList();
-  toast('Sent back to technician');
-  // SMS to tech
-  const j = JOBS[id];
-  const tech = TECHS_LIST.find(x=>x.name===j.tech);
-  if(tech) {
-    apiCall('/sms/job-status', {
-      method: 'POST',
-      body: JSON.stringify({ techPhone: tech.phone, techName: tech.name, job: j, newStatus: 'progress' })
-    }).catch(e => console.warn('[sms] job-status failed:', e.message));
+  // SMS tech to go ahead
+  const j = jobById(id);
+  if(j) {
+    const tech = TECHS_LIST.find(t=>t.name===j.tech);
+    if(tech?.phone) {
+      apiCall('/sms/job-status', {
+        method:'POST',
+        body: JSON.stringify({ techPhone: tech.phone, techName: tech.name, job: j, newStatus: 'Go ahead approved — proceed with the job' })
+      }).catch(e=>console.warn('[sms]',e.message));
+    }
+    toast('Sent back to ' + (j.tech||'technician') + ' with go-ahead ✓');
   }
 }
 
+
 async function callUrgentAlert(id) {
-  const j = JOBS[id];
+  const j = jobById(id); if(!j) return;
   const tech = TECHS_LIST.find(x=>x.name===j.tech);
   if(!tech) { toast('No technician assigned', 'warning'); return; }
   toast('Calling ' + tech.name + ' ✓');
@@ -2002,7 +2281,7 @@ async function callUrgentAlert(id) {
 }
 
 async function callOverdueAlert(id) {
-  const j = JOBS[id];
+  const j = jobById(id); if(!j) return;
   const tech = TECHS_LIST.find(x=>x.name===j.tech);
   if(!tech) { toast('No technician assigned', 'warning'); return; }
   toast('Calling ' + tech.name + ' — overdue escalation ✓');
@@ -2243,28 +2522,35 @@ function updateInvitePreview() {
   const role  = document.getElementById('new-tech-role')?.value || 'tech';
   const rc    = ROLE_COLORS[role] || ROLE_COLORS.tech;
   const prev  = document.getElementById('invite-preview');
-  if (prev) prev.textContent = `Hi ${first}, you've been added to Smart Electric Service Pro as ${rc.label}. Download the app and create your password: https://smartelectric.netlify.app/setup?token=••••••`;
+  if (prev) prev.textContent = `Hi ${first}, you've been added to Smart Electric Service Pro as ${rc.label}. Download the app and create your password: https://smartservice-byz.pages.dev/setup?token=••••••`;
 }
 
-function confirmAddTech() {
+async function confirmAddTech() {
   const name  = document.getElementById('new-tech-name')?.value?.trim();
   const phone = document.getElementById('new-tech-phone')?.value?.trim();
   const email = document.getElementById('new-tech-email')?.value?.trim() || null;
   const role  = document.getElementById('new-tech-role')?.value || 'tech';
   if (!name || !phone) { toast('Please enter a name and phone number', 'warning'); return; }
-  const ini   = name.split(' ').map(w => w[0]?.toUpperCase() || '').join('').slice(0, 2);
-  const rc    = ROLE_COLORS[role] || ROLE_COLORS.tech;
-  TECHS_LIST.push({ name, phone, email, av: ini, bg: rc.bg, tc: rc.tc, role, pendingSetup: true });
-  closeAddTech();
-  renderTeamSection();
-  // Real Twilio SMS invite
-  apiCall('/sms/invite', { method:'POST', body: JSON.stringify({ techPhone: phone, techName: name, role }) })
-    .catch(e => console.warn('[sms] invite failed:', e.message));
-  if(email) {
-    emailUserInvite(email, name, role);
-    toast(`Invite sent to ${name} via SMS & email ✓`);
-  } else {
-    toast(`Invite sent to ${name} via SMS ✓`);
+  const ini = name.split(' ').map(w => w[0]?.toUpperCase() || '').join('').slice(0, 2);
+  const rc  = ROLE_COLORS[role] || ROLE_COLORS.tech;
+
+  try {
+    // Use real backend invite — creates user + sends SMS with setup link
+    const data = await apiCall('/auth/invite', {
+      method: 'POST',
+      body: JSON.stringify({ name, phone, role, email }),
+    });
+    TECHS_LIST.push({ name, phone, email, av: ini, bg: rc.bg, tc: rc.tc, role, pendingSetup: true });
+    closeAddTech();
+    renderTeamSection();
+    if(email) emailUserInvite(email, name, role);
+    toast(`Invite sent to ${name} via SMS ✓ — setup link included`);
+  } catch(e) {
+    // Fallback to local add if backend invite fails
+    TECHS_LIST.push({ name, phone, email, av: ini, bg: rc.bg, tc: rc.tc, role, pendingSetup: true });
+    closeAddTech();
+    renderTeamSection();
+    toast(`${name} added — SMS invite failed: ${e.error||e.message||'check backend'}`);
   }
 }
 
@@ -2368,6 +2654,856 @@ function confirmRemoveTech() {
   toast((removed && removed.name ? removed.name : 'User') + ' removed from team');
 }
 
+
+// ── CLIENTS ───────────────────────────────────────────────────────────────────
+let CLIENTS = []; // loaded from backend
+let currentClientId = null;
+let editingClientId = null;
+
+async function loadClients() {
+  try {
+    const data = await apiCall('/clients');
+    if(data && data.clients) {
+      CLIENTS = data.clients;
+      renderClientList();
+      if(IS_DESKTOP() && desktopTab==='clients') renderDesktopView('clients');
+    }
+  } catch(e) {
+    console.warn('[clients] Failed to load:', e.message);
+    CLIENTS = [];
+    renderClientList();
+  }
+}
+
+function renderClientList(filter) {
+  const el = document.getElementById('clients-list');
+  if(!el) return;
+  const q = (filter||'').toLowerCase();
+  const list = q ? CLIENTS.filter(c=>(c.name||'').toLowerCase().includes(q)||(c.address||'').toLowerCase().includes(q)||(c.phone||'').includes(q)) : CLIENTS;
+  if(!list.length) {
+    el.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--text3)">
+      <div style="font-size:32px;margin-bottom:10px">👥</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:6px">${q?'No clients found':'No clients yet'}</div>
+      <div style="font-size:12px">${q?'Try a different search':'Add your first client to get started'}</div>
+    </div>`;
+    return;
+  }
+  el.innerHTML = list.map(c => {
+    const jobs = JOBS.filter(j=>j.client===c.name||j.client===c.name);
+    return `<div onclick="openClientDetail(${c.id})" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px">
+      <div style="width:40px;height:40px;border-radius:50%;background:rgba(79,142,247,.2);color:#7bb3ff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">${(c.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:14px;font-weight:600;margin-bottom:2px">${c.name}</div>
+        <div style="font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">📍 ${c.address||'No address'}${c.city?', '+c.city:''}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">${c.phone||'No phone'} ${jobs.length?`· ${jobs.length} job${jobs.length!==1?'s':''}`:'· No jobs yet'}</div>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--text3);flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>`;
+  }).join('');
+}
+
+function filterClientList(q) { renderClientList(q); }
+
+function openClientDetail(id) {
+  currentClientId = id;
+  const c = CLIENTS.find(x=>x.id===id);
+  if(!c) return;
+  document.getElementById('client-detail-title').textContent = c.name;
+  document.getElementById('client-detail-sub').textContent   = c.city || 'Carberry';
+  const jobs = JOBS.filter(j=>j.client===c.name);
+  const jobsHTML = jobs.length ? jobs.map(j=>`
+    <div onclick="openJob(${j.id})" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer">
+      <div>
+        <div style="font-size:13px;font-weight:600">${j.title}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">${j.time} · ${j.tech||'Unassigned'}</div>
+      </div>
+      ${spill(j.status)}
+    </div>`).join('') :
+    `<div style="font-size:13px;color:var(--text3);padding:12px 0">No service history yet.</div>`;
+
+  document.getElementById('client-detail-body').innerHTML = `
+    <div class="slide-up">
+      <div class="card-sm" style="margin-bottom:12px">
+        <div class="info-row"><span class="info-label">📞 Phone</span><span class="info-value"><a href="tel:${c.phone}" style="color:var(--accent)">${c.phone||'—'}</a></span></div>
+        <div class="info-row"><span class="info-label">📧 Email</span><span class="info-value">${c.email||'—'}</span></div>
+        <div class="info-row"><span class="info-label">📍 Address</span><span class="info-value">${c.address||'—'}${c.city?', '+c.city:''}</span></div>
+        ${c.notes?`<div class="info-row" style="border:none"><span class="info-label">📝 Notes</span><span class="info-value" style="white-space:pre-wrap">${c.notes}</span></div>`:''}
+      </div>
+      <div class="card-sm" style="margin-bottom:12px">
+        <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">SERVICE HISTORY (${jobs.length})</div>
+        ${jobsHTML}
+      </div>
+      <button onclick="openNewJobForClient(${c.id})" class="btn btn-primary" style="width:100%;padding:13px">+ New job for this client</button>
+    </div>`;
+  document.getElementById('client-detail').classList.add('open');
+}
+
+function closeClientDetail() {
+  document.getElementById('client-detail').classList.remove('open');
+}
+
+function openNewJobForClient(clientId) {
+  const c = CLIENTS.find(x=>x.id===clientId);
+  if(!c) return;
+  closeClientDetail();
+  openNewJobModal();
+  setTimeout(()=>{
+    document.getElementById('nj-client').value  = c.name;
+    document.getElementById('nj-phone').value   = c.phone||'';
+    document.getElementById('nj-address').value = c.address||'';
+    document.getElementById('nj-city').value    = c.city||'Carberry';
+  }, 100);
+}
+
+// Add / Edit client modal
+function openAddClientModal() {
+  editingClientId = null;
+  document.getElementById('client-modal-title').textContent    = 'Add client';
+  document.getElementById('client-modal-save-btn').textContent = 'Save client';
+  ['cm-company','cm-first','cm-last','cm-phone','cm-email','cm-address','cm-city','cm-notes'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('cm-city').value = 'Carberry';
+  document.getElementById('client-modal').style.display = 'flex';
+}
+
+function openEditClientModal(id) {
+  const c = CLIENTS.find(x=>x.id===id);
+  if(!c) return;
+  editingClientId = id;
+  const parts = (c.name||'').split(' ');
+  document.getElementById('client-modal-title').textContent    = 'Edit client';
+  document.getElementById('client-modal-save-btn').textContent = 'Save changes';
+  document.getElementById('cm-company').value = c.company||'';
+  document.getElementById('cm-first').value   = parts[0]||'';
+  document.getElementById('cm-last').value    = parts.slice(1).join(' ')||'';
+  document.getElementById('cm-phone').value   = c.phone||'';
+  document.getElementById('cm-email').value   = c.email||'';
+  document.getElementById('cm-address').value = c.address||'';
+  document.getElementById('cm-city').value    = c.city||'Carberry';
+  document.getElementById('cm-notes').value   = c.notes||'';
+  document.getElementById('client-modal').style.display = 'flex';
+}
+
+function closeClientModal() {
+  document.getElementById('client-modal').style.display = 'none';
+}
+
+async function confirmSaveClient() {
+  const company = document.getElementById('cm-company')?.value?.trim();
+  const first   = document.getElementById('cm-first')?.value?.trim();
+  const last    = document.getElementById('cm-last')?.value?.trim();
+  const phone   = document.getElementById('cm-phone')?.value?.trim();
+  const email   = document.getElementById('cm-email')?.value?.trim();
+  const address = document.getElementById('cm-address')?.value?.trim();
+  const city    = document.getElementById('cm-city')?.value?.trim()||'Carberry';
+  const notes   = document.getElementById('cm-notes')?.value?.trim();
+  const nameEl = document.getElementById('cm-first');
+  const compEl = document.getElementById('cm-company');
+  if(!first && !company) {
+    if(nameEl) nameEl.style.border='2px solid #f06060';
+    if(compEl) compEl.style.border='2px solid #f06060';
+    toast('Please enter a name or company','warning'); return;
+  }
+  if(nameEl) nameEl.style.border='';
+  if(compEl) compEl.style.border='';
+  const name = last ? `${first} ${last}` : first;
+  const payload = { name, company, phone, email, address, city, notes };
+
+  try {
+    if(editingClientId) {
+      const data = await apiCall(`/clients/${editingClientId}`, { method:'PUT', body: JSON.stringify(payload) });
+      const idx = CLIENTS.findIndex(x=>x.id===editingClientId);
+      if(idx>=0) CLIENTS[idx] = { ...CLIENTS[idx], ...payload };
+      toast(name + ' updated ✓');
+      closeClientModal();
+      openClientDetail(editingClientId);
+    } else {
+      const data = await apiCall('/clients', { method:'POST', body: JSON.stringify(payload) });
+      CLIENTS.unshift(data.client || { id: Date.now(), ...payload });
+      toast(name + ' added ✓');
+      closeClientModal();
+    }
+    renderClientList();
+    if(IS_DESKTOP() && desktopTab==='clients') renderDesktopView('clients');
+  } catch(e) {
+    // Fallback: save locally if backend endpoint not yet created
+    if(editingClientId) {
+      const idx = CLIENTS.findIndex(x=>x.id===editingClientId);
+      if(idx>=0) CLIENTS[idx] = { ...CLIENTS[idx], ...payload };
+      toast(name + ' updated ✓');
+    } else {
+      CLIENTS.unshift({ id: Date.now(), ...payload });
+      toast(name + ' added ✓');
+    }
+    closeClientModal();
+    renderClientList();
+    if(IS_DESKTOP() && desktopTab==='clients') renderDesktopView('clients');
+  }
+}
+
+// Desktop clients view
+function renderDesktopClients(el) {
+  const isAdmin = currentRole==='admin'||currentRole==='office';
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div>
+        <div style="font-size:18px;font-weight:600">Clients</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">${CLIENTS.length} client${CLIENTS.length!==1?'s':''}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="text" placeholder="Search clients..." oninput="filterDesktopClients(this.value)" style="padding:8px 14px;background:#171921;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);width:220px">
+        ${isAdmin?`<button onclick="openAddClientModal()" style="padding:8px 16px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add client</button>`:''}
+      </div>
+    </div>
+    <div id="desktop-clients-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px"></div>`;
+  renderDesktopClientCards(CLIENTS);
+}
+
+function renderDesktopClientCards(list) {
+  const el = document.getElementById('desktop-clients-grid');
+  if(!el) return;
+  if(!list.length) {
+    el.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:rgba(255,255,255,.3)">
+      <div style="font-size:40px;margin-bottom:12px">👥</div>
+      <div style="font-size:15px;font-weight:600">No clients yet</div>
+      <div style="font-size:13px;margin-top:6px">Add your first client to get started</div>
+    </div>`;
+    return;
+  }
+  el.innerHTML = list.map(c=>{
+    const jobs = JOBS.filter(j=>j.client===c.name);
+    const ini  = (c.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `<div onclick="openClientDetail(${c.id})" style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(79,142,247,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:42px;height:42px;border-radius:50%;background:rgba(79,142,247,.2);color:#7bb3ff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ini}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.name}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">${c.phone||'No phone'}</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:8px">📍 ${c.address||'No address'}${c.city?', '+c.city:''}</div>
+      ${c.email?`<div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:8px">✉ ${c.email}</div>`:''}
+      ${c.notes?`<div style="font-size:11px;color:rgba(255,255,255,.3);font-style:italic;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">"${c.notes}"</div>`:''}
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05)">
+        <span style="font-size:11px;color:rgba(255,255,255,.3)">${jobs.length} job${jobs.length!==1?'s':''}</span>
+        <span style="font-size:11px;color:#7bb3ff">View →</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterDesktopClients(q) {
+  const filtered = q ? CLIENTS.filter(c=>(c.name||'').toLowerCase().includes(q.toLowerCase())||(c.address||'').toLowerCase().includes(q.toLowerCase())||(c.phone||'').includes(q)) : CLIENTS;
+  renderDesktopClientCards(filtered);
+}
+
+// ── INBOX (inbound SMS) ───────────────────────────────────────────────────────
+let INBOX_MESSAGES = [];
+let INBOX_THREADS = {}; // keyed by phone number
+
+async function loadInbox() {
+  try {
+    const data = await apiCall('/sms/inbox');
+    INBOX_MESSAGES = data.messages || [];
+    renderInboxList();
+    updateInboxBadge();
+    if(IS_DESKTOP() && desktopTab==='inbox') renderDesktopInbox(document.getElementById('desktop-view-inbox'));
+  } catch(e) {
+    console.warn('[inbox] Failed to load:', e.message);
+    renderInboxList();
+  }
+}
+
+async function loadThread(phoneNumber) {
+  try {
+    const encoded = encodeURIComponent(phoneNumber);
+    const data = await apiCall(`/sms/thread/${encoded}`);
+    INBOX_THREADS[phoneNumber] = data.messages || [];
+    return INBOX_THREADS[phoneNumber];
+  } catch(e) {
+    console.warn('[thread] Failed to load:', e.message);
+    return [];
+  }
+}
+
+function updateInboxBadge() {
+  const unread = INBOX_MESSAGES.filter(m=>!m.read).length;
+  const badge1 = document.getElementById('sb-inbox-badge');
+  const badge2 = document.getElementById('nav-inbox-badge');
+  if(badge1) { badge1.textContent=unread; badge1.style.display=unread?'flex':'none'; }
+  if(badge2) { badge2.textContent=unread; badge2.style.display=unread?'inline':'none'; }
+}
+
+function renderInboxList() {
+  const el = document.getElementById('inbox-list');
+  if(!el) return;
+  if(!INBOX_MESSAGES.length) {
+    el.innerHTML=`<div style="text-align:center;padding:40px;color:var(--text3)">
+      <div style="font-size:32px;margin-bottom:10px">📭</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:6px">No messages yet</div>
+      <div style="font-size:12px">Customer replies will appear here when they text back</div>
+    </div>`;
+    return;
+  }
+  // Group by phone number — show latest message per contact
+  const threads = {};
+  INBOX_MESSAGES.forEach(m => {
+    const phone = m.from_number;
+    if(!threads[phone] || new Date(m.created_at) > new Date(threads[phone].created_at)) {
+      threads[phone] = m;
+    }
+  });
+  const contacts = Object.values(threads).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  el.innerHTML = contacts.map(m=>{
+    const time = new Date(m.created_at).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const unread = INBOX_MESSAGES.filter(x=>x.from_number===m.from_number&&!x.read).length;
+    return `<div onclick="openInboxMessage('${m.from_number}')" style="background:${unread?'var(--bg1)':'var(--bg2)'};border:1px solid ${unread?'rgba(79,142,247,.3)':'var(--border)'};border-radius:var(--r-sm);padding:14px;margin-bottom:8px;cursor:pointer">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${unread?`<div style="width:8px;height:8px;border-radius:50%;background:#4f8ef7;flex-shrink:0"></div>`:''}
+          <div style="font-size:14px;font-weight:${unread?'700':'500'}">${m.client_name||m.from_number}</div>
+        </div>
+        <div style="font-size:11px;color:var(--text3)">${time}</div>
+      </div>
+      ${m.client_name?`<div style="font-size:12px;color:var(--accent);margin-bottom:4px">${m.from_number}</div>`:''}
+      <div style="font-size:13px;color:var(--text2);line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.body}</div>
+      ${unread?`<div style="font-size:11px;color:#4f8ef7;margin-top:4px">${unread} unread</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function openInboxMessage(phone) {
+  const messages = INBOX_MESSAGES.filter(x=>x.from_number===phone);
+  const m = messages[0];
+  if(!m) return;
+  // Mark all as read
+  messages.forEach(msg => {
+    if(!msg.read) {
+      msg.read = true;
+      apiCall(`/sms/inbox/${msg.id}/read`, { method:'POST', body:'{}' }).catch(()=>{});
+    }
+  });
+  updateInboxBadge();
+
+  const existing = document.getElementById('inbox-reply-modal');
+  if(existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'inbox-reply-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;display:flex;align-items:flex-end;padding:0';
+  modal.innerHTML = `
+    <div style="width:100%;background:var(--bg1);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 16px 32px;animation:slideUp .3s ease-out;max-height:85vh;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-shrink:0">
+        <div>
+          <div style="font-size:15px;font-weight:600">${m.client_name||phone}</div>
+          ${m.client_name?`<div style="font-size:12px;color:var(--accent);margin-top:2px">${phone}</div>`:''}
+        </div>
+        <button onclick="document.getElementById('inbox-reply-modal').remove()" style="background:var(--bg3);border:1px solid var(--border);width:28px;height:28px;border-radius:50%;cursor:pointer;color:var(--text2);font-size:14px;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+      <div id="mobile-thread-messages" style="flex:1;overflow-y:auto;margin-bottom:14px;display:flex;flex-direction:column;gap:8px">
+        <div style="text-align:center;color:var(--text3);font-size:12px">Loading…</div>
+      </div>
+      <div style="flex-shrink:0">
+        <div style="display:flex;gap:8px">
+          <textarea id="inbox-reply-text" placeholder="Type your reply..." style="flex:1;padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font);resize:none;height:44px;line-height:1.5;box-sizing:border-box"></textarea>
+          <button onclick="sendInboxReply('${phone}')" class="btn btn-primary" style="padding:10px 16px">Send</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('app').appendChild(modal);
+
+  // Load thread
+  loadThread(phone).then(msgs => {
+    const container = document.getElementById('mobile-thread-messages');
+    if(!container) return;
+    if(!msgs.length) { container.innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px">No messages</div>'; return; }
+    container.innerHTML = msgs.map(msg => {
+      const isOut = msg.direction==='out';
+      const time = new Date(msg.created_at).toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});
+      return `<div style="display:flex;justify-content:${isOut?'flex-end':'flex-start'}">
+        <div style="max-width:80%;background:${isOut?'rgba(79,142,247,.25)':'var(--bg3)'};border:1px solid ${isOut?'rgba(79,142,247,.3)':'var(--border)'};border-radius:${isOut?'12px 12px 2px 12px':'12px 12px 12px 2px'};padding:8px 12px">
+          <div style="font-size:13px;color:var(--text1);line-height:1.5">${msg.body}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:3px;text-align:${isOut?'right':'left'}">${time}</div>
+        </div>
+      </div>`;
+    }).join('');
+    container.scrollTop = container.scrollHeight;
+  });
+}
+
+async function sendInboxReply(toNumber) {
+  const text = document.getElementById('inbox-reply-text')?.value?.trim();
+  if(!text) { toast('Type a message first','warning'); return; }
+  const clientName = INBOX_MESSAGES.find(x=>x.from_number===toNumber)?.client_name;
+  try {
+    await apiCall('/sms/reply', {
+      method: 'POST',
+      body: JSON.stringify({ to: toNumber, message: text, client_name: clientName })
+    });
+    document.getElementById('inbox-reply-text').value = '';
+    toast('Reply sent ✓');
+    // Reload thread to show sent message
+    delete INBOX_THREADS[toNumber];
+    const msgs = await loadThread(toNumber);
+    const container = document.getElementById('mobile-thread-messages');
+    if(container) {
+      container.innerHTML = msgs.map(msg => {
+        const isOut = msg.direction==='out';
+        const time = new Date(msg.created_at).toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});
+        return `<div style="display:flex;justify-content:${isOut?'flex-end':'flex-start'}">
+          <div style="max-width:80%;background:${isOut?'rgba(79,142,247,.25)':'var(--bg3)'};border:1px solid ${isOut?'rgba(79,142,247,.3)':'var(--border)'};border-radius:${isOut?'12px 12px 2px 12px':'12px 12px 12px 2px'};padding:8px 12px">
+            <div style="font-size:13px;color:var(--text1);line-height:1.5">${msg.body}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:3px;text-align:${isOut?'right':'left'}">${time}</div>
+          </div>
+        </div>`;
+      }).join('');
+      container.scrollTop = container.scrollHeight;
+    }
+  } catch(e) {
+    toast('Failed to send: ' + (e.error||e.message||'check backend'), 'warning');
+  }
+}
+
+function renderDesktopInbox(el) {
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <div style="font-size:18px;font-weight:600">Inbox</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">Customer SMS replies</div>
+      </div>
+      <button onclick="loadInbox()" style="padding:8px 16px;border-radius:20px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;font-family:var(--font)">↻ Refresh</button>
+    </div>
+    <div style="display:grid;grid-template-columns:320px 1fr;gap:16px;height:calc(100vh - 160px)">
+      <div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow-y:auto" id="desktop-inbox-list"></div>
+      <div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;display:flex;flex-direction:column" id="desktop-inbox-thread">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.3)">
+          <div style="text-align:center"><div style="font-size:32px;margin-bottom:10px">💬</div><div>Select a message to view</div></div>
+        </div>
+      </div>
+    </div>`;
+  renderDesktopInboxList();
+}
+
+function renderDesktopInboxList() {
+  const el = document.getElementById('desktop-inbox-list');
+  if(!el) return;
+  if(!INBOX_MESSAGES.length) {
+    el.innerHTML=`<div style="text-align:center;padding:40px;color:rgba(255,255,255,.3)"><div style="font-size:32px;margin-bottom:10px">📭</div><div>No messages yet</div></div>`;
+    return;
+  }
+  // Group by phone — latest message per contact
+  const threads = {};
+  INBOX_MESSAGES.forEach(m => {
+    const phone = m.from_number;
+    if(!threads[phone] || new Date(m.created_at) > new Date(threads[phone].created_at)) {
+      threads[phone] = m;
+    }
+  });
+  const contacts = Object.values(threads).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  el.innerHTML = contacts.map(m=>{
+    const time = new Date(m.created_at).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const unread = INBOX_MESSAGES.filter(x=>x.from_number===m.from_number&&!x.read).length;
+    return `<div onclick="openDesktopThread(${m.id})" style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;background:${unread?'rgba(79,142,247,.05)':'transparent'}" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='${unread?'rgba(79,142,247,.05)':'transparent'}'">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div style="display:flex;align-items:center;gap:6px">
+          ${unread?'<div style="width:7px;height:7px;border-radius:50%;background:#4f8ef7;flex-shrink:0"></div>':''}
+          <div style="font-size:13px;font-weight:${unread?'700':'500'};color:#fff">${m.client_name||m.from_number}</div>
+        </div>
+        <div style="font-size:10px;color:rgba(255,255,255,.3)">${time}</div>
+      </div>
+      ${m.client_name?`<div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:2px">${m.from_number}</div>`:''}
+      <div style="font-size:12px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.body}</div>
+      ${unread?`<div style="font-size:10px;color:#4f8ef7;margin-top:3px">${unread} unread</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+async function openDesktopThread(id) {
+  const m = INBOX_MESSAGES.find(x=>x.id===id);
+  if(!m) return;
+  if(!m.read) {
+    m.read = true;
+    apiCall(`/sms/inbox/${id}/read`, { method:'POST', body:'{}' }).catch(()=>{});
+    updateInboxBadge();
+    renderDesktopInboxList();
+  }
+
+  const thread = document.getElementById('desktop-inbox-thread');
+  if(!thread) return;
+
+  // Show loading state
+  thread.innerHTML = `
+    <div style="padding:20px;border-bottom:1px solid rgba(255,255,255,.07)">
+      <div style="font-size:15px;font-weight:600">${m.from_number}</div>
+      ${m.client_name?`<div style="font-size:12px;color:#7bb3ff;margin-top:3px">👤 ${m.client_name}${m.job_title?' · '+m.job_title:''}</div>`:''}
+    </div>
+    <div style="flex:1;padding:20px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.3)">Loading conversation…</div>
+    <div style="padding:16px;border-top:1px solid rgba(255,255,255,.07)">
+      <div style="display:flex;gap:8px">
+        <textarea id="desktop-reply-text" placeholder="Reply to ${m.from_number}..." style="flex:1;padding:10px 12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);resize:none;height:44px;line-height:1.5"></textarea>
+        <button onclick="sendDesktopReply('${m.from_number}',${m.id})" style="padding:10px 20px;border-radius:8px;background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.3);color:#7bb3ff;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap">Send →</button>
+      </div>
+    </div>`;
+
+  // Load full thread
+  const messages = await loadThread(m.from_number);
+  renderDesktopThreadMessages(thread, m, messages);
+}
+
+function renderDesktopThreadMessages(thread, m, messages) {
+  const messagesHtml = messages.length ? messages.map(msg => {
+    const isOut = msg.direction === 'out';
+    const time = new Date(msg.created_at).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    return `<div style="display:flex;justify-content:${isOut?'flex-end':'flex-start'};margin-bottom:12px">
+      <div style="max-width:75%">
+        <div style="background:${isOut?'rgba(79,142,247,.25)':'rgba(255,255,255,.08)'};border:1px solid ${isOut?'rgba(79,142,247,.3)':'rgba(255,255,255,.1)'};border-radius:${isOut?'12px 12px 2px 12px':'12px 12px 12px 2px'};padding:10px 14px">
+          <div style="font-size:13px;color:#fff;line-height:1.6">${msg.body}</div>
+        </div>
+        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;text-align:${isOut?'right':'left'}">${isOut?'You · ':''} ${time}</div>
+      </div>
+    </div>`;
+  }).join('') : `<div style="text-align:center;color:rgba(255,255,255,.3);font-size:13px">No messages yet</div>`;
+
+  const msgContainer = thread.querySelector('#thread-messages');
+  if(msgContainer) {
+    msgContainer.innerHTML = messagesHtml;
+    msgContainer.scrollTop = msgContainer.scrollHeight;
+    return;
+  }
+
+  thread.innerHTML = `
+    <div style="padding:20px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
+      <div style="font-size:15px;font-weight:600">${m.from_number}</div>
+      ${m.client_name?`<div style="font-size:12px;color:#7bb3ff;margin-top:3px">👤 ${m.client_name}${m.job_title?' · '+m.job_title:''}</div>`:''}
+    </div>
+    <div id="thread-messages" style="flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column">
+      ${messagesHtml}
+    </div>
+    <div style="padding:16px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0">
+      <div style="display:flex;gap:8px">
+        <textarea id="desktop-reply-text" placeholder="Reply to ${m.from_number}..." style="flex:1;padding:10px 12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);resize:none;height:44px;line-height:1.5" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDesktopReply('${m.from_number}',${m.id})}"></textarea>
+        <button onclick="sendDesktopReply('${m.from_number}',${m.id})" style="padding:10px 20px;border-radius:8px;background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.3);color:#7bb3ff;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap">Send →</button>
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:6px">Press Enter to send · Shift+Enter for new line</div>
+    </div>`;
+
+  const mc = thread.querySelector('#thread-messages');
+  if(mc) mc.scrollTop = mc.scrollHeight;
+}
+
+async function sendDesktopReply(toNumber, msgId) {
+  const text = document.getElementById('desktop-reply-text')?.value?.trim();
+  if(!text) { toast('Type a message first','warning'); return; }
+  try {
+    await apiCall('/sms/reply', {
+      method: 'POST',
+      body: JSON.stringify({ to: toNumber, message: text, client_name: INBOX_MESSAGES.find(x=>x.id===msgId)?.client_name })
+    });
+    document.getElementById('desktop-reply-text').value='';
+    toast('Reply sent ✓');
+    // Reload thread to show the sent message
+    delete INBOX_THREADS[toNumber];
+    const messages = await loadThread(toNumber);
+    const thread = document.getElementById('desktop-inbox-thread');
+    const m = INBOX_MESSAGES.find(x=>x.id===msgId)||{from_number:toNumber,client_name:'',job_title:''};
+    if(thread) renderDesktopThreadMessages(thread, m, messages);
+  } catch(e) {
+    toast('Failed: ' + (e.error||e.message||'check backend'), 'warning');
+  }
+}
+
+// ── PHOTO PREVIEW IN NEW JOB ──────────────────────────────────────────────────
+function previewNewJobPhoto(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const preview = document.getElementById('nj-photo-preview');
+    if(preview) preview.innerHTML = `<img src="${e.target.result}" style="max-height:120px;border-radius:8px;object-fit:cover">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── LOAD JOBS FROM BACKEND ────────────────────────────────────────────────────
+async function loadJobs() {
+  try {
+    const data = await apiCall('/jobs');
+    if(data && data.jobs && data.jobs.length) {
+      JOBS.length = 0;
+      data.jobs.forEach((j,idx) => {
+        JOBS.push(mapJobFromApi(j));
+      });
+      updateHomeCounts();
+      renderJobList();
+      if(IS_DESKTOP()) renderDesktopView(desktopTab);
+    }
+  } catch(e) {
+    console.warn('[jobs] Failed to load from backend, using demo data:', e.message);
+  }
+}
+
+function mapJobFromApi(j) {
+  // Map backend snake_case fields to frontend camelCase
+  const tech = TECHS_LIST.find(t => t.id === j.tech_id || t.name === j.tech_name);
+  const timeStr = j.scheduled_at
+    ? new Date(j.scheduled_at).toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'})
+    : (j.time || 'TBD');
+  const dueStr = j.due_date
+    ? new Date(j.due_date).toISOString().split('T')[0]
+    : null;
+  return {
+    id:          j.id,
+    _apiId:      j.id, // preserve UUID if backend uses UUID
+    title:       j.title || '',
+    client:      j.client_name || j.client || '',
+    phone:       j.client_phone || j.phone || '',
+    address:     j.client_address || j.address || '',
+    city:        j.client_city || j.city || 'Carberry',
+    time:        timeStr,
+    tech:        j.tech_name || (tech ? tech.name : ''),
+    techPhone:   j.tech_phone || (tech ? tech.phone : ''),
+    brief:       j.description || j.brief || '',
+    status:      j.status || 'new',
+    priority:    j.priority || 'normal',
+    refPhotos:   0,
+    techUpdate:  j.tech_notes || j.techUpdate || '',
+    techPhotos:  0,
+    partsUsed:   Array.isArray(j.parts_used) ? j.parts_used : (j.partsUsed || []),
+    partsReq:    j.partsReq || [],
+    partsSent:   j.partsSent || false,
+    dueDate:     dueStr,
+    overrides:   {
+      name:    j.override_name  || null,
+      phone:   j.override_phone || null,
+      address: j.override_address || null,
+      city:    j.override_city  || null,
+    },
+    jx: j.jx || 0.5,
+    jy: j.jy || 0.5,
+  };
+}
+
+// Save a new job to backend
+async function saveJobToApi(job) {
+  try {
+    const tech = TECHS_LIST.find(t => t.name === job.tech);
+    const payload = {
+      title:          job.title,
+      description:    job.brief || '',
+      priority:       job.priority === 'urgent' ? 'urgent' : (job.priority === 'overdue' ? 'asap' : 'routine'),
+      client_name:    job.client,
+      client_phone:   job.phone || null,
+      client_address: job.address || null,
+      client_city:    job.city || 'Carberry',
+      tech_id:        (tech && tech.id) ? tech.id : null,
+      scheduled_at:   (job.time && job.time !== 'TBD') ? job.time : null,
+      due_date:       job.dueDate || null,
+    };
+    console.log('[jobs] Saving to backend:', payload);
+    const data = await apiCall('/jobs', { method:'POST', body: JSON.stringify(payload) });
+    if(data && data.job) {
+      const idx = JOBS.findIndex(j => j.id === job.id);
+      if(idx >= 0) JOBS[idx] = mapJobFromApi(data.job);
+      console.log('[jobs] Saved successfully, API ID:', data.job.id);
+    }
+    return data;
+  } catch(e) {
+    const errMsg = e.error || e.message || JSON.stringify(e);
+    console.warn('[jobs] Failed to save to backend:', errMsg);
+    toast('Job saved locally — backend sync failed: ' + errMsg, 'warning');
+  }
+}
+
+// Update job status on backend
+async function updateJobStatusApi(jobId, status, note) {
+  try {
+    const j = jobById(jobId);
+    if(!j || !j._apiId) return;
+    await apiCall(`/jobs/${j._apiId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status, note: note||'' })
+    });
+  } catch(e) {
+    console.warn('[jobs] Status update failed:', e.message);
+  }
+}
+
+// Submit review to backend
+async function submitReviewApi(jobId, techNotes, partsUsed) {
+  try {
+    const j = jobById(jobId);
+    if(!j || !j._apiId) return;
+    await apiCall(`/jobs/${j._apiId}/submit-review`, {
+      method: 'POST',
+      body: JSON.stringify({ techNotes, partsUsed })
+    });
+  } catch(e) {
+    console.warn('[jobs] Submit review failed:', e.message);
+  }
+}
+
+// Approve job on backend
+async function approveJobApi(jobId) {
+  try {
+    const j = jobById(jobId);
+    if(!j || !j._apiId) return;
+    await apiCall(`/jobs/${j._apiId}/approve`, { method:'POST', body:'{}' });
+  } catch(e) {
+    console.warn('[jobs] Approve failed:', e.message);
+  }
+}
+
+// ── LOAD USERS FROM BACKEND ───────────────────────────────────────────────────
+async function loadUsers() {
+  try {
+    const data = await apiCall('/users');
+    if (data && data.users && data.users.length) {
+      TECHS_LIST.length = 0; // clear array in place
+      data.users.forEach(u => {
+        const rc  = ROLE_COLORS[u.role] || ROLE_COLORS.tech;
+        const ini = u.name.split(' ').map(w=>w[0]?.toUpperCase()||'').join('').slice(0,2);
+        TECHS_LIST.push({
+          id:           u.id,
+          name:         u.name,
+          phone:        u.phone || '',
+          email:        u.email || null,
+          av:           ini,
+          bg:           rc.bg,
+          tc:           rc.tc,
+          role:         u.role,
+          pendingSetup: !u.setup_complete,
+        });
+      });
+      renderTeamSection();
+      if(IS_DESKTOP() && desktopTab==='profile') renderDesktopView('profile');
+    }
+  } catch(e) {
+    console.warn('[users] Failed to load from backend, using demo data:', e.message);
+  }
+}
+
+// ── CLIENT SEARCH FOR NEW JOB ─────────────────────────────────────────────────
+// Searches jobs for existing clients to autofill
+function searchClients(query) {
+  const box2 = document.getElementById('nj-client-suggestions');
+  const input2 = document.getElementById('nj-client');
+  if(box2 && input2) {
+    const rect = input2.getBoundingClientRect();
+    box2.style.top = (rect.bottom + 2) + 'px';
+    box2.style.left = rect.left + 'px';
+    box2.style.width = rect.width + 'px';
+  }
+  if(!query || query.length < 1) { if(box2) box2.style.display='none'; return; }
+  const q = query.toLowerCase();
+  const matches = [];
+  const seen = new Set();
+  // Search CLIENTS list first
+  CLIENTS.forEach(c => {
+    if(!seen.has(c.name) && (c.name||'').toLowerCase().includes(q)) {
+      seen.add(c.name);
+      matches.push({ name: c.name, phone: c.phone||'', address: c.address||'', city: c.city||'Carberry' });
+    }
+  });
+  // Also search past jobs for clients not in list
+  JOBS.forEach(j => {
+    if(!seen.has(j.client) && j.client.toLowerCase().includes(q)) {
+      seen.add(j.client);
+      matches.push({ name: j.client, phone: j.phone||'', address: j.address||'', city: j.city||'Carberry' });
+    }
+  });
+  const box = document.getElementById('nj-client-suggestions');
+  if(!matches.length) { box.style.display='none'; return; }
+  box.style.display = 'block';
+  box.innerHTML = matches.slice(0,6).map(m =>
+    `<div onclick="fillClient('${m.name.replace(/'/g,"\\'")}','${(m.phone||'').replace(/'/g,"\\'")}','${(m.address||'').replace(/'/g,"\\'")}','${(m.city||'').replace(/'/g,"\\'")}') "
+      style="padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);font-size:13px;color:var(--text1)"
+      onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''"
+    ><span style="font-weight:600">${m.name}</span> <span style="color:var(--text3);font-size:11px">${m.phone} · ${m.address}</span></div>`
+  ).join('');
+}
+
+function fillClient(name, phone, address, city) {
+  document.getElementById('nj-client').value  = name;
+  document.getElementById('nj-phone').value   = phone;
+  document.getElementById('nj-address').value = address;
+  document.getElementById('nj-city').value    = city || 'Carberry';
+  document.getElementById('nj-client-suggestions').style.display = 'none';
+}
+
+// ── FORGOT PASSWORD ───────────────────────────────────────────────────────────
+function openForgotPassword() {
+  const emailEl = document.getElementById('login-email');
+  if(emailEl) document.getElementById('forgot-email').value = emailEl.value||'';
+  document.getElementById('forgot-msg').style.display = 'none';
+  document.getElementById('forgot-modal').style.display = 'flex';
+}
+function closeForgotPassword() {
+  document.getElementById('forgot-modal').style.display = 'none';
+}
+async function submitForgotPassword() {
+  const email = document.getElementById('forgot-email')?.value?.trim();
+  const msg   = document.getElementById('forgot-msg');
+  if(!email) { msg.textContent='Please enter your email.'; msg.style.cssText='display:block;padding:10px;border-radius:8px;background:rgba(240,96,96,.1);color:var(--red);font-size:13px;margin-bottom:14px'; return; }
+  try {
+    await apiCall('/auth/forgot-password', { method:'POST', body: JSON.stringify({ email }) });
+    msg.textContent = '✓ Reset link sent! Check your email inbox.';
+    msg.style.cssText = 'display:block;padding:10px;border-radius:8px;background:rgba(62,207,142,.1);color:var(--green);font-size:13px;margin-bottom:14px';
+  } catch(e) {
+    msg.textContent = 'Could not send reset email — check the address and try again.';
+    msg.style.cssText = 'display:block;padding:10px;border-radius:8px;background:rgba(240,96,96,.1);color:var(--red);font-size:13px;margin-bottom:14px';
+  }
+}
+
+// ── PARTS AUTOCOMPLETE ────────────────────────────────────────────────────────
+let SAVED_PARTS = [];
+try { SAVED_PARTS = JSON.parse(localStorage.getItem('se_saved_parts')||'[]'); } catch(e){}
+
+function savePart(part) {
+  if(!part||SAVED_PARTS.includes(part)) return;
+  SAVED_PARTS.unshift(part);
+  if(SAVED_PARTS.length>200) SAVED_PARTS=SAVED_PARTS.slice(0,200);
+  try { localStorage.setItem('se_saved_parts', JSON.stringify(SAVED_PARTS)); } catch(e){}
+}
+
+function showPartsSuggestions(inputId, dropId, val) {
+  const box = document.getElementById(dropId);
+  if(!box) return;
+  if(!val||val.length<1) { box.style.display='none'; return; }
+  const q = val.toLowerCase();
+  const matches = SAVED_PARTS.filter(p=>p.toLowerCase().includes(q)).slice(0,6);
+  if(!matches.length) { box.style.display='none'; return; }
+  box.style.display='block';
+  box.innerHTML = matches.map(p=>`<div onclick="selectPartSuggestion('${inputId}','${dropId}','${p.replace(/'/g,"\\'")}','${p.replace(/'/g,"\\'")}') " style="padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border)" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">${p}</div>`).join('');
+}
+
+function selectPartSuggestion(inputId, dropId, part) {
+  const el = document.getElementById(inputId);
+  if(el) el.value = part;
+  const box = document.getElementById(dropId);
+  if(box) box.style.display='none';
+}
+
+// ── COMPLETED JOBS TAB ────────────────────────────────────────────────────────
+function renderCompletedJobs(filter) {
+  const el = document.getElementById('completed-jobs-list');
+  if(!el) return;
+  const q = (filter||'').toLowerCase().trim();
+  const done = JOBS.filter(j=>j.status==='done' && (!q || j.client.toLowerCase().includes(q) || j.title.toLowerCase().includes(q)));
+  if(!done.length) {
+    el.innerHTML=`<div style="text-align:center;padding:40px;color:var(--text3)"><div style="font-size:32px;margin-bottom:10px">✅</div><div style="font-size:14px">${q ? 'No results for "'+filter+'"' : 'No completed jobs yet'}</div></div>`;
+    return;
+  }
+  el.innerHTML = done.map(j=>`
+    <div onclick="openJob(${j.id})" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;margin-bottom:8px;cursor:pointer">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:14px;font-weight:600">${j.title}</div>
+        <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(62,207,142,.15);color:var(--green);font-weight:600">✓ Complete</span>
+      </div>
+      <div style="font-size:12px;color:var(--text3)">👤 ${j.client} · 🔧 ${j.tech||'Unassigned'} · 🕐 ${j.time}</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:3px">📍 ${j.address}${j.city?', '+j.city:''}</div>
+      ${j.techUpdate?`<div style="font-size:12px;color:var(--text2);margin-top:6px;padding-top:6px;border-top:1px solid var(--border);font-style:italic">"${j.techUpdate.slice(0,100)}${j.techUpdate.length>100?'…':''}"</div>`:''}
+    </div>`).join('');
+}
 
 // ── TWILIO SMS & VOICE ────────────────────────────────────────────────────────
 let twilioConnected = false;
@@ -2578,6 +3714,180 @@ async function emailUserInvite(recipientEmail, recipientName, role) {
   } catch(e) { console.warn('[email] invite failed:', e.message); }
 }
 
+// ── NEW JOB MODAL ─────────────────────────────────────────────────────────────
+let newJobPriority = 'normal';
+
+function openNewJobModal() {
+  const isTech = currentRole==='tech';
+  const techField = document.getElementById('nj-tech-field');
+  const sel = document.getElementById('nj-tech');
+  if(techField) techField.style.display = isTech ? 'none' : 'block';
+  if(sel && !isTech) {
+    sel.innerHTML = '<option value="">— Unassigned —</option>' +
+      TECHS_LIST.filter(t=>t.role==='tech').map(t=>`<option value="${t.name}">${t.name}</option>`).join('');
+  }
+  const saveBtn = document.querySelector('#new-job-modal .btn-primary');
+  if(saveBtn) saveBtn.textContent = isTech ? 'Submit for admin review' : 'Create job';
+  ['nj-title','nj-client','nj-phone','nj-address','nj-city','nj-due','nj-brief'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('nj-city').value = 'Carberry';
+  document.getElementById('nj-time').value = '';
+  selectNewJobPriority('normal');
+  const sug = document.getElementById('nj-client-suggestions');
+  if(sug) sug.style.display='none';
+  document.getElementById('new-job-modal').style.display = 'flex';
+}
+
+function closeNewJobModal() {
+  document.getElementById('new-job-modal').style.display = 'none';
+}
+
+function selectNewJobPriority(p) {
+  newJobPriority = p;
+  const colors = { normal:{bg:'rgba(62,207,142,.15)',border:'#5ce0a8',tc:'#5ce0a8'}, urgent:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#f5c56a'}, overdue:{bg:'rgba(240,96,96,.15)',border:'#f06060',tc:'#f06060'} };
+  ['normal','urgent','overdue'].forEach(x=>{
+    const btn = document.getElementById('njp-'+x);
+    if(!btn) return;
+    const isActive = x === p;
+    const c = colors[x];
+    btn.style.background   = isActive ? c.bg  : 'var(--bg3)';
+    btn.style.borderColor  = isActive ? c.border : 'var(--border2)';
+    btn.style.color        = isActive ? c.tc  : 'var(--text2)';
+  });
+}
+
+function confirmNewJob() {
+  const title   = document.getElementById('nj-title')?.value?.trim();
+  const client  = document.getElementById('nj-client')?.value?.trim();
+  const phone   = document.getElementById('nj-phone')?.value?.trim();
+  const address = document.getElementById('nj-address')?.value?.trim();
+  const city    = document.getElementById('nj-city')?.value?.trim() || 'Carberry';
+  const due     = document.getElementById('nj-due')?.value || null;
+  const brief   = document.getElementById('nj-brief')?.value?.trim() || '';
+
+  // Format time from HH:MM to 12-hour
+  const rawTime = document.getElementById('nj-time')?.value;
+  let time = 'TBD';
+  if(rawTime) {
+    const [h,m] = rawTime.split(':');
+    const hr = parseInt(h);
+    time = `${hr>12?hr-12:hr||12}:${m} ${hr>=12?'PM':'AM'}`;
+  }
+
+  const isTech  = currentRole==='tech';
+  const tech    = isTech ? (currentUser?.name||'') : (document.getElementById('nj-tech')?.value||null);
+
+  // Validate with red borders
+  let hasError = false;
+  const fields = [
+    ['nj-title', title],
+    ['nj-client', client],
+    ['nj-address', address],
+  ];
+  fields.forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if(el) el.style.border = val ? '1px solid var(--border2)' : '2px solid #f06060';
+    if(!val) hasError = true;
+  });
+  if(hasError) { toast('Please fill in the highlighted fields', 'warning'); return; }
+
+  const newId   = Math.max(...JOBS.map(j=>j.id), 0) + 1;
+  const techObj = tech ? TECHS_LIST.find(t=>t.name===tech) : null;
+
+  // Tech submits for admin review; admin creates directly
+  const status = isTech ? 'review' : (tech ? 'new' : 'new');
+
+  const newJob = {
+    id: newId, title, client,
+    phone: phone||'', address, city, time,
+    tech: tech||'', techPhone: techObj?.phone||'',
+    brief, status,
+    refPhotos:0, techUpdate: isTech ? brief : '',
+    techPhotos:0, partsUsed:[], partsReq:[], partsSent:false,
+    dueDate: due, overrides:{}, jx:.5, jy:.5,
+    priority: newJobPriority,
+    submittedByTech: isTech,
+  };
+
+  JOBS.unshift(newJob);
+  closeNewJobModal();
+  updateHomeCounts();
+  renderJobList();
+  if(IS_DESKTOP()) renderDesktopView(desktopTab);
+
+  if(isTech) {
+    toast(title + ' submitted for admin review ✓');
+    // Notify admins
+    const admins = TECHS_LIST.filter(u=>u.role==='admin'||u.role==='office');
+    admins.forEach(u=>{
+      if(u.email) emailJobStatus(newJob, u.name, u.email, '', 'review');
+    });
+  } else {
+    toast(title + ' created ✓');
+    if(tech && techObj) {
+      apiCall('/sms/job-assigned', { method:'POST', body: JSON.stringify({ techPhone: techObj.phone, techName: techObj.name, job: newJob }) }).catch(e=>console.warn('[sms]',e.message));
+      if(techObj.email) emailJobAssigned(newJob, techObj.name, techObj.email);
+    }
+  }
+  // Save to backend
+  saveJobToApi(newJob);
+}
+// ── ACCOUNT SETUP (invite link) ───────────────────────────────────────────────
+let setupInviteToken = null;
+
+function checkInviteToken() {
+  const params = new URLSearchParams(window.location.search);
+  const token  = params.get('token');
+  if (!token) return false;
+  setupInviteToken = token;
+  // Look up the invite to get the user's name
+  apiCall('/auth/setup-info?token=' + token).then(function(data) {
+    const msg = document.getElementById('setup-welcome-msg');
+    if(msg && data.name) msg.textContent = 'Hi ' + data.name.split(' ')[0] + ', create your password to get started.';
+  }).catch(function() {
+    // Endpoint may not exist — just show generic message
+  });
+  document.getElementById('login-screen').style.display  = 'none';
+  document.getElementById('setup-screen').style.display  = 'flex';
+  return true;
+}
+
+async function submitSetup() {
+  const pw  = document.getElementById('setup-password')?.value;
+  const pw2 = document.getElementById('setup-password2')?.value;
+  const err = document.getElementById('setup-error');
+
+  if (!pw || pw.length < 8) {
+    err.textContent = 'Password must be at least 8 characters.'; err.style.display = 'block'; return;
+  }
+  if (pw !== pw2) {
+    err.textContent = 'Passwords do not match.'; err.style.display = 'block'; return;
+  }
+  err.style.display = 'none';
+
+  try {
+    const data = await apiCall('/auth/setup', {
+      method: 'POST',
+      body: JSON.stringify({ token: setupInviteToken, password: pw }),
+    });
+    // Auto-login after setup
+    localStorage.setItem('se_auth_token', data.token);
+    const rc  = ROLE_COLORS[data.user.role] || ROLE_COLORS.tech;
+    const ini = data.user.name.split(' ').map(w=>w[0]?.toUpperCase()||'').join('').slice(0,2);
+    const appUser = { ...data.user, av: ini, bg: rc.bg, tc: rc.tc };
+    currentRole = appUser.role;
+    currentUser = appUser;
+    document.getElementById('setup-screen').style.display = 'none';
+    // Clear token from URL without reload
+    window.history.replaceState({}, '', window.location.pathname);
+    applyLogin(appUser);
+  } catch(e) {
+    err.textContent = e.error || 'Setup failed — link may have expired. Ask your admin to resend.';
+    err.style.display = 'block';
+  }
+}
+
 function checkExistingSession() {
   const token = localStorage.getItem('se_auth_token');
   if (!token) return;
@@ -2607,11 +3917,11 @@ function initLayout() {
     var dc      = document.getElementById('desktop-content');
     var ms      = document.getElementById('main-screen');
     var nav     = document.getElementById('main-nav');
-    if (sidebar) sidebar.style.cssText = 'display:flex !important;flex-direction:column;width:220px;height:100vh;position:fixed;top:0;left:0;background:#111318;border-right:1px solid rgba(255,255,255,.07);z-index:100;';
-    if (topbar)  topbar.style.cssText  = 'display:flex !important;position:fixed;top:0;left:220px;right:0;height:56px;background:#111318;border-bottom:1px solid rgba(255,255,255,.07);z-index:99;align-items:center;justify-content:space-between;padding:0 24px;';
-    if (dc)      dc.style.cssText      = 'display:block !important;position:fixed;top:56px;left:220px;right:0;bottom:0;overflow-y:auto;padding:24px;background:#0a0c12;';
-    if (ms)      ms.style.cssText      = 'display:none !important;';
-    if (nav)     nav.style.cssText     = 'display:none !important;';
+    if (sidebar) sidebar.style.display = 'flex';
+    if (topbar)  topbar.style.display  = 'flex';
+    if (dc)      dc.style.display      = 'block';
+    if (ms)      ms.style.display      = 'none';
+    if (nav)     nav.style.display     = 'none';
     updateDesktopClock();
     if (!window._desktopClockInterval) {
       window._desktopClockInterval = setInterval(updateDesktopClock, 1000);
@@ -2623,11 +3933,11 @@ function initLayout() {
     var dc      = document.getElementById('desktop-content');
     var ms      = document.getElementById('main-screen');
     var nav     = document.getElementById('main-nav');
-    if (sidebar) sidebar.style.cssText = 'display:none !important;';
-    if (topbar)  topbar.style.cssText  = 'display:none !important;';
-    if (dc)      dc.style.cssText      = 'display:none !important;';
-    if (ms)      ms.style.cssText      = 'display:block !important;';
-    if (nav)     nav.style.cssText     = 'display:flex !important;';
+    if (sidebar) sidebar.style.display = 'none';
+    if (topbar)  topbar.style.display  = 'none';
+    if (dc)      dc.style.display      = 'none';
+    if (ms)      ms.style.display      = 'block';
+    if (nav)     nav.style.display     = 'flex';
   }
 }
 
@@ -2659,11 +3969,14 @@ function desktopNav(tab, skipGuard) {
 function renderDesktopView(tab) {
   var view = document.getElementById('desktop-view-' + tab);
   if (!tab || !view) return;
-  if (tab === 'home')    renderDesktopDashboard(view);
-  if (tab === 'open')    renderDesktopOpen(view);
-  if (tab === 'map')     renderDesktopMap(view);
-  if (tab === 'parts')   renderDesktopParts(view);
-  if (tab === 'profile') renderDesktopProfile(view);
+  if (tab === 'home')      renderDesktopDashboard(view);
+  if (tab === 'open')      renderDesktopOpen(view);
+  if (tab === 'map')       renderDesktopMap(view);
+  if (tab === 'parts')     renderDesktopParts(view);
+  if (tab === 'clients')   renderDesktopClients(view);
+  if (tab === 'completed') renderDesktopCompleted(view);
+  if (tab === 'inbox')     renderDesktopInbox(view);
+  if (tab === 'profile')   renderDesktopProfile(view);
 }
 
 function renderDesktopDashboard(el) {
@@ -2681,37 +3994,183 @@ function renderDesktopDashboard(el) {
 
   var tableRows = allJobs.map(function(j){
     var t = TECHS_LIST.find(function(t){ return t.name===j.tech; }) || {bg:'rgba(79,142,247,.2)',tc:'#7bb3ff',av:'?'};
+    var priColors = {normal:'color:rgba(255,255,255,.35)',urgent:'color:#f5c56a',overdue:'color:#f06060'};
     return '<tr style="border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer" onclick="desktopOpenJob('+j.id+')">'
-      + '<td style="padding:11px 14px;font-weight:600;color:rgba(255,255,255,.9)">'+j.title+'</td>'
-      + '<td style="padding:11px 14px;color:rgba(255,255,255,.5)">'+j.client+'</td>'
+      + '<td style="padding:11px 14px;font-weight:600;color:rgba(255,255,255,.9);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+j.title+'</td>'
+      + '<td style="padding:11px 14px;color:rgba(255,255,255,.5);white-space:nowrap">'+j.client+'</td>'
       + '<td style="padding:11px 14px"><div style="display:flex;align-items:center;gap:6px">'
       + (j.tech ? '<div class="av" style="width:22px;height:22px;font-size:8px;background:'+t.bg+';color:'+t.tc+'">'+t.av+'</div><span style="color:rgba(255,255,255,.7);font-size:12px">'+j.tech+'</span>' : '<span style="color:var(--red);font-size:11px">Unassigned</span>')
       + '</div></td>'
-      + '<td style="padding:11px 14px;color:rgba(255,255,255,.5)">'+j.time+'</td>'
+      + '<td style="padding:11px 14px;color:rgba(255,255,255,.5);white-space:nowrap">'+j.time+'</td>'
       + '<td style="padding:11px 14px">'+spill(j.status)+'</td>'
+      + '<td style="padding:11px 14px;font-size:11px;font-weight:600;'+(priColors[j.priority||'normal']||priColors.normal)+'">'+((j.priority||'normal').toUpperCase())+'</td>'
       + '</tr>';
   }).join('');
 
   el.innerHTML = statsHTML
-    + '<div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.6px;margin-bottom:12px">ALL JOBS TODAY</div>'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
+    + '<div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.6px">ALL JOBS TODAY</div>'
+    + (isAdmin ? '<button onclick="openNewJobModal()" style="padding:6px 14px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:5px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New job</button>' : '')
+    + '</div>'
     + '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden">'
     + '<table style="width:100%;border-collapse:collapse;font-size:13px">'
     + '<thead><tr style="border-bottom:1px solid rgba(255,255,255,.07)">'
-    + ['Job','Client','Tech','Time','Status'].map(function(h){ return '<th style="text-align:left;padding:11px 14px;font-size:11px;font-weight:600;color:rgba(255,255,255,.35)">'+h+'</th>'; }).join('')
+    + ['Job','Client','Tech','Time','Status','Priority'].map(function(h){ return '<th style="text-align:left;padding:11px 14px;font-size:11px;font-weight:600;color:rgba(255,255,255,.35)">'+h+'</th>'; }).join('')
     + '</tr></thead><tbody>' + tableRows + '</tbody></table></div>';
 }
 
 function renderDesktopOpen(el) {
   var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
   OPEN_CALLS.filter(function(c){ return c.status==='open'; }).forEach(function(c) {
-    html += '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px">'
-      + '<div style="font-size:14px;font-weight:600;margin-bottom:8px">'+c.title+'</div>'
+    var isAdmin = currentRole==='admin'||currentRole==='office';
+    html += '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;cursor:pointer" onclick="openCallDetail('+c.id+')">'
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">'
+      + '<div style="font-size:14px;font-weight:600">'+c.title+'</div>'
+      + '<span style="font-size:11px;font-weight:600;'+priColor(c.priority)+'">'+c.priority.toUpperCase()+'</span>'
+      + '</div>'
       + '<div style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:8px">👤 '+c.client+' · 📍 '+c.address+'</div>'
       + '<div style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:12px">'+c.desc+'</div>'
+      + (c.requests.length ? '<div style="font-size:11px;color:rgba(255,255,255,.3)">✋ '+c.requests.join(', ')+' requested</div>' : '')
       + '</div>';
   });
+  if(!OPEN_CALLS.filter(c=>c.status==='open').length) {
+    html += '<div style="color:rgba(255,255,255,.3);font-size:13px;padding:20px">No open calls</div>';
+  }
   el.innerHTML = html + '</div>';
 }
+
+function renderDesktopMap(el) {
+  el.innerHTML = '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:24px;text-align:center;color:rgba(255,255,255,.4)">'
+    + '<div style="font-size:32px;margin-bottom:12px">🗺</div>'
+    + '<div style="font-size:14px;font-weight:600;margin-bottom:6px">Live Map</div>'
+    + '<div style="font-size:12px">Map view is optimised for mobile. Open the app on your phone to see the live technician map.</div>'
+    + '</div>';
+}
+
+function renderDesktopParts(el) {
+  var pending = PARTS_REQS.filter(r=>r.status==='pending'||r.status==='followup');
+  var ordered = PARTS_REQS.filter(r=>r.status==='ordered');
+  var html = '<div style="display:flex;flex-direction:column;gap:14px">';
+
+  if(!pending.length && !ordered.length) {
+    html += '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:32px;text-align:center;color:rgba(255,255,255,.4);font-size:13px">✅ All parts ordered</div>';
+  }
+
+  pending.forEach(function(r) {
+    html += '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px">'
+      + (r.urgent ? '<div style="font-size:11px;font-weight:700;color:#f06060;margin-bottom:8px">⚠ Urgent</div>' : '')
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">'
+      + '<div><div style="font-size:14px;font-weight:600">'+r.job+'</div><div style="font-size:12px;color:rgba(255,255,255,.45);margin-top:2px">👤 '+r.client+' · '+r.tech+'</div></div>'
+      + '<span style="font-size:11px;padding:3px 8px;border-radius:20px;background:rgba(245,166,35,.15);color:#f5c56a">'+r.status+'</span>'
+      + '</div>'
+      + '<div style="margin-bottom:10px">'+r.parts.map(p=>'<span style="display:inline-block;padding:3px 8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:20px;font-size:11px;color:#f5c56a;margin:2px">'+p+'</span>').join('')+'</div>'
+      + (r.notes ? '<div style="font-size:12px;color:rgba(255,255,255,.4);font-style:italic;margin-bottom:10px">"'+r.notes+'"</div>' : '')
+      + (currentRole==='parts' ? '<button onclick="confirmOrder('+r.id+')" style="padding:7px 14px;border-radius:8px;background:rgba(62,207,142,.15);color:#5ce0a8;border:1px solid rgba(62,207,142,.3);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">✓ Confirm ordered</button>' : '')
+      + '</div>';
+  });
+
+  ordered.forEach(function(r) {
+    html += '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'
+      + '<div style="font-size:14px;font-weight:600">'+r.job+'</div>'
+      + '<span style="font-size:11px;padding:3px 8px;border-radius:20px;background:rgba(79,142,247,.15);color:#7bb3ff">Ordered</span>'
+      + '</div>'
+      + '<div style="margin-bottom:8px">'+r.parts.map(p=>'<span style="display:inline-block;padding:3px 8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:20px;font-size:11px;color:#f5c56a;margin:2px">'+p+'</span>').join('')+'</div>'
+      + '<div style="font-size:11px;color:rgba(255,255,255,.3)">Ordered by '+r.orderedBy+'</div>'
+      + (currentRole==='parts' ? '<button onclick="markReceived('+r.id+')" style="margin-top:10px;padding:5px 12px;border-radius:8px;background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.1);font-size:11px;cursor:pointer;font-family:var(--font)">Mark received</button>' : '')
+      + '</div>';
+  });
+
+  el.innerHTML = html + '</div>';
+}
+
+function desktopOpenJob(id) {
+  openJob(id);
+}
+
+function renderDesktopCompleted(el) {
+  const done = JOBS.filter(j=>j.status==='done');
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div>
+        <div style="font-size:18px;font-weight:600">Completed Jobs</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">${done.length} completed</div>
+      </div>
+      <input type="text" id="desktop-completed-search" placeholder="Search by client or job…" oninput="filterDesktopCompleted(this.value)" style="padding:8px 14px;background:#171921;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);width:240px">
+    </div>
+    <div id="desktop-completed-list" style="display:flex;flex-direction:column;gap:10px;margin-top:20px"></div>`;
+  renderDesktopCompletedCards(done);
+}
+
+function renderDesktopCompletedCards(list) {
+  const el = document.getElementById('desktop-completed-list');
+  if(!el) return;
+  if(!list.length) {
+    el.innerHTML='<div style="text-align:center;padding:60px;color:rgba(255,255,255,.3)"><div style="font-size:40px;margin-bottom:12px">✅</div><div>No completed jobs found</div></div>';
+    return;
+  }
+  el.innerHTML = list.map(j=>`
+    <div onclick="desktopOpenJob(${j.id})" style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;cursor:pointer;display:flex;align-items:flex-start;gap:16px" onmouseover="this.style.borderColor='rgba(62,207,142,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'">
+      <div style="width:40px;height:40px;border-radius:50%;background:rgba(62,207,142,.15);color:#5ce0a8;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px">✓</div>
+      <div style="flex:1">
+        <div style="font-size:15px;font-weight:600;margin-bottom:4px">${j.title}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4)">👤 ${j.client} · 🔧 ${j.tech||'Unassigned'} · 📍 ${j.address}${j.city?', '+j.city:''}</div>
+        ${j.techUpdate?`<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;font-style:italic">"${j.techUpdate.slice(0,120)}${j.techUpdate.length>120?'…':''}"</div>`:''}
+        ${j.partsUsed?.length?`<div style="margin-top:8px">${j.partsUsed.map(p=>`<span style="display:inline-block;padding:2px 8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:20px;font-size:11px;color:#f5c56a;margin:2px">${p}</span>`).join('')}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function filterDesktopCompleted(q) {
+  const filtered = q
+    ? JOBS.filter(j=>j.status==='done' && (j.client.toLowerCase().includes(q.toLowerCase()) || j.title.toLowerCase().includes(q.toLowerCase())))
+    : JOBS.filter(j=>j.status==='done');
+  renderDesktopCompletedCards(filtered);
+}
+
+function renderDesktopProfile(el) {
+  var rc = ROLE_COLORS[currentRole] || ROLE_COLORS.tech;
+  var ini = currentUser ? (currentUser.av || currentUser.name.split(' ').map(w=>w[0]).join('').slice(0,2)) : 'AD';
+  var memberRows = TECHS_LIST.map(function(t, i) {
+    var trc = ROLE_COLORS[t.role||'tech'];
+    var canEdit = currentRole==='admin';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);'+(canEdit?'cursor:pointer':'')+'" '+(canEdit?'onclick="openEditUser('+i+')"':'')+' >'
+      + '<div class="av" style="width:34px;height:34px;background:'+trc.bg+';color:'+trc.tc+';font-size:12px">'+t.av+'</div>'
+      + '<div style="flex:1"><div style="font-size:13px;font-weight:600">'+t.name+'</div>'
+      + '<div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px"><span style="background:'+trc.bg+';color:'+trc.tc+';padding:1px 7px;border-radius:20px;font-size:10px">'+trc.label+'</span> '+t.phone+'</div></div>'
+      + (t.pendingSetup ? '<span style="font-size:10px;color:#f5c56a">⏳ Pending</span>' : '<span style="font-size:10px;color:#5ce0a8">✓ Active</span>')
+      + (canEdit ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:rgba(255,255,255,.25)"><polyline points="9 18 15 12 9 6"/></svg>' : '')
+      + '</div>';
+  }).join('');
+
+  el.innerHTML = '<div style="display:grid;grid-template-columns:300px 1fr;gap:20px">'
+    // Left: profile card
+    + '<div>'
+    + '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px;margin-bottom:16px">'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">'
+    + '<div class="av" style="width:48px;height:48px;font-size:17px;background:'+rc.bg+';color:'+rc.tc+'">'+ini+'</div>'
+    + '<div><div style="font-size:16px;font-weight:600">'+(currentUser?.name||'Admin')+'</div>'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">'+rc.label+'</div></div>'
+    + '</div>'
+    + '<div style="border-top:1px solid rgba(255,255,255,.05);padding-top:14px">'
+    + '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px"><span style="color:rgba(255,255,255,.4)">QuickBooks</span><span style="color:#5ce0a8">Connected ✓</span></div>'
+    + '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px"><span style="color:rgba(255,255,255,.4)">Twilio SMS</span><button onclick="openTwilioModal()" style="background:none;border:none;cursor:pointer;font-size:12px;color:'+(twilioConnected?'#5ce0a8':'#f5c56a')+';font-family:var(--font)">'+(twilioConnected?'✓ Connected':'Not connected')+'</button></div>'
+    + '<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px"><span style="color:rgba(255,255,255,.4)">Microsoft 365</span><button onclick="openM365Modal()" style="background:none;border:none;cursor:pointer;font-size:12px;color:'+(m365Connected?'#5ce0a8':'#f5c56a')+';font-family:var(--font)">'+(m365Connected?'✓ Connected':'Not connected')+'</button></div>'
+    + '</div></div>'
+    + '<button onclick="showLogin()" class="btn btn-ghost" style="width:100%;padding:11px">Sign out</button>'
+    + '</div>'
+    // Right: users table
+    + '<div>'
+    + '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px">'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">'
+    + '<div style="font-size:15px;font-weight:600">Users</div>'
+    + (currentRole==='admin' ? '<button onclick="openAddTech()" style="padding:6px 14px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add user</button>' : '')
+    + '</div>'
+    + memberRows
+    + '</div></div>'
+    + '</div>';
+}
+
 
 window.addEventListener('resize', function() {
   initLayout();
@@ -2747,7 +4206,7 @@ function generateIcon() {
 }
 
 window.addEventListener('load', function() {
-  checkExistingSession();
+  if (!checkInviteToken()) checkExistingSession();
   generateIcon();
   if (isStandalone) return;
   setTimeout(function() {
@@ -2790,6 +4249,247 @@ function showIosSheet() {
 function closeIosSheet() {
   var s = document.getElementById('ios-sheet');
   if (s) s.style.display = 'none';
+}
+</script>
+<!-- Leaflet Map -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ── LEAFLET MAP ───────────────────────────────────────────────────────────────
+let _map = null;
+let _mapMarkers = [];
+let _pinMarker = null;
+let _myMarker = null;
+let _mapInitialized = false;
+let _pendingClientPin = null;
+
+function initMap() {
+  if(_mapInitialized) return;
+  const container = document.getElementById('map-container');
+  if(!container) return;
+
+  _map = L.map('map-container', {
+    center: [49.87, -99.37], // Carberry, MB
+    zoom: 13,
+    zoomControl: true,
+  });
+
+  // Dark tile layer
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap © CARTO',
+    maxZoom: 19,
+  }).addTo(_map);
+
+  _mapInitialized = true;
+
+  // Add job markers
+  plotJobMarkers();
+
+  // Click to drop a pin (admin/office/tech can all pin)
+  _map.on('click', function(e) {
+    dropPin(e.latlng.lat, e.latlng.lng);
+  });
+
+  // If there's a pending client pin from Add Client modal
+  if(_pendingClientPin) {
+    const { lat, lng } = _pendingClientPin;
+    _map.setView([lat, lng], 16);
+    dropPin(lat, lng);
+    _pendingClientPin = null;
+  }
+}
+
+function plotJobMarkers() {
+  if(!_map) return;
+  // Clear existing markers
+  _mapMarkers.forEach(m => m.remove());
+  _mapMarkers = [];
+
+  const statusColors = { new:'#f5c56a', progress:'#7bb3ff', review:'#c4b0ff', done:'#5ce0a8', overdue:'#f06060', assigned:'#7bb3ff' };
+
+  JOBS.filter(j=>j.status!=='done').forEach(j=>{
+    if(!j.address) return;
+    // Geocode address and add marker
+    geocodeAddress(`${j.address}, ${j.city||'Carberry'}, MB, Canada`, function(lat, lng) {
+      if(!lat||!_map) return;
+      const color = statusColors[j.status]||'#7bb3ff';
+      const icon = L.divIcon({
+        html: `<div style="width:32px;height:32px;border-radius:50% 50% 50% 0;background:${color};border:2px solid rgba(255,255,255,.8);transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.4)"><span style="transform:rotate(45deg);font-size:12px">${j.tech?j.tech.split(' ')[0][0]:''}</span></div>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -34],
+        className: '',
+      });
+      const marker = L.marker([lat, lng], { icon }).addTo(_map);
+      marker.bindPopup(`
+        <div style="font-family:sans-serif;min-width:180px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px">${j.title}</div>
+          <div style="font-size:12px;color:#666;margin-bottom:2px">👤 ${j.client}</div>
+          <div style="font-size:12px;color:#666;margin-bottom:2px">🔧 ${j.tech||'Unassigned'}</div>
+          <div style="font-size:12px;color:#666;margin-bottom:6px">📍 ${j.address}</div>
+          <div style="display:inline-block;padding:2px 8px;border-radius:20px;background:${color};color:#000;font-size:11px;font-weight:600">${j.status.toUpperCase()}</div>
+        </div>
+      `);
+      _mapMarkers.push(marker);
+    });
+  });
+}
+
+function dropPin(lat, lng, label) {
+  // Remove existing pin
+  if(_pinMarker) { _pinMarker.remove(); _pinMarker = null; }
+
+  const icon = L.divIcon({
+    html: `<div style="position:relative">
+      <div style="width:20px;height:20px;border-radius:50%;background:#f06060;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5)"></div>
+      <div style="width:2px;height:16px;background:#f06060;margin:0 auto;box-shadow:0 2px 4px rgba(0,0,0,.3)"></div>
+    </div>`,
+    iconSize: [20, 36],
+    iconAnchor: [10, 36],
+    className: '',
+  });
+
+  _pinMarker = L.marker([lat, lng], { icon, draggable: true }).addTo(_map);
+
+  const displayLat = lat.toFixed(5);
+  const displayLng = lng.toFixed(5);
+
+  _pinMarker.bindPopup(`
+    <div style="font-family:sans-serif;min-width:200px">
+      <div style="font-weight:700;font-size:13px;margin-bottom:6px">📍 ${label||'Pinned location'}</div>
+      <div style="font-size:11px;color:#666;margin-bottom:8px">${displayLat}, ${displayLng}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button onclick="openNavToPin(${lat},${lng})" style="padding:5px 10px;border-radius:6px;background:#2563eb;color:#fff;border:none;font-size:11px;cursor:pointer">🧭 Navigate</button>
+        <button onclick="copyPinCoords(${lat},${lng})" style="padding:5px 10px;border-radius:6px;background:#374151;color:#fff;border:none;font-size:11px;cursor:pointer">📋 Copy</button>
+        <button onclick="savePinToClient(${lat},${lng})" style="padding:5px 10px;border-radius:6px;background:#059669;color:#fff;border:none;font-size:11px;cursor:pointer">💾 Save to client</button>
+      </div>
+    </div>
+  `).openPopup();
+
+  // Update pin on drag
+  _pinMarker.on('dragend', function(e) {
+    const pos = e.target.getLatLng();
+    dropPin(pos.lat, pos.lng, label);
+  });
+
+  toast('Pin dropped — drag to adjust');
+}
+
+function openNavToPin(lat, lng) {
+  window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+}
+
+function copyPinCoords(lat, lng) {
+  navigator.clipboard.writeText(`${lat.toFixed(5)}, ${lng.toFixed(5)}`).then(()=>toast('Coordinates copied ✓'));
+}
+
+function savePinToClient(lat, lng) {
+  // Store pin for use when adding/editing a client
+  localStorage.setItem('se_pending_pin', JSON.stringify({ lat, lng }));
+  toast('Pin saved — open Add Client to attach it');
+  if(_pinMarker) _pinMarker.closePopup();
+}
+
+// Geocode using OpenStreetMap Nominatim (free, no key needed)
+const _geocodeCache = {};
+function geocodeAddress(address, callback) {
+  if(_geocodeCache[address]) { callback(_geocodeCache[address].lat, _geocodeCache[address].lng); return; }
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`;
+  fetch(url, { headers: { 'Accept-Language': 'en' } })
+    .then(r=>r.json())
+    .then(results=>{
+      if(results.length) {
+        const lat = parseFloat(results[0].lat);
+        const lng = parseFloat(results[0].lon);
+        _geocodeCache[address] = { lat, lng };
+        callback(lat, lng);
+      }
+    })
+    .catch(()=>{});
+}
+
+// Map search input
+let _searchTimeout;
+function mapSearchInput(val) {
+  clearTimeout(_searchTimeout);
+  const box = document.getElementById('map-search-results');
+  if(!val || val.length < 3) { if(box) box.style.display='none'; return; }
+
+  // Search clients and jobs first
+  const q = val.toLowerCase();
+  const clientMatches = CLIENTS.filter(c=>(c.name||'').toLowerCase().includes(q)||(c.address||'').toLowerCase().includes(q)).slice(0,3);
+  const jobMatches = JOBS.filter(j=>j.client.toLowerCase().includes(q)||j.address.toLowerCase().includes(q)).slice(0,3);
+
+  let html = '';
+  if(clientMatches.length) {
+    html += `<div style="padding:6px 12px;font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.5px">CLIENTS</div>`;
+    html += clientMatches.map(c=>`<div onclick="mapFlyToAddress('${(c.address+', '+(c.city||'Carberry')+', MB, Canada').replace(/'/g,"\\'")}','${c.name.replace(/'/g,"\\'")}') " style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border);font-size:13px" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''"><div style="font-weight:600">${c.name}</div><div style="font-size:11px;color:var(--text3)">${c.address||''}</div></div>`).join('');
+  }
+  if(jobMatches.length) {
+    html += `<div style="padding:6px 12px;font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.5px">JOBS</div>`;
+    html += jobMatches.map(j=>`<div onclick="mapFlyToAddress('${(j.address+', '+(j.city||'Carberry')+', MB, Canada').replace(/'/g,"\\'")}','${j.client.replace(/'/g,"\\'")}') " style="padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border);font-size:13px" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''"><div style="font-weight:600">${j.title}</div><div style="font-size:11px;color:var(--text3)">${j.client} · ${j.address}</div></div>`).join('');
+  }
+
+  if(box) {
+    box.innerHTML = html || `<div style="padding:10px 12px;font-size:13px;color:var(--text3)">No matches — press Enter to search address</div>`;
+    box.style.display = 'block';
+  }
+
+  // Also geocode after delay
+  _searchTimeout = setTimeout(()=>mapGeocode(val), 800);
+}
+
+function mapGeocode(address) {
+  const box = document.getElementById('map-search-results');
+  if(box) box.style.display='none';
+  geocodeAddress(address + ', MB, Canada', function(lat, lng) {
+    if(!lat || !_map) return;
+    _map.setView([lat, lng], 16);
+    dropPin(lat, lng, address);
+  });
+}
+
+function mapFlyToAddress(address, label) {
+  const box = document.getElementById('map-search-results');
+  if(box) box.style.display='none';
+  document.getElementById('map-search-input').value = label;
+  geocodeAddress(address, function(lat, lng) {
+    if(!lat || !_map) return;
+    _map.flyTo([lat, lng], 16, { duration: 1 });
+    dropPin(lat, lng, label);
+  });
+}
+
+function locateMe() {
+  if(!navigator.geolocation) { toast('GPS not available','warning'); return; }
+  toast('Getting your location…');
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    if(!_map) return;
+    _map.setView([lat, lng], 15);
+    if(_myMarker) _myMarker.remove();
+    const icon = L.divIcon({
+      html: `<div style="width:16px;height:16px;border-radius:50%;background:#7bb3ff;border:3px solid #fff;box-shadow:0 0 0 4px rgba(79,142,247,.3)"></div>`,
+      iconSize: [16,16], iconAnchor: [8,8], className:'',
+    });
+    _myMarker = L.marker([lat, lng], { icon }).addTo(_map);
+    _myMarker.bindPopup('<div style="font-family:sans-serif;font-size:13px;font-weight:600">📍 You are here</div>').openPopup();
+    toast('Location found ✓');
+  }, function() {
+    toast('Could not get location — check GPS permissions','warning');
+  });
+}
+
+// Called when Map tab is opened
+function onMapTabOpen() {
+  setTimeout(function() {
+    if(!_mapInitialized) {
+      initMap();
+    } else {
+      _map.invalidateSize();
+      plotJobMarkers();
+    }
+  }, 100);
 }
 </script>
 </body>
