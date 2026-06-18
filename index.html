@@ -2013,10 +2013,16 @@ function autoSaveNotes(jobId, value) {
   const j = jobById(jobId);
   if(!j) return;
   j.techUpdate = value;
-  // Debounce backend save
+  // Debounce backend save using notes-specific endpoint (works for all roles)
   clearTimeout(window._notesSaveTimer);
   window._notesSaveTimer = setTimeout(()=>{
-    saveJobToApi(j).catch(e=>console.warn('[notes] save failed:',e.message));
+    if(j._apiId || j.id) {
+      const id = j._apiId || j.id;
+      apiCall(`/jobs/${id}/notes`, {
+        method: 'PATCH',
+        body: JSON.stringify({ techNotes: value, po: j.po || null })
+      }).catch(e => console.warn('[notes] save failed:', e.message));
+    }
   }, 1500);
 }
 
@@ -2054,7 +2060,14 @@ function saveInlinePO(id) {
   const po = document.getElementById('po-inline-input')?.value?.trim();
   if(!po) { toast('Please enter a PO number', 'warning'); return; }
   const j = jobById(id);
-  if(j) { j.po = po; saveJobToApi(j).catch(()=>{}); }
+  if(j) {
+    j.po = po;
+    const apiId = j._apiId || j.id;
+    apiCall(`/jobs/${apiId}/notes`, {
+      method: 'PATCH',
+      body: JSON.stringify({ techNotes: j.techUpdate || null, po })
+    }).catch(()=>{});
+  }
   renderDetail();
   toast('PO number saved ✓');
 }
