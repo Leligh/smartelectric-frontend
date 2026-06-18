@@ -1623,9 +1623,9 @@ function renderDetail() {
   document.getElementById('detail-title').textContent = j.title;
   document.getElementById('detail-pill').innerHTML = spill(j.status);
 
-  const isDone = j.status==='done';
-  const isReview = j.status==='review';
-  const isNew = j.status==='new';
+  const isDone     = j.status==='done';
+  const isReview   = j.status==='review';
+  const isNew      = j.status==='new' || j.status==='assigned';
   const isProgress = j.status==='progress';
 
   // Client fields with override support
@@ -1751,7 +1751,7 @@ function renderDetail() {
         <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:var(--r-sm);padding:10px;font-size:12px;color:var(--amber);margin-bottom:0">
           ✓ Sent to Linda P. — ${j.partsReq.length} part${j.partsReq.length!==1?'s':''} listed: ${j.partsReq.join(', ')}
         </div>` :
-        isProgress ? `
+        (isProgress||isNew) ? `
           ${micActive.req?`<div style="background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.2);border-radius:var(--r-sm);padding:6px 10px;font-size:11px;color:var(--red);margin-bottom:6px;display:flex;align-items:center;gap:5px"><span style="animation:micpulse 1s infinite;display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red)"></span> Recording</div>`:''}
           <div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:8px">
             <textarea id="req-ta" rows="2" style="flex:1;font-size:12px;min-height:52px" placeholder="Speak parts needed…"></textarea>
@@ -1849,7 +1849,7 @@ function renderDetail() {
       <div class="card-sm" style="margin-bottom:12px">
         ${j.brief?`<div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px"><span style="font-weight:600;color:var(--text1)">Brief: </span>${j.brief}</div>`:''}
         ${j.po?`<div style="font-size:12px;margin-bottom:10px;display:flex;align-items:center;gap:6px"><span style="font-weight:600;color:var(--text3);font-size:11px;letter-spacing:.3px">PO:</span><span style="font-family:var(--mono);font-size:12px;color:var(--amber);background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:4px;padding:2px 8px">${j.po}</span></div>`:
-        `<div style="font-size:11px;color:rgba(240,96,96,.7);margin-bottom:10px">⚠ No PO number — required before completing</div>`}        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        (isReview&&(currentRole==='admin'||currentRole==='office'))?`<div style="font-size:11px;color:rgba(240,96,96,.7);margin-bottom:10px">⚠ No PO number — required before completing</div>`:''}        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
           <div style="display:flex;align-items:center;gap:6px">
             <span style="font-size:12px;font-weight:600;color:var(--text3);letter-spacing:.3px">COMPLETE BY</span>
             ${j.dueDate
