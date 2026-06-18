@@ -1383,21 +1383,75 @@ function removeJobPhoto(jobId, idx) {
 }
 
 function updateHomeCounts() {
-  const mine = JOBS.filter(j=>j.tech==='Dale K.');
-  document.getElementById('cnt-todo').textContent = mine.filter(j=>j.status==='new').length;
-  document.getElementById('cnt-active').textContent = mine.filter(j=>j.status==='progress').length;
-  document.getElementById('cnt-review').textContent = mine.filter(j=>j.status==='review').length;
-  document.getElementById('cnt-done').textContent = mine.filter(j=>j.status==='done').length;
-  const jobs = currentRole==='tech' ? mine : JOBS;
-  document.getElementById('hero-date').textContent = `Wednesday · ${jobs.length} jobs today`;
+  const myName = currentUser ? currentUser.name : '';
+  const isAdmin = currentRole==='admin'||currentRole==='office';
+  const mine = isAdmin ? JOBS : JOBS.filter(j=>j.tech===myName);
+  const todo   = mine.filter(j=>j.status==='new').length;
+  const active = mine.filter(j=>j.status==='progress').length;
+  const review = mine.filter(j=>j.status==='review').length;
+  const done   = mine.filter(j=>j.status==='done').length;
+
+  document.getElementById('cnt-todo').textContent   = todo;
+  document.getElementById('cnt-active').textContent = active;
+  document.getElementById('cnt-review').textContent = review;
+  document.getElementById('cnt-done').textContent   = done;
+
+  // Make stat boxes clickable to filter job list
+  const boxes = [
+    {id:'cnt-todo',   status:'new'},
+    {id:'cnt-active', status:'progress'},
+    {id:'cnt-review', status:'review'},
+    {id:'cnt-done',   status:'done'},
+  ];
+  boxes.forEach(({id, status})=>{
+    const box = document.getElementById(id)?.closest('.stat-box');
+    if(box) {
+      box.style.cursor = 'pointer';
+      box.onclick = ()=>filterJobListByStatus(status);
+    }
+  });
+
+  const jobs = isAdmin ? JOBS : mine;
+  const today = new Date().toLocaleDateString('en-CA',{weekday:'long'});
+  document.getElementById('hero-date').textContent = `${today} · ${jobs.length} job${jobs.length!==1?'s':''} today`;
+}
+
+let activeStatusFilter = null;
+
+function filterJobListByStatus(status) {
+  if(activeStatusFilter === status) {
+    // Tap same filter again to clear it
+    activeStatusFilter = null;
+  } else {
+    activeStatusFilter = status;
+  }
+  // Highlight active stat box
+  ['new','progress','review','done'].forEach(s => {
+    const idMap = {new:'cnt-todo',progress:'cnt-active',review:'cnt-review',done:'cnt-done'};
+    const box = document.getElementById(idMap[s])?.closest('.stat-box');
+    if(box) {
+      box.style.outline = (activeStatusFilter===s) ? '2px solid var(--accent)' : 'none';
+      box.style.background = (activeStatusFilter===s) ? 'rgba(79,142,247,.15)' : 'var(--bg2)';
+    }
+  });
+  renderJobList();
 }
 
 function renderJobList() {
-  const myName = currentUser ? currentUser.name : 'Dale K.';
-  const jobs = (currentRole==='tech') ? JOBS.filter(j=>j.tech===myName)
-             : (currentRole==='parts') ? JOBS.filter(j=>j.status!=='done')
-             : JOBS;
-  document.getElementById('job-list-home').innerHTML = jobs.map(j=>{
+  const myName = currentUser ? currentUser.name : '';
+  const isAdmin = currentRole==='admin'||currentRole==='office';
+  let jobs = isAdmin ? JOBS
+           : currentRole==='tech' ? JOBS.filter(j=>j.tech===myName)
+           : currentRole==='parts' ? JOBS.filter(j=>j.status!=='done')
+           : JOBS;
+  if(activeStatusFilter) jobs = jobs.filter(j=>j.status===activeStatusFilter);
+  const el = document.getElementById('job-list-home');
+  if(!el) return;
+  if(!jobs.length) {
+    el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text3)"><div style="font-size:32px;margin-bottom:10px">${activeStatusFilter?'🔍':'✅'}</div><div>${activeStatusFilter?'No '+activeStatusFilter+' jobs':'No jobs yet'}</div>${activeStatusFilter?`<button onclick="filterJobListByStatus(null)" style="margin-top:12px;padding:6px 14px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--font)">Show all</button>`:''}</div>`;
+    return;
+  }
+  el.innerHTML = jobs.map(j=>{
     const dialNum = (j.phone||'').replace(/\D/g,'');
     return `<div class="card" style="margin-bottom:10px;cursor:pointer" onclick="openJob('${j.id}')">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">
@@ -4210,6 +4264,7 @@ function renderDesktopView(tab) {
 function renderDesktopDashboard(el) {
   var isAdmin = currentRole === 'admin' || currentRole === 'office';
   var myName  = currentUser ? currentUser.name : '';
+  // Tech sees only their jobs; admin/office see all assigned+unassigned
   var allJobs = isAdmin ? JOBS : JOBS.filter(function(j){ return j.tech === myName; });
   var reviewCount = allJobs.filter(function(j){ return j.status==='review'; }).length;
   var activeCount = allJobs.filter(function(j){ return j.status==='progress'; }).length;
@@ -4248,23 +4303,33 @@ function renderDesktopDashboard(el) {
 }
 
 function renderDesktopOpen(el) {
-  var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
-  OPEN_CALLS.filter(function(c){ return c.status==='open'; }).forEach(function(c) {
-    var isAdmin = currentRole==='admin'||currentRole==='office';
-    html += '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;cursor:pointer" onclick="openCallDetail('+c.id+')">'
-      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">'
-      + '<div style="font-size:14px;font-weight:600">'+c.title+'</div>'
-      + '<span style="font-size:11px;font-weight:600;'+priColor(c.priority)+'">'+c.priority.toUpperCase()+'</span>'
-      + '</div>'
-      + '<div style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:8px">👤 '+c.client+' · 📍 '+c.address+'</div>'
-      + '<div style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:12px">'+c.desc+'</div>'
-      + (c.requests.length ? '<div style="font-size:11px;color:rgba(255,255,255,.3)">✋ '+c.requests.join(', ')+' requested</div>' : '')
-      + '</div>';
-  });
-  if(!OPEN_CALLS.filter(c=>c.status==='open').length) {
-    html += '<div style="color:rgba(255,255,255,.3);font-size:13px;padding:20px">No open calls</div>';
-  }
-  el.innerHTML = html + '</div>';
+  const q = (el.querySelector('input')?.value||'').toLowerCase();
+  let open = JOBS.filter(j => !j.tech && j.status !== 'done' && j.status !== 'cancelled');
+  if(q) open = open.filter(j => (j.title||'').toLowerCase().includes(q)||(j.client||'').toLowerCase().includes(q)||(j.address||'').toLowerCase().includes(q));
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div>
+        <div style="font-size:18px;font-weight:600">Open calls</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">${open.length} unassigned</div>
+      </div>
+      <input type="text" placeholder="🔍 Search..." oninput="renderDesktopView('open')" style="padding:8px 14px;background:#171921;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);width:220px">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      ${open.length ? open.map(j=>`
+        <div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;cursor:pointer" onclick="openCallDetail('${j.id}')" onmouseover="this.style.borderColor='rgba(79,142,247,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:14px;font-weight:600">${j.title}</div>
+            <span style="font-size:11px;font-weight:600;color:var(--amber)">${(j.priority||'routine').toUpperCase()}</span>
+          </div>
+          <div style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:6px">👤 ${j.client} · 📍 ${j.address}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:10px">🕐 ${j.time}</div>
+          ${j.brief?`<div style="font-size:12px;color:rgba(255,255,255,.35);margin-bottom:10px;font-style:italic">${j.brief.slice(0,80)}${j.brief.length>80?'…':''}</div>`:''}
+          ${(j.requests||[]).length?`<div style="font-size:11px;color:rgba(255,255,255,.3)">✋ ${j.requests.join(', ')} requested</div>`:''}
+        </div>`).join('') :
+        '<div style="grid-column:1/-1;text-align:center;padding:60px;color:rgba(255,255,255,.3)"><div style="font-size:40px;margin-bottom:12px">✅</div><div>No unassigned jobs</div></div>'
+      }
+    </div>`;
 }
 
 function renderDesktopMap(el) {
