@@ -486,6 +486,7 @@ select option{background:var(--bg2);color:var(--text1)}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
           <div class="sec-head" style="margin:0">Clients</div>
           <button onclick="openAddClientModal()" style="padding:6px 14px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:var(--green);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add client</button>
+          <button onclick="document.getElementById('import-clients-file').click()" style="padding:6px 12px;border-radius:20px;background:rgba(79,142,247,.15);border:1px solid rgba(79,142,247,.3);color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">📥 Import</button>
         </div>
         <div style="margin-bottom:12px">
           <input type="text" id="client-search-input" placeholder="Search clients..." oninput="filterClientList(this.value)" style="width:100%;box-sizing:border-box">
@@ -2691,25 +2692,59 @@ function parseExcelFile(file, callback) {
 async function importClientsFromExcel(input) {
   const file = input.files[0];
   if(!file) return;
-  parseExcelFile(file, async (records) => {
-    let count = 0;
-    for(const r of records) {
-      const name = r.name||r['first name']||r.firstname||'';
-      const company = r.company||r['farm name']||r.farm||'';
-      const phone = r.phone||r['phone number']||'';
-      const address = r.address||'';
-      const city = r.city||'';
-      const email = r.email||'';
-      if(!name && !company) continue;
-      try {
-        await apiCall('/clients', { method:'POST', body: JSON.stringify({ name, company, phone, address, city, email }) });
-        count++;
-      } catch(e) { console.warn('[import client]', e.message); }
+
+  // Load SheetJS dynamically if needed
+  if(!window.XLSX) {
+    await new Promise((res,rej)=>{
+      const s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+      s.onload=res; s.onerror=rej;
+      document.head.appendChild(s);
+    });
+  }
+
+  const reader = new FileReader();
+  reader.onload = async e => {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, { type:'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { defval:'' });
+
+      toast(`Importing ${rows.length} clients…`);
+      let count = 0, errors = 0;
+
+      for(const r of rows) {
+        // Support both QuickBooks export format and simple format
+        const firstName = r['First Name'] || r['firstname'] || '';
+        const lastName  = r['Last Name']  || r['lastname']  || '';
+        const name      = (firstName + ' ' + lastName).trim() || r['name'] || r['Customer'] || '';
+        const company   = r['Company'] || r['company'] || r['farm'] || '';
+        const phone     = r['Main Phone'] || r['Alt. Phone'] || r['phone'] || '';
+        const email     = r['Main Email'] || r['email'] || '';
+        // QuickBooks address in "Invoice to" columns
+        const address   = r['Invoice to 3'] || r['address'] || r['Address'] || '';
+        const cityLine  = r['Invoice to 4'] || r['city'] || r['City'] || '';
+        const city      = cityLine.replace(/\b(MB|SK|AB|BC|ON)\b/g,'').replace(/[A-Z]\d[A-Z]\s?\d[A-Z]\d/g,'').trim().replace(/,$/,'').trim();
+
+        if(!name && !company) continue;
+        if(r['Active Status'] && r['Active Status'].toLowerCase()==='inactive') continue;
+
+        try {
+          await apiCall('/clients', { method:'POST', body: JSON.stringify({ name: name||company, company: company!==name?company:'', phone, email, address, city }) });
+          count++;
+        } catch(e) { errors++; console.warn('[import]', e.message); }
+      }
+
+      await loadClients();
+      toast(`✓ Imported ${count} clients${errors?` (${errors} skipped)`:''}`, count>0?'success':'warning');
+      input.value = '';
+    } catch(err) {
+      toast('Could not parse file — try saving as .csv', 'warning');
+      console.error('[import]', err);
     }
-    await loadClients();
-    toast(`✓ Imported ${count} clients`);
-    input.value = '';
-  });
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 async function importEmployeesFromExcel(input) {
@@ -3158,7 +3193,8 @@ function renderDesktopClients(el) {
       </div>
       <div style="display:flex;gap:8px;align-items:center">
         <input type="text" placeholder="Search clients..." oninput="filterDesktopClients(this.value)" style="padding:8px 14px;background:#171921;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);width:220px">
-        ${isAdmin?`<button onclick="openAddClientModal()" style="padding:8px 16px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add client</button>`:''}
+        ${isAdmin?`<button onclick="openAddClientModal()" style="padding:8px 16px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add client</button>
+        <button onclick="document.getElementById('import-clients-file').click()" style="padding:8px 16px;border-radius:20px;background:rgba(79,142,247,.15);border:1px solid rgba(79,142,247,.3);color:#7bb3ff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">📥 Import Excel</button>`:''}
       </div>
     </div>
     <div id="desktop-clients-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px"></div>`;
@@ -4499,6 +4535,16 @@ function renderDesktopProfile(el) {
     + (currentRole==='admin' ? '<button onclick="openAddTech()" style="padding:6px 14px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add user</button>' : '')
     + '</div>'
     + memberRows
+    + '</div>'
+    + ((currentRole==='admin'||currentRole==='office') ? '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px;margin-top:16px">'
+      + '<div style="font-size:15px;font-weight:600;margin-bottom:14px">Import from Excel</div>'
+      + '<div style="font-size:13px;color:rgba(255,255,255,.4);margin-bottom:14px">Import clients or employees from a .xlsx or .csv file</div>'
+      + '<div style="display:flex;gap:10px">'
+      + '<button onclick="document.getElementById(\'import-clients-file\').click()" style="padding:10px 18px;border-radius:8px;background:rgba(79,142,247,.15);border:1px solid rgba(79,142,247,.3);color:#7bb3ff;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)">👥 Import clients</button>'
+      + '<button onclick="document.getElementById(\'import-employees-file\').click()" style="padding:10px 18px;border-radius:8px;background:rgba(62,207,142,.12);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)">🔧 Import employees</button>'
+      + '</div>'
+      + '<div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:10px;line-height:1.6"><strong style="color:rgba(255,255,255,.5)">Clients:</strong> Name, Company, Phone, Email, Address, City &nbsp;·&nbsp; <strong style="color:rgba(255,255,255,.5)">Employees:</strong> Name, Role, Phone, Email</div>'
+      + '</div>' : '')
     + '</div></div>'
     + '</div>';
 }
