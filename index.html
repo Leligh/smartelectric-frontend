@@ -876,6 +876,10 @@ select option{background:var(--bg2);color:var(--text1)}
           <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">JOB TITLE</label>
           <input type="text" id="nj-title" placeholder="e.g. Panel upgrade, Furnace inspection">
         </div>
+        <div class="field">
+          <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">PO NUMBER <span style="font-weight:400;color:var(--text3)">(required before marking complete)</span></label>
+          <input type="text" id="nj-po" placeholder="e.g. PO-2024-0142" oninput="this.style.border=''">
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <div class="field" style="position:relative">
             <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">CLIENT NAME</label>
@@ -1787,7 +1791,8 @@ function renderDetail() {
 
       <div class="card-sm" style="margin-bottom:12px">
         ${j.brief?`<div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px"><span style="font-weight:600;color:var(--text1)">Brief: </span>${j.brief}</div>`:''}
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        ${j.po?`<div style="font-size:12px;margin-bottom:10px;display:flex;align-items:center;gap:6px"><span style="font-weight:600;color:var(--text3);font-size:11px;letter-spacing:.3px">PO:</span><span style="font-family:var(--mono);font-size:12px;color:var(--amber);background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:4px;padding:2px 8px">${j.po}</span></div>`:
+        `<div style="font-size:11px;color:rgba(240,96,96,.7);margin-bottom:10px">⚠ No PO number — required before completing</div>`}        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
           <div style="display:flex;align-items:center;gap:6px">
             <span style="font-size:12px;font-weight:600;color:var(--text3);letter-spacing:.3px">COMPLETE BY</span>
             ${j.dueDate
@@ -2307,6 +2312,43 @@ async function markReceived(id) {
 
 // ── Admin: approve job complete → SMS to customer ─────────────────────────────
 async function approveJobComplete(id) {
+  const j = jobById(id); if(!j) return;
+  // Require PO number before marking complete
+  if(!j.po) {
+    // Show PO input in detail
+    const existing = document.getElementById('po-required-banner');
+    if(!existing) {
+      const actionsEl = document.querySelector('#detail-body .slide-up > div:last-child');
+      const banner = document.createElement('div');
+      banner.id = 'po-required-banner';
+      banner.style.cssText = 'background:rgba(240,96,96,.1);border:2px solid #f06060;border-radius:var(--r-sm);padding:12px 14px;margin-bottom:10px';
+      banner.innerHTML = `<div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:8px">⚠ PO number required before marking complete</div>
+        <div style="display:flex;gap:8px">
+          <input id="po-entry-input" type="text" placeholder="Enter PO number..." style="flex:1;padding:8px 10px;font-size:13px;border:1px solid #f06060">
+          <button onclick="savePOAndComplete('${id}')" style="padding:8px 14px;border-radius:var(--r-sm);background:rgba(240,96,96,.2);color:var(--red);border:1px solid #f06060;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">Save & complete</button>
+        </div>`;
+      // Insert before action buttons
+      const detailBody = document.getElementById('detail-body');
+      const lastDiv = detailBody?.querySelector('.slide-up > div:last-child');
+      if(lastDiv) lastDiv.insertAdjacentElement('beforebegin', banner);
+      else detailBody?.appendChild(banner);
+      document.getElementById('po-entry-input')?.focus();
+    }
+    toast('Enter a PO number before completing', 'warning');
+    return;
+  }
+  await _doApproveJobComplete(id);
+}
+
+async function savePOAndComplete(id) {
+  const po = document.getElementById('po-entry-input')?.value?.trim();
+  if(!po) { toast('Please enter a PO number', 'warning'); return; }
+  const j = jobById(id);
+  if(j) j.po = po;
+  await _doApproveJobComplete(id);
+}
+
+async function _doApproveJobComplete(id) {
   const j = jobById(id); if(!j) return;
   const oldStatus = j.status;
   j.status = 'done';
@@ -3888,7 +3930,7 @@ function openNewJobModal() {
   }
   const saveBtn = document.querySelector('#new-job-modal .btn-primary');
   if(saveBtn) saveBtn.textContent = isTech ? 'Submit for admin review' : 'Create job';
-  ['nj-title','nj-client','nj-phone','nj-address','nj-city','nj-due','nj-brief'].forEach(id=>{
+  ['nj-title','nj-client','nj-phone','nj-address','nj-city','nj-due','nj-brief','nj-po'].forEach(id=>{
     const el = document.getElementById(id); if(el) el.value='';
   });
   document.getElementById('nj-city').value = 'Carberry';
@@ -3925,6 +3967,7 @@ function confirmNewJob() {
   const city    = document.getElementById('nj-city')?.value?.trim() || 'Carberry';
   const due     = document.getElementById('nj-due')?.value || null;
   const brief   = document.getElementById('nj-brief')?.value?.trim() || '';
+  const po      = document.getElementById('nj-po')?.value?.trim() || '';
 
   // Format time from HH:MM to 12-hour
   const rawTime = document.getElementById('nj-time')?.value;
@@ -3962,7 +4005,7 @@ function confirmNewJob() {
     id: newId, title, client,
     phone: phone||'', address, city, time,
     tech: tech||'', techPhone: techObj?.phone||'',
-    brief, status,
+    brief, po, status,
     refPhotos:0, techUpdate: isTech ? brief : '',
     techPhotos:0, partsUsed:[], partsReq:[], partsSent:false,
     dueDate: due, overrides:{}, jx:.5, jy:.5,
