@@ -2015,25 +2015,17 @@ function submitReview(id) {
   // Require PO number before submitting for review
   const j = jobById(id);
   if(!j.po) {
-    // Show PO input inline
-    const existing = document.getElementById('po-submit-banner');
-    if(!existing) {
-      const detailBody = document.getElementById('detail-body');
-      const actionsDiv = detailBody?.querySelector('.slide-up > div:last-child');
-      const banner = document.createElement('div');
-      banner.id = 'po-submit-banner';
-      banner.style.cssText = 'background:rgba(240,96,96,.1);border:2px solid #f06060;border-radius:var(--r-sm);padding:12px 14px;margin-bottom:10px';
-      banner.innerHTML = `<div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:8px">⚠ PO number required before submitting for review</div>
-        <div style="display:flex;gap:8px">
-          <input id="po-submit-input" type="text" placeholder="Enter PO number..." style="flex:1;padding:8px 10px;font-size:13px;border:2px solid #f06060" oninput="this.style.border='1px solid var(--border2)'">
-          <button onclick="savePOAndSubmit('${id}')" style="padding:8px 14px;border-radius:var(--r-sm);background:rgba(240,96,96,.2);color:var(--red);border:1px solid #f06060;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap">Save & submit</button>
-        </div>`;
-      if(actionsDiv) actionsDiv.insertAdjacentElement('beforebegin', banner);
-      else detailBody?.appendChild(banner);
-      document.getElementById('po-submit-input')?.focus();
+    // Check if PO was entered in the inline field
+    const inlinePO = document.getElementById('po-inline-input')?.value?.trim();
+    if(inlinePO) {
+      j.po = inlinePO;
+    } else {
+      toast('Enter a PO number before submitting', 'warning');
+      // Flash the PO input red
+      const poInput = document.getElementById('po-inline-input');
+      if(poInput) { poInput.style.border='2px solid #f06060'; poInput.focus(); }
+      return;
     }
-    toast('Enter a PO number before submitting', 'warning');
-    return;
   }
 
   const _rj=jobById(id); const oldStatus=_rj?_rj.status:'';
@@ -2043,15 +2035,6 @@ function submitReview(id) {
   submitReviewApi(id, notes, tempUsedTags);
   const admins = TECHS_LIST.filter(u=>u.role==='admin'||u.role==='office');
   admins.forEach(u=>{ if(u.email) emailJobStatus(jobById(id), u.name, u.email, oldStatus, 'review'); });
-}
-
-function savePOAndSubmit(id) {
-  const po = document.getElementById('po-submit-input')?.value?.trim();
-  if(!po) { toast('Please enter a PO number', 'warning'); return; }
-  const j = jobById(id);
-  if(j) j.po = po;
-  document.getElementById('po-submit-banner')?.remove();
-  submitReview(id);
 }
 
 function saveInlinePO(id) {
