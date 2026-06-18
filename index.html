@@ -1849,7 +1849,7 @@ function renderDetail() {
       <div class="card-sm" style="margin-bottom:12px">
         ${j.brief?`<div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px"><span style="font-weight:600;color:var(--text1)">Brief: </span>${j.brief}</div>`:''}
         ${j.po?`<div style="font-size:12px;margin-bottom:10px;display:flex;align-items:center;gap:6px"><span style="font-weight:600;color:var(--text3);font-size:11px;letter-spacing:.3px">PO:</span><span style="font-family:var(--mono);font-size:12px;color:var(--amber);background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:4px;padding:2px 8px">${j.po}</span></div>`:
-        (isReview&&(currentRole==='admin'||currentRole==='office'))?`<div style="font-size:11px;color:rgba(240,96,96,.7);margin-bottom:10px">⚠ No PO number — required before completing</div>`:''}        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        (isProgress||isNew)?`<div style="margin-bottom:10px"><label style="font-size:11px;font-weight:600;color:var(--red);letter-spacing:.3px;display:block;margin-bottom:5px">⚠ PO NUMBER — required before submitting</label><div style="display:flex;gap:6px"><input id="po-inline-input" type="text" placeholder="Enter PO number..." style="flex:1;padding:7px 10px;font-size:13px;border:2px solid rgba(240,96,96,.5)"><button onclick="saveInlinePO('${j.id}')" style="padding:7px 12px;border-radius:var(--r-sm);background:rgba(245,166,35,.15);color:var(--amber);border:1px solid rgba(245,166,35,.3);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">Save</button></div></div>`:''}        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
           <div style="display:flex;align-items:center;gap:6px">
             <span style="font-size:12px;font-weight:600;color:var(--text3);letter-spacing:.3px">COMPLETE BY</span>
             ${j.dueDate
@@ -2011,15 +2011,56 @@ function submitReview(id) {
   const notesEl = document.getElementById('notes-ta');
   const notes = notesEl ? notesEl.value.trim() : jobById(id)?.techUpdate;
   if(!notes){toast('Add notes before submitting','warning');return;}
+
+  // Require PO number before submitting for review
+  const j = jobById(id);
+  if(!j.po) {
+    // Show PO input inline
+    const existing = document.getElementById('po-submit-banner');
+    if(!existing) {
+      const detailBody = document.getElementById('detail-body');
+      const actionsDiv = detailBody?.querySelector('.slide-up > div:last-child');
+      const banner = document.createElement('div');
+      banner.id = 'po-submit-banner';
+      banner.style.cssText = 'background:rgba(240,96,96,.1);border:2px solid #f06060;border-radius:var(--r-sm);padding:12px 14px;margin-bottom:10px';
+      banner.innerHTML = `<div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:8px">⚠ PO number required before submitting for review</div>
+        <div style="display:flex;gap:8px">
+          <input id="po-submit-input" type="text" placeholder="Enter PO number..." style="flex:1;padding:8px 10px;font-size:13px;border:2px solid #f06060" oninput="this.style.border='1px solid var(--border2)'">
+          <button onclick="savePOAndSubmit('${id}')" style="padding:8px 14px;border-radius:var(--r-sm);background:rgba(240,96,96,.2);color:var(--red);border:1px solid #f06060;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap">Save & submit</button>
+        </div>`;
+      if(actionsDiv) actionsDiv.insertAdjacentElement('beforebegin', banner);
+      else detailBody?.appendChild(banner);
+      document.getElementById('po-submit-input')?.focus();
+    }
+    toast('Enter a PO number before submitting', 'warning');
+    return;
+  }
+
   const _rj=jobById(id); const oldStatus=_rj?_rj.status:'';
   if(_rj){_rj.status='review';_rj.techUpdate=notes;_rj.partsUsed=[...tempUsedTags];}
   renderDetail();
   toast('Submitted for review — admin notified');
-  // Save to backend
   submitReviewApi(id, notes, tempUsedTags);
-  // Email admin/office about status change
   const admins = TECHS_LIST.filter(u=>u.role==='admin'||u.role==='office');
   admins.forEach(u=>{ if(u.email) emailJobStatus(jobById(id), u.name, u.email, oldStatus, 'review'); });
+}
+
+function savePOAndSubmit(id) {
+  const po = document.getElementById('po-submit-input')?.value?.trim();
+  if(!po) { toast('Please enter a PO number', 'warning'); return; }
+  const j = jobById(id);
+  if(j) j.po = po;
+  document.getElementById('po-submit-banner')?.remove();
+  submitReview(id);
+}
+
+function saveInlinePO(id) {
+  const po = document.getElementById('po-inline-input')?.value?.trim();
+  if(!po) { toast('Please enter a PO number', 'warning'); return; }
+  const j = jobById(id);
+  if(j) { j.po = po; saveJobToApi(j).catch(()=>{}); }
+  renderDetail();
+  toast('PO number saved ✓');
 }
 function addUsed() {
   const v = document.getElementById('used-inp')?.value?.trim();
@@ -2385,38 +2426,6 @@ async function markReceived(id) {
 // ── Admin: approve job complete → SMS to customer ─────────────────────────────
 async function approveJobComplete(id) {
   const j = jobById(id); if(!j) return;
-  // Require PO number before marking complete
-  if(!j.po) {
-    // Show PO input in detail
-    const existing = document.getElementById('po-required-banner');
-    if(!existing) {
-      const actionsEl = document.querySelector('#detail-body .slide-up > div:last-child');
-      const banner = document.createElement('div');
-      banner.id = 'po-required-banner';
-      banner.style.cssText = 'background:rgba(240,96,96,.1);border:2px solid #f06060;border-radius:var(--r-sm);padding:12px 14px;margin-bottom:10px';
-      banner.innerHTML = `<div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:8px">⚠ PO number required before marking complete</div>
-        <div style="display:flex;gap:8px">
-          <input id="po-entry-input" type="text" placeholder="Enter PO number..." style="flex:1;padding:8px 10px;font-size:13px;border:1px solid #f06060">
-          <button onclick="savePOAndComplete('${id}')" style="padding:8px 14px;border-radius:var(--r-sm);background:rgba(240,96,96,.2);color:var(--red);border:1px solid #f06060;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">Save & complete</button>
-        </div>`;
-      // Insert before action buttons
-      const detailBody = document.getElementById('detail-body');
-      const lastDiv = detailBody?.querySelector('.slide-up > div:last-child');
-      if(lastDiv) lastDiv.insertAdjacentElement('beforebegin', banner);
-      else detailBody?.appendChild(banner);
-      document.getElementById('po-entry-input')?.focus();
-    }
-    toast('Enter a PO number before completing', 'warning');
-    return;
-  }
-  await _doApproveJobComplete(id);
-}
-
-async function savePOAndComplete(id) {
-  const po = document.getElementById('po-entry-input')?.value?.trim();
-  if(!po) { toast('Please enter a PO number', 'warning'); return; }
-  const j = jobById(id);
-  if(j) j.po = po;
   await _doApproveJobComplete(id);
 }
 
