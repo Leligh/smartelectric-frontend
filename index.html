@@ -2212,14 +2212,6 @@ function assignOpenCall(callId, techName) {
   setTimeout(()=>closeOpenCallDetail(), 1200);
 }
 
-  renderOpenCallDetail();
-  renderOpenCalls();
-  updateHomeCounts();
-  renderJobList();
-  toast(techName + ' assigned ✓');
-  setTimeout(()=>closeOpenCallDetail(), 1000);
-}
-
 function requestOpenCall(callId) {
   const c = OPEN_CALLS.find(x=>String(x.id)===String(callId));
   const myName = currentUser ? currentUser.name : 'Dale K.';
