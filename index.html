@@ -1699,11 +1699,13 @@ function renderDetail() {
         <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">NOTES ${isProgress?'<span style="color:var(--red)">*</span>':''}</div>
         ${isProgress ? `
           ${micActive.notes?`<div style="background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.2);border-radius:var(--r-sm);padding:6px 10px;font-size:11px;color:var(--red);margin-bottom:6px;display:flex;align-items:center;gap:5px"><span style="animation:micpulse 1s infinite;display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red)"></span> Recording</div>`:''}
-          <div style="font-size:11px;color:var(--text3);margin-bottom:5px;min-height:13px" id="notes-hint">🎤 Tap mic</div>
-          <div style="display:flex;gap:6px;align-items:flex-start">
-            <textarea id="notes-ta" rows="4" style="flex:1;font-size:12px;min-height:80px" placeholder="What you found…">${j.techUpdate}</textarea>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px;min-height:13px" id="notes-hint">🎤 Tap mic to transcribe</div>
+          <div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:8px">
+            <textarea id="notes-mic-ta" rows="2" style="flex:1;font-size:12px;min-height:48px;background:rgba(240,96,96,.05);border-color:rgba(240,96,96,.2)" placeholder="Mic transcription appears here…"></textarea>
             <div class="mic-wrap"><div class="mic-ring ${micActive.notes?'pulse':''}"></div><button class="mic-btn ${micActive.notes?'on':''}" onclick="toggleMic('notes')" style="font-size:14px">🎤</button></div>
-          </div>` :
+          </div>
+          <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.3px;margin-bottom:4px">✏️ NOTES (type or edit here)</div>
+          <textarea id="notes-ta" rows="4" style="width:100%;font-size:12px;min-height:80px;box-sizing:border-box" placeholder="What you found, work completed, observations…">${j.techUpdate}</textarea>` :
           `<div style="font-size:12px;color:var(--text2);line-height:1.6">${j.techUpdate||'<em style="color:var(--text3)">None logged</em>'}</div>`
         }
       </div>
@@ -2092,11 +2094,14 @@ function toggleMic(slot) {
 }
 function startMic(slot) {
   micActive[slot]=true;
+  // Notes mic writes to mic-transcription box, not main notes-ta
+  const micTaId = slot==='notes' ? 'notes-mic-ta' : slot+'-ta';
   if(SR) {
     try {
       const r=new SR(); r.continuous=true; r.interimResults=true; r.lang='en-CA';
-      const ta=document.getElementById(slot+'-ta');
-      let final=ta?ta.value:'';
+      const ta=document.getElementById(micTaId);
+      if(ta) ta.value='';
+      let final='';
       r.onresult=e=>{let interim='';for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final+=e.results[i][0].transcript+' ';else interim=e.results[i][0].transcript;}if(ta){ta.value=final+(interim?`[${interim}]`:'');}};
       r.onerror=()=>runDemo(slot);
       r.onend=()=>{if(micActive[slot])r.start();};
@@ -2112,7 +2117,8 @@ function runDemo(slot) {
   const idx=(demoIdxs[slot]||0)%phrases.length;
   demoIdxs[slot]=(demoIdxs[slot]||0)+1;
   const phrase=phrases[idx];
-  const ta=document.getElementById(slot+'-ta');
+  const micTaId = slot==='notes' ? 'notes-mic-ta' : slot+'-ta';
+  const ta=document.getElementById(micTaId);
   let ci=0,acc=ta?ta.value:'';
   demoIntervals[slot]=setInterval(()=>{
     if(!micActive[slot]){clearInterval(demoIntervals[slot]);return;}
@@ -2124,8 +2130,17 @@ function stopMic(slot) {
   micActive[slot]=false;
   clearInterval(demoIntervals[slot]);
   try{if(demoIntervals[slot+'_rec'])demoIntervals[slot+'_rec'].stop();}catch(e){}
-  const ta=document.getElementById(slot+'-ta');
+  const micTaId = slot==='notes' ? 'notes-mic-ta' : slot+'-ta';
+  const ta=document.getElementById(micTaId);
   if(ta) ta.value=ta.value.replace(/\[.*?\]/g,'').trim();
+  // For notes: append mic transcription to the main notes textarea
+  if(slot==='notes') {
+    const mainTa = document.getElementById('notes-ta');
+    if(mainTa && ta && ta.value.trim()) {
+      mainTa.value = (mainTa.value ? mainTa.value + '\n' : '') + ta.value.trim();
+      ta.value = '';
+    }
+  }
   if(slot==='used'||slot==='req') {
     const raw=ta?ta.value.trim():'';
     if(raw){
