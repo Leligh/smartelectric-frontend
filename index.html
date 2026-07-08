@@ -2,10 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1SAPf6PG4yJc-XeiQkSfs0TFclozR_pA&libraries=places,geocoding&loading=async&callback=__mapsReady"></script>
 <script>
-function __mapsReady() { window._googleMapsReady = true; if(window._mapsReadyCb) window._mapsReadyCb(); }
+// Google Maps ready callback — must be global before Maps script loads
+window.__mapsReady = function() { 
+  window._googleMapsReady = true; 
+  if(window._mapsReadyCbs) window._mapsReadyCbs.forEach(cb => cb());
+  window._mapsReadyCbs = [];
+};
+window._mapsReadyCbs = [];
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1SAPf6PG4yJc-XeiQkSfs0TFclozR_pA&libraries=places,geocoding&loading=async&callback=__mapsReady"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1038,11 +1044,8 @@ let _gmScript = null;
 
 function loadGoogleMaps(cb) {
   if(window._googleMapsReady && window.google && window.google.maps) { cb(); return; }
-  // Queue the callback for when Maps is ready
-  const prev = window._mapsReadyCb;
-  window._mapsReadyCb = () => { if(prev) prev(); cb(); };
-  // If already loading, just wait for callback
-  if(window._googleMapsReady) cb();
+  if(window._mapsReadyCbs) window._mapsReadyCbs.push(cb);
+  else window._mapsReadyCbs = [cb];
 }
 
 
