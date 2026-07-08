@@ -437,10 +437,10 @@ select option{background:var(--bg2);color:var(--text1)}
           </div>
         </div>
         <div class="stat-row">
-          <div class="stat-box"><div class="stat-num" id="cnt-todo" style="color:var(--text1)">0</div><div class="stat-lbl">TO DO</div></div>
-          <div class="stat-box"><div class="stat-num" id="cnt-active" style="color:var(--amber)">0</div><div class="stat-lbl">ACTIVE</div></div>
-          <div class="stat-box"><div class="stat-num" id="cnt-review" style="color:var(--purple)">0</div><div class="stat-lbl">REVIEW</div></div>
-          <div class="stat-box"><div class="stat-num" id="cnt-done" style="color:var(--green)">0</div><div class="stat-lbl">DONE</div></div>
+          <div class="stat-box" onclick="filterJobListByStatus('new')" style="cursor:pointer"><div class="stat-num" id="cnt-todo" style="color:var(--text1)">0</div><div class="stat-lbl">TO DO</div></div>
+          <div class="stat-box" onclick="filterJobListByStatus('progress')" style="cursor:pointer"><div class="stat-num" id="cnt-active" style="color:var(--amber)">0</div><div class="stat-lbl">ACTIVE</div></div>
+          <div class="stat-box" onclick="filterJobListByStatus('review')" style="cursor:pointer"><div class="stat-num" id="cnt-review" style="color:var(--purple)">0</div><div class="stat-lbl">REVIEW</div></div>
+          <div class="stat-box" onclick="filterJobListByStatus('done')" style="cursor:pointer"><div class="stat-num" id="cnt-done" style="color:var(--green)">0</div><div class="stat-lbl">DONE</div></div>
         </div>
       </div>
       <div style="padding:14px 14px 0">
@@ -601,6 +601,7 @@ select option{background:var(--bg2);color:var(--text1)}
         <input type="password" id="setup-password2" placeholder="Repeat password" autocomplete="new-password">
       </div>
       <button class="btn btn-primary" style="padding:14px;font-size:15px;margin-top:4px" onclick="submitSetup()">Create password & sign in</button>
+      <button onclick="showLogin()" style="background:none;border:none;color:var(--text3);font-size:13px;cursor:pointer;margin-top:8px;font-family:var(--font);text-decoration:underline">← Back to login</button>
     </div>
   </div>
   <nav class="nav-bar" id="main-nav" style="display:none">
@@ -727,10 +728,11 @@ select option{background:var(--bg2);color:var(--text1)}
       <div style="font-size:13px;color:var(--text2);margin-bottom:18px" id="edit-user-subtitle">Change role</div>
       <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:10px">ROLE</div>
       <div id="edit-role-picker" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px"></div>
-      <div style="display:flex;gap:8px">
+      <div style="display:flex;gap:8px;margin-bottom:8px">
         <button onclick="closeEditUser()" class="btn btn-ghost" style="flex:1;padding:12px">Cancel</button>
         <button onclick="confirmEditUser()" class="btn btn-primary" style="flex:2;padding:12px">Save changes</button>
       </div>
+      <button onclick="confirmDeleteUser()" style="width:100%;padding:10px;border-radius:var(--r-sm);background:transparent;border:1px solid rgba(240,96,96,.25);color:rgba(240,96,96,.7);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">🗑 Remove this team member</button>
     </div>
   </div>
 
@@ -3050,6 +3052,39 @@ function selectEditRole(role) {
   });
 }
 
+function confirmDeleteUser() {
+  const t = TECHS_LIST[editUserTarget];
+  if(!t) return;
+  const existing = document.getElementById('delete-user-confirm');
+  if(existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'delete-user-confirm';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:400;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.innerHTML = `
+    <div style="width:100%;max-width:320px;background:var(--bg1);border-radius:var(--r);border:1px solid var(--border2);padding:20px">
+      <div style="font-size:15px;font-weight:600;margin-bottom:6px">Remove ${t.name}?</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:16px">This will permanently remove ${t.name} from the team. They will no longer be able to log in.</div>
+      <div style="display:flex;gap:8px">
+        <button onclick="document.getElementById('delete-user-confirm').remove()" class="btn btn-ghost" style="flex:1;padding:10px;font-size:12px">Cancel</button>
+        <button onclick="deleteUser(${editUserTarget})" style="flex:1;padding:10px;border-radius:var(--r);border:none;background:rgba(240,96,96,.2);color:var(--red);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)">Remove</button>
+      </div>
+    </div>`;
+  document.getElementById('app').appendChild(modal);
+}
+
+async function deleteUser(idx) {
+  const t = TECHS_LIST[idx];
+  if(!t) return;
+  document.getElementById('delete-user-confirm')?.remove();
+  closeEditUser();
+  try {
+    await apiCall(`/users/${t.id}`, { method: 'DELETE' });
+  } catch(e) { console.warn('[delete user]', e.message); }
+  TECHS_LIST.splice(idx, 1);
+  renderTeamSection();
+  toast(`${t.name} removed ✓`);
+}
+
 function closeEditUser() {
   document.getElementById('edit-user-modal').style.display = 'none';
   editUserTarget = null;
@@ -3947,13 +3982,20 @@ async function deleteJob(id) {
   const j = jobById(id);
   if(!j) return;
   const apiId = j._apiId || j.id;
+  const idx = jobIdxById(id);
+  if(idx>=0) JOBS.splice(idx,1);
+  closeDetail();
+  updateHomeCounts();
+  renderJobList();
+  renderOpenCalls();
+  if(IS_DESKTOP()) renderDesktopView(desktopTab);
+  toast('Job deleted');
   try {
     await apiCall(`/jobs/${apiId}`, { method: 'DELETE' });
   } catch(e) {
     console.warn('[delete job] backend failed:', e.message||e.error);
   }
-  const idx = jobIdxById(id);
-  if(idx>=0) JOBS.splice(idx,1);
+  return; // prevent duplicate actions below
   closeDetail();
   updateHomeCounts();
   renderJobList();
@@ -4694,8 +4736,8 @@ function renderDesktopDashboard(el) {
   var doneCount   = allJobs.filter(function(j){ return j.status==='done'; }).length;
 
   var statsHTML = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px">'
-    + [['Total jobs',allJobs.length,'#f0f0f5'],['Active',activeCount,'#f5c56a'],['Pending review',reviewCount,'#c4b0ff'],['Complete',doneCount,'#5ce0a8']]
-      .map(function(s){ return '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px"><div style="font-size:26px;font-weight:600;color:'+s[2]+';line-height:1.1">'+s[1]+'</div><div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:4px">'+s[0].toUpperCase()+'</div></div>'; })
+    + [['Total jobs',allJobs.length,'#f0f0f5',null],['Active',activeCount,'#f5c56a','progress'],['Pending review',reviewCount,'#c4b0ff','review'],['Complete',doneCount,'#5ce0a8','done']]
+      .map(function(s){ return '<div onclick="'+(s[3]?'filterJobListByStatus(\''+s[3]+'\')':'filterJobListByStatus(null)')+'" style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor=\'rgba(255,255,255,.2)\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,.07)\'"><div style="font-size:26px;font-weight:600;color:'+s[2]+';line-height:1.1">'+s[1]+'</div><div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:4px">'+s[0].toUpperCase()+'</div></div>'; })
       .join('') + '</div>';
 
   var tableRows = allJobs.map(function(j){
