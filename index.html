@@ -1038,11 +1038,20 @@ select option{background:var(--bg2);color:var(--text1)}
 let _gmScript = null;
 
 function loadGoogleMaps(cb) {
-  if(window._googleMapsReady && window.google && window.google.maps) { cb(); return; }
-  if(window._mapsReadyCbs) window._mapsReadyCbs.push(cb);
-  else window._mapsReadyCbs = [cb];
+  if(window.google && window.google.maps) { cb(); return; }
+  // Poll until Maps API is available (loaded at end of body)
+  let attempts = 0;
+  const poll = setInterval(() => {
+    attempts++;
+    if(window.google && window.google.maps) {
+      clearInterval(poll);
+      cb();
+    } else if(attempts > 100) {
+      clearInterval(poll);
+      console.warn('Google Maps failed to load after 10s');
+    }
+  }, 100);
 }
-
 
 // Mobile browsers (especially Android Chrome) report unreliable vh/dvh values
 // due to dynamic URL bar show/hide. Calculate real viewport height in JS instead.
