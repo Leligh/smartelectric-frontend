@@ -3264,9 +3264,9 @@ function openClientMapPin(clientId) {
           document.getElementById('client-pin-coords').textContent = `📍 ${results[0].formatted_address}`;
         }
       });
-    });
-    }));
-  });
+    });  // end cMap.addListener click
+  });    // end loadGoogleMaps
+  }));   // end requestAnimationFrame
 }
 
 async function saveClientPinFromModal(clientId) {
