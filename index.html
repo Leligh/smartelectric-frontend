@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1SAPf6PG4yJc-XeiQkSfs0TFclozR_pA&libraries=places,geocoding" async defer></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1034,13 +1035,14 @@ let _gmScript = null;
 
 function loadGoogleMaps(cb) {
   if(window.google && window.google.maps) { cb(); return; }
-  if(_gmScript) { _gmScript.addEventListener('load', cb); return; }
-  _gmScript = document.createElement('script');
-  _gmScript.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_KEY}&libraries=places,geocoding`;
-  _gmScript.async = true;
-  _gmScript.defer = true;
-  _gmScript.addEventListener('load', cb);
-  document.head.appendChild(_gmScript);
+  // Script is in <head> but may still be loading - poll for it
+  const poll = setInterval(() => {
+    if(window.google && window.google.maps) {
+      clearInterval(poll);
+      cb();
+    }
+  }, 100);
+  setTimeout(() => clearInterval(poll), 10000); // give up after 10s
 }
 
 
