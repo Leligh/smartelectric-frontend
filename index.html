@@ -4747,11 +4747,13 @@ function renderDesktopOpen(el) {
 }
 
 function renderDesktopMap(el) {
+  const mapH = window.innerHeight - 56;
   el.style.padding = '0';
-  el.style.height = 'calc(100vh - 56px)';
+  el.style.height = mapH + 'px';
+  el.style.overflow = 'hidden';
   el.innerHTML = `
-    <div style="position:relative;width:100%;height:100%">
-      <div id="map-container" style="width:100%;height:100%"></div>
+    <div style="position:relative;width:100%;height:${mapH}px">
+      <div id="map-container" style="width:100%;height:${mapH}px;background:#1a1f2e"></div>
       <div style="position:absolute;top:12px;left:12px;right:12px;z-index:5;display:flex;gap:8px">
         <div style="flex:1;position:relative">
           <input type="text" id="map-search-input" placeholder="Search client, job or address…" autocomplete="off"
@@ -4763,7 +4765,14 @@ function renderDesktopMap(el) {
         <button onclick="plotJobMarkers();plotClientPins();toast('Map refreshed ✓')" style="padding:10px 14px;border-radius:8px;background:rgba(15,17,23,.95);border:1px solid rgba(255,255,255,.15);color:#5ce0a8;font-size:13px;cursor:pointer;white-space:nowrap">↻ Refresh</button>
       </div>
     </div>`;
-  initMap();
+  // Reset map state so it reinitializes with the new container
+  _mapInitialized = false;
+  _map = null;
+  setTimeout(() => {
+    const container = document.getElementById('map-container');
+    if(container) container.style.height = mapH + 'px';
+    initMap();
+  }, 50);
 }
 
 function renderDesktopParts(el) {
@@ -5060,9 +5069,10 @@ function initMap() {
 
 function onMapTabOpen() {
   const container = document.getElementById('map-container');
-  if(container) container.style.height = IS_DESKTOP() ? 'calc(100vh - 56px)' : 'calc(100vh - 76px)';
+  const h = window.innerHeight - 76;
+  if(container) container.style.height = h + 'px';
   if(!_mapInitialized) { initMap(); return; }
-  google.maps.event.trigger(_map, 'resize');
+  if(_map && window.google) google.maps.event.trigger(_map, 'resize');
 }
 
 const STATUS_COLORS = { new:'#f5c56a', progress:'#4f8ef7', review:'#c4b0ff', done:'#3ecf8e', overdue:'#f06060', assigned:'#4f8ef7' };
