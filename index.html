@@ -2,11 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script>
-// Pre-declare maps callback array so it exists before anything runs
-window._mapsReadyCbs = [];
-window._googleMapsReady = false;
-</script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1039,18 +1035,22 @@ let _gmScript = null;
 
 function loadGoogleMaps(cb) {
   if(window.google && window.google.maps) { cb(); return; }
-  // Poll until Maps API is available (loaded at end of body)
-  let attempts = 0;
-  const poll = setInterval(() => {
-    attempts++;
-    if(window.google && window.google.maps) {
-      clearInterval(poll);
-      cb();
-    } else if(attempts > 100) {
-      clearInterval(poll);
-      console.warn('Google Maps failed to load after 10s');
-    }
-  }, 100);
+  // Queue callback
+  if(!window._mapsReadyCbs) window._mapsReadyCbs = [];
+  window._mapsReadyCbs.push(cb);
+  // Inject script if not already done
+  if(!window._mapsScriptInjected) {
+    window._mapsScriptInjected = true;
+    window.__mapsLoaded = function() {
+      window.google = window.google || {};
+      if(window._mapsReadyCbs) { window._mapsReadyCbs.forEach(fn=>fn()); window._mapsReadyCbs=[]; }
+    };
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD1SAPf6PG4yJc-XeiQkSfs0TFclozR_pA&libraries=places,geocoding&callback=__mapsLoaded';
+    s.onerror = () => console.error('Google Maps script failed to load');
+    document.head.appendChild(s);
+  }
 }
 
 // Mobile browsers (especially Android Chrome) report unreliable vh/dvh values
@@ -5320,11 +5320,5 @@ function geoLocateMe() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.j<!-- Google Maps -->
 
 </body>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1SAPf6PG4yJc-XeiQkSfs0TFclozR_pA&libraries=places,geocoding"></script>
-<script>
-// Maps loaded synchronously - mark as ready
-window._googleMapsReady = true;
-if(window._mapsReadyCbs) { window._mapsReadyCbs.forEach(cb=>cb()); window._mapsReadyCbs=[]; }
-</script>
 <!-- BUILD:2025-06-18-v2 -->
 </html>
