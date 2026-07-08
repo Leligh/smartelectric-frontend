@@ -5027,16 +5027,12 @@ function closeIosSheet() {
   var s = document.getElementById('ios-sheet');
   if (s) s.style.display = 'none';
 }
-</script>
-<!-- Leaflet Map -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.j<!-- Google Maps -->
-<script>
+
+
+
 const GOOGLE_MAPS_KEY = 'AIzaSyD1SAPf6PG4yJc-XeiQkSfs0TFclozR_pA';
 let _map = null, _mapMarkers = [], _pinMarker = null, _myMarker = null;
 let _mapInitialized = false, _clientPins = {}, _pendingJobPin = null;
-let _gmScript = null;
-
-// loadGoogleMaps moved to main script block for global access
 
 function initMap() {
   if(_mapInitialized) return;
@@ -5311,6 +5307,9 @@ function geoLocateMe() {
 }
 
 </script>
+<!-- Leaflet Map -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.j<!-- Google Maps -->
+
 </body>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1SAPf6PG4yJc-XeiQkSfs0TFclozR_pA&libraries=places,geocoding"></script>
 <script>
