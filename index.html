@@ -3078,8 +3078,12 @@ async function deleteUser(idx) {
   document.getElementById('delete-user-confirm')?.remove();
   closeEditUser();
   try {
-    await apiCall(`/users/${t.id}`, { method: 'DELETE' });
-  } catch(e) { console.warn('[delete user]', e.message); }
+    const result = await apiCall(`/users/${t.id}`, { method: 'DELETE' });
+    console.log('[delete user] backend result:', result);
+  } catch(e) { 
+    console.warn('[delete user]', e.message||e.error);
+    toast('Warning: user may reappear after refresh — backend error', 'warning');
+  }
   TECHS_LIST.splice(idx, 1);
   renderTeamSection();
   toast(`${t.name} removed ✓`);
@@ -3991,17 +3995,12 @@ async function deleteJob(id) {
   if(IS_DESKTOP()) renderDesktopView(desktopTab);
   toast('Job deleted');
   try {
-    await apiCall(`/jobs/${apiId}`, { method: 'DELETE' });
+    const result = await apiCall(`/jobs/${apiId}`, { method: 'DELETE' });
+    console.log('[delete job] backend result:', result);
   } catch(e) {
     console.warn('[delete job] backend failed:', e.message||e.error);
+    toast('Warning: job may reappear after refresh — backend error', 'warning');
   }
-  return; // prevent duplicate actions below
-  closeDetail();
-  updateHomeCounts();
-  renderJobList();
-  renderOpenCalls();
-  if(IS_DESKTOP()) renderDesktopView(desktopTab);
-  toast('Job deleted');
 }
 
 async function approveJobApi(jobId) {
