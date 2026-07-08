@@ -5312,14 +5312,11 @@ function geoLocateMe() {
 
 </script>
 </body>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1SAPf6PG4yJc-XeiQkSfs0TFclozR_pA&libraries=places,geocoding"></script>
 <script>
-// Google Maps callback — defined after all our functions are loaded
-window.__mapsReady = function() {
-  window._googleMapsReady = true;
-  if(window._mapsReadyCbs) window._mapsReadyCbs.forEach(cb => cb());
-  window._mapsReadyCbs = [];
-};
+// Maps loaded synchronously - mark as ready
+window._googleMapsReady = true;
+if(window._mapsReadyCbs) { window._mapsReadyCbs.forEach(cb=>cb()); window._mapsReadyCbs=[]; }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1SAPf6PG4yJc-XeiQkSfs0TFclozR_pA&libraries=places,geocoding&loading=async&callback=__mapsReady"></script>
 <!-- BUILD:2025-06-18-v2 -->
 </html>
