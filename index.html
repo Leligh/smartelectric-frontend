@@ -559,12 +559,18 @@ select option{background:var(--bg2);color:var(--text1)}
           </div>
         </div>
 
-        <div class="sec-head" id="demo-switch-head">Demo — Switch role</div>
+        <div id="view-as-banner" style="display:none;align-items:center;gap:10px;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.25);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:16px">
+          <span style="font-size:16px">👁</span>
+          <div style="flex:1;font-size:12px;color:var(--accent)">Previewing another role — this doesn't change your real account</div>
+          <button onclick="viewAsRole(actualRole)" style="padding:6px 12px;border-radius:20px;background:var(--accent);border:none;color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap">← Back to my role</button>
+        </div>
+
+        <div class="sec-head" id="demo-switch-head">🔍 View as <span style="font-weight:400;color:var(--text3);text-transform:none;letter-spacing:0">— preview only, doesn't change your real role</span></div>
         <div class="role-grid" style="margin-bottom:20px" id="demo-switch-grid">
-          <button class="role-btn" onclick="demoLogin('admin')"><span class="role-icon">🛡</span><span class="role-name">Admin</span></button>
-          <button class="role-btn" onclick="demoLogin('office')"><span class="role-icon">🏢</span><span class="role-name">Office</span></button>
-          <button class="role-btn" onclick="demoLogin('tech')"><span class="role-icon">🔧</span><span class="role-name">Tech</span></button>
-          <button class="role-btn" onclick="demoLogin('parts')"><span class="role-icon">📦</span><span class="role-name">Parts</span></button>
+          <button class="role-btn" id="viewas-admin" onclick="viewAsRole('admin')"><span class="role-icon">🛡</span><span class="role-name">Admin</span></button>
+          <button class="role-btn" id="viewas-office" onclick="viewAsRole('office')"><span class="role-icon">🏢</span><span class="role-name">Office</span></button>
+          <button class="role-btn" id="viewas-tech" onclick="viewAsRole('tech')"><span class="role-icon">🔧</span><span class="role-name">Tech</span></button>
+          <button class="role-btn" id="viewas-parts" onclick="viewAsRole('parts')"><span class="role-icon">📦</span><span class="role-name">Parts</span></button>
         </div>
 
         <div class="sec-head">Settings</div>
@@ -1118,6 +1124,7 @@ function setJob(id, updates) { const i=jobIdxById(id); if(i>=0) Object.assign(JO
 
 // ── STATE ────────────────────────────────────────────────────────────────────
 let currentRole = 'tech';
+let actualRole = null; // the person's real logged-in role — never changed by "View as"
 let currentUser = null;
 let currentTab = 'home';
 let currentJobId = null;
@@ -1287,6 +1294,7 @@ function demoLogin(role) {
 }
 
 function applyLogin(user) {
+  actualRole = user.role; // real role, unaffected by "View as"
   document.getElementById('login-screen').style.display  = 'none';
   document.getElementById('main-screen').style.display   = 'block';
   document.getElementById('main-nav').style.display      = 'flex';
@@ -1388,6 +1396,69 @@ function applyNavPermissions(role) {
 function canAccessTab(tab) {
   const allowed = ROLE_TABS[currentRole] || ['home','profile'];
   return allowed.includes(tab);
+}
+
+// ── VIEW AS ──────────────────────────────────────────────────────────────────
+// Lets an admin/office user preview the app as another role WITHOUT changing
+// their real account — this never calls the backend, so it can never lock
+// anyone out. To go back, they can always reach Profile (every role keeps
+// access to it) and tap "Back to my role".
+function viewAsRole(role) {
+  if (actualRole !== 'admin' && actualRole !== 'office') {
+    toast('Only admins can preview other roles', 'warning');
+    return;
+  }
+  currentRole = role;
+  const rc = ROLE_COLORS[role] || ROLE_COLORS.tech;
+  const isSelf = role === actualRole;
+
+  const label = document.getElementById('profile-role-label');
+  if (label) label.textContent = isSelf ? (rc.label||role) : ('👁 Viewing as: ' + (rc.label||role));
+  const sbRole = document.getElementById('sb-role');
+  if (sbRole) sbRole.textContent = isSelf ? (rc.label||role) : ('👁 Viewing as ' + (rc.label||role));
+
+  applyNavPermissions(role);
+  const partsBadge = document.getElementById('parts-badge');
+  if (partsBadge) partsBadge.style.display = (role==='parts') ? 'block' : 'none';
+
+  const sbTabs = {home:'sb-home',open:'sb-open',map:'sb-map',parts:'sb-parts',clients:'sb-clients',review:'sb-review',completed:'sb-completed',inbox:'sb-inbox',profile:'sb-profile'};
+  const allowed = ROLE_TABS[role] || ['home','profile'];
+  Object.entries(sbTabs).forEach(([tab, id]) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = allowed.includes(tab) ? 'flex' : 'none';
+  });
+  const sbBadge = document.getElementById('sb-parts-badge');
+  if (sbBadge) sbBadge.style.display = role==='parts' ? 'flex' : 'none';
+
+  const heroNewJobBtn = document.getElementById('hero-new-job-btn');
+  if (heroNewJobBtn) heroNewJobBtn.style.display = (role==='admin'||role==='office'||role==='tech') ? 'block' : 'none';
+  const showSettings = (role==='admin'||role==='office');
+  const r1 = document.getElementById('ms365-settings-row');
+  const r2 = document.getElementById('twilio-settings-row');
+  if (r1) r1.style.display = showSettings ? 'flex' : 'none';
+  if (r2) r2.style.display = showSettings ? 'flex' : 'none';
+
+  highlightViewAsRole(role);
+  const banner = document.getElementById('view-as-banner');
+  if (banner) banner.style.display = isSelf ? 'none' : 'flex';
+
+  const defaultTab = role === 'parts' ? 'parts' : 'home';
+  desktopTab = defaultTab;
+  switchTab(defaultTab);
+  updateHomeCounts();
+  renderJobList();
+  renderOpenCalls();
+  renderPartsList();
+  if (IS_DESKTOP()) { initLayout(); renderDesktopView(desktopTab); }
+
+  toast(isSelf ? 'Back to your normal view ✓' : '👁 Previewing as ' + (rc.label||role));
+}
+
+function highlightViewAsRole(role) {
+  ['admin','office','tech','parts'].forEach(r => {
+    const btn = document.getElementById('viewas-'+r);
+    if (btn) btn.classList.toggle('selected', r===role);
+  });
 }
 
 function doLogin() {
@@ -3093,6 +3164,10 @@ function openEditUser(idx) {
   editUserTarget = idx;
   const t = TECHS_LIST[idx];
   if(!t) return;
+  if(currentUser && t.id && t.id === currentUser.id) {
+    toast('Use "View as" in Profile to preview your own account as another role — editing your own role here is disabled to prevent lockouts', 'warning');
+    return;
+  }
   editUserSelectedRole = t.role || 'tech';
   document.getElementById('edit-user-subtitle').textContent = t.name;
   const roles = ['tech','parts','office','admin'];
