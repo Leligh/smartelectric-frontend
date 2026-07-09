@@ -3181,7 +3181,7 @@ function closeEditUser() {
   editUserSelectedRole = null;
 }
 
-function confirmEditUser() {
+async function confirmEditUser() {
   if(editUserTarget === null || !editUserSelectedRole) return;
   const t = TECHS_LIST[editUserTarget];
   if(!t) return;
@@ -3192,10 +3192,16 @@ function confirmEditUser() {
   t.tc = rc.tc;
   closeEditUser();
   renderTeamSection();
-  if(oldRole !== editUserSelectedRole) {
-    toast(t.name + ' is now ' + rc.label);
-  } else {
-    toast('No changes made');
+  // Save to backend
+  try {
+    await apiCall(`/users/${t.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ role: editUserSelectedRole })
+    });
+    toast(t.name + ' is now ' + rc.label + ' ✓');
+  } catch(e) {
+    toast('Role updated locally — backend sync failed', 'warning');
+    console.warn('[edit user]', e.message||e.error);
   }
 }
 
