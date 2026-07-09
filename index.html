@@ -5189,8 +5189,8 @@ function renderDesktopDashboard(el) {
     var t = TECHS_LIST.find(function(t){ return t.name===j.tech; }) || {bg:'rgba(79,142,247,.2)',tc:'#7bb3ff',av:'?'};
     var priColors = {normal:'color:rgba(255,255,255,.35)',urgent:'color:#f5c56a',overdue:'color:#f06060'};
     return '<tr style="border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer" onclick="desktopOpenJob(\''+j.id+'\')">'
-      + '<td style="padding:11px 14px;color:rgba(255,255,255,.5);white-space:nowrap">'+j.client+'</td>'
-      + '<td style="padding:11px 14px;font-weight:600;color:rgba(255,255,255,.9);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+j.title+'</td>'
+      + '<td style="padding:11px 14px;font-weight:600;color:rgba(255,255,255,.9);white-space:nowrap">'+j.client+'</td>'
+      + '<td style="padding:11px 14px;color:rgba(255,255,255,.5);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+j.title+'</td>'
       + '<td style="padding:11px 14px"><div style="display:flex;align-items:center;gap:6px">'
       + (j.tech ? '<div class="av" style="width:22px;height:22px;font-size:8px;background:'+t.bg+';color:'+t.tc+'">'+t.av+'</div><span style="color:rgba(255,255,255,.7);font-size:12px">'+j.tech+'</span>' : '<span style="color:var(--red);font-size:11px">Unassigned</span>')
       + '</div></td>'
