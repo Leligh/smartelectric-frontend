@@ -3190,13 +3190,14 @@ async function confirmEditUser() {
   t.role = editUserSelectedRole;
   t.bg = rc.bg;
   t.tc = rc.tc;
+  const newRole = editUserSelectedRole;   // capture BEFORE closeEditUser() clears it
   closeEditUser();
   renderTeamSection();
   // Save to backend
   try {
     await apiCall(`/users/${t.id}`, {
       method: 'PATCH',
-      body: JSON.stringify({ role: editUserSelectedRole })
+      body: JSON.stringify({ role: newRole })
     });
     toast(t.name + ' is now ' + rc.label + ' ✓');
   } catch(e) {
