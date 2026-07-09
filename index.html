@@ -1950,6 +1950,27 @@ function renderDetail() {
         <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:2px">CLIENT ${currentRole==='tech'&&!isDone&&!isReview?'<span style="font-size:10px;font-weight:400;color:var(--text3)"> — tap ✏️ to edit for this job</span>':''}</div>
         ${clientRows}
         ${qbNote}
+        ${(()=>{
+          const client = CLIENTS.find(c=>c.name===j.client);
+          const contacts = client?.contacts || [];
+          const allContacts = [
+            ...(j.phone||client?.phone ? [{ name: j.client, phone: j.phone||client?.phone||'', role: 'Primary' }] : []),
+            ...contacts
+          ];
+          return allContacts.length > 1 ? `
+            <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+              <div style="font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.3px;margin-bottom:6px">ADDITIONAL CONTACTS</div>
+              ${contacts.map(ct=>`
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+                  <div>
+                    <span style="font-size:12px;font-weight:600">${ct.name}</span>
+                    ${ct.role?`<span style="font-size:11px;color:var(--text3);margin-left:6px">${ct.role}</span>`:''}
+                  </div>
+                  ${ct.phone?`<a href="tel:${ct.phone.replace(/\D/g,'')}" style="font-size:12px;color:var(--accent);text-decoration:none">📞 ${ct.phone}</a>`:''}
+                </div>`).join('')}
+            </div>` : '';
+        })()}
+        <button onclick="openAddContactFromJob('${j.id}')" style="margin-top:10px;width:100%;padding:8px;border-radius:var(--r-sm);background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.2);color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add contact for ${j.client}</button>
       </div>
       ${doneState}
       ${arrivalSmsState}
@@ -3267,6 +3288,54 @@ function openClientDetail(id) {
       <button onclick="openNewJobForClient(${c.id})" class="btn btn-primary" style="width:100%;padding:13px">+ New job for this client</button>
     </div>`;
   document.getElementById('client-detail').classList.add('open');
+}
+
+function openAddContactFromJob(jobId) {
+  const j = jobById(jobId);
+  if(!j) return;
+  const client = CLIENTS.find(c=>c.name===j.client);
+  const clientId = client?.id;
+  const existing = document.getElementById('add-contact-modal');
+  if(existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'add-contact-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:400;display:flex;align-items:flex-end;padding:0';
+  modal.innerHTML = `
+    <div style="width:100%;background:var(--bg1);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 16px 32px;animation:slideUp .3s ease-out">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:15px;font-weight:600">Add contact for ${j.client}</div>
+        <button onclick="document.getElementById('add-contact-modal').remove()" style="background:var(--bg3);border:1px solid var(--border);width:28px;height:28px;border-radius:50%;cursor:pointer;color:var(--text2);font-size:14px">✕</button>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:14px">This contact will be saved to ${j.client}'s profile and available on all future jobs</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <input id="job-contact-name" type="text" placeholder="Contact name (e.g. John Smith)" style="padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font)">
+        <input id="job-contact-phone" type="tel" placeholder="Phone number" style="padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font)">
+        <input id="job-contact-role" type="text" placeholder="Role (e.g. Farm manager, Owner, Operator)" style="padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font)">
+        <button onclick="saveContactFromJob('${clientId}','${jobId}')" class="btn btn-primary" style="padding:12px;margin-top:4px">💾 Save to ${j.client}'s profile</button>
+      </div>
+    </div>`;
+  document.getElementById('app').appendChild(modal);
+  setTimeout(()=>document.getElementById('job-contact-name')?.focus(), 100);
+}
+
+async function saveContactFromJob(clientId, jobId) {
+  const name = document.getElementById('job-contact-name')?.value?.trim();
+  const phone = document.getElementById('job-contact-phone')?.value?.trim();
+  const role = document.getElementById('job-contact-role')?.value?.trim();
+  if(!name && !phone) { toast('Enter a name or phone number', 'warning'); return; }
+  const client = CLIENTS.find(c=>String(c.id)===String(clientId));
+  if(!client) { toast('Client not found', 'warning'); return; }
+  if(!client.contacts) client.contacts = [];
+  client.contacts.push({ name: name||'', phone: phone||'', role: role||'' });
+  try {
+    await apiCall(`/clients/${clientId}`, { method:'PUT', body: JSON.stringify({...client}) });
+    document.getElementById('add-contact-modal')?.remove();
+    toast(`✓ Contact saved to ${client.name}'s profile`);
+    // Re-render the job detail to show the new contact
+    renderDetail();
+  } catch(e) {
+    toast('Save failed: ' + (e.error||e.message), 'warning');
+  }
 }
 
 function openAddContactModal(clientId) {
