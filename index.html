@@ -1161,7 +1161,12 @@ function hasOverride(job, field) {
 // ── LOGIN ────────────────────────────────────────────────────────────────────
 function showLogin() {
   localStorage.removeItem('se_auth_token');
+  setupInviteToken = null;
+  // Clear token from URL
+  if(window.location.search) window.history.replaceState({}, '', window.location.pathname);
   document.getElementById('login-screen').style.display='flex';
+  document.getElementById('setup-screen').style.display='none';
+  document.getElementById('forgot-modal') && (document.getElementById('forgot-modal').style.display='none');
   document.getElementById('main-screen').style.display='none';
   document.getElementById('main-nav').style.display='none';
   document.getElementById('desktop-sidebar') && (document.getElementById('desktop-sidebar').style.display='none');
@@ -1474,12 +1479,11 @@ let activeStatusFilter = null;
 
 function filterJobListByStatus(status) {
   if(activeStatusFilter === status) {
-    // Tap same filter again to clear it
     activeStatusFilter = null;
   } else {
     activeStatusFilter = status;
   }
-  // Highlight active stat box
+  // Highlight active stat box on mobile
   ['new','progress','review','done'].forEach(s => {
     const idMap = {new:'cnt-todo',progress:'cnt-active',review:'cnt-review',done:'cnt-done'};
     const box = document.getElementById(idMap[s])?.closest('.stat-box');
@@ -1488,7 +1492,9 @@ function filterJobListByStatus(status) {
       box.style.background = (activeStatusFilter===s) ? 'rgba(79,142,247,.15)' : 'var(--bg2)';
     }
   });
+  // Update both mobile and desktop
   renderJobList();
+  if(IS_DESKTOP()) renderDesktopView(desktopTab);
 }
 
 function renderJobList() {
@@ -4626,7 +4632,14 @@ async function submitSetup() {
     document.getElementById('setup-screen').style.display = 'none';
     // Clear token from URL without reload
     window.history.replaceState({}, '', window.location.pathname);
-    applyLogin(appUser);
+    setupInviteToken = null;
+    // If this was a password reset (not a new invite), go to login so they can sign in fresh
+    if(data.isReset) {
+      toast('Password updated! Please sign in with your new password ✓');
+      showLogin();
+    } else {
+      applyLogin(appUser);
+    }
   } catch(e) {
     err.textContent = e.error || 'Setup failed — link may have expired. Ask your admin to resend.';
     err.style.display = 'block';
@@ -4739,7 +4752,7 @@ function renderDesktopDashboard(el) {
       .map(function(s){ return '<div onclick="'+(s[3]?'filterJobListByStatus(\''+s[3]+'\')':'filterJobListByStatus(null)')+'" style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor=\'rgba(255,255,255,.2)\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,.07)\'"><div style="font-size:26px;font-weight:600;color:'+s[2]+';line-height:1.1">'+s[1]+'</div><div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:4px">'+s[0].toUpperCase()+'</div></div>'; })
       .join('') + '</div>';
 
-  var tableRows = allJobs.map(function(j){
+  var tableRows = allJobs.filter(function(j){ return !activeStatusFilter || j.status===activeStatusFilter; }).map(function(j){
     var t = TECHS_LIST.find(function(t){ return t.name===j.tech; }) || {bg:'rgba(79,142,247,.2)',tc:'#7bb3ff',av:'?'};
     var priColors = {normal:'color:rgba(255,255,255,.35)',urgent:'color:#f5c56a',overdue:'color:#f06060'};
     return '<tr style="border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer" onclick="desktopOpenJob(\''+j.id+'\')">'
