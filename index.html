@@ -1448,7 +1448,8 @@ function removeJobPhoto(jobId, idx) {
 function updateHomeCounts() {
   const myName = currentUser ? currentUser.name : '';
   const isAdmin = currentRole==='admin'||currentRole==='office';
-  const mine = isAdmin ? JOBS : JOBS.filter(j=>j.tech===myName);
+  const seesAll = isAdmin || currentRole==='parts';
+  const mine = seesAll ? JOBS : JOBS.filter(j=>j.tech===myName);
   const todo   = mine.filter(j=>j.status==='new').length;
   const active = mine.filter(j=>j.status==='progress').length;
   const review = mine.filter(j=>j.status==='review').length;
@@ -1474,7 +1475,7 @@ function updateHomeCounts() {
     }
   });
 
-  const jobs = isAdmin ? JOBS : mine;
+  const jobs = seesAll ? JOBS : mine;
   const today = new Date().toLocaleDateString('en-CA',{weekday:'long'});
   document.getElementById('hero-date').textContent = `${today} · ${jobs.length} job${jobs.length!==1?'s':''} today`;
 
@@ -1510,10 +1511,9 @@ function filterJobListByStatus(status) {
 
 function renderJobList() {
   const myName = currentUser ? currentUser.name : '';
-  const isAdmin = currentRole==='admin'||currentRole==='office';
+  const isAdmin = currentRole==='admin'||currentRole==='office'||currentRole==='parts';
   let jobs = isAdmin ? JOBS
            : currentRole==='tech' ? JOBS.filter(j=>j.tech===myName)
-           : currentRole==='parts' ? JOBS.filter(j=>j.status!=='done')
            : JOBS;
   if(activeStatusFilter) jobs = jobs.filter(j=>j.status===activeStatusFilter);
   const el = document.getElementById('job-list-home');
@@ -3190,13 +3190,14 @@ async function confirmEditUser() {
   t.role = editUserSelectedRole;
   t.bg = rc.bg;
   t.tc = rc.tc;
+  const newRole = editUserSelectedRole;   // capture BEFORE closeEditUser() clears it
   closeEditUser();
   renderTeamSection();
   // Save to backend
   try {
     await apiCall(`/users/${t.id}`, {
       method: 'PATCH',
-      body: JSON.stringify({ role: editUserSelectedRole })
+      body: JSON.stringify({ role: newRole })
     });
     toast(t.name + ' is now ' + rc.label + ' ✓');
   } catch(e) {
@@ -5087,9 +5088,9 @@ function renderDesktopView(tab) {
 }
 
 function renderDesktopDashboard(el) {
-  var isAdmin = currentRole === 'admin' || currentRole === 'office';
+  var isAdmin = currentRole === 'admin' || currentRole === 'office' || currentRole === 'parts';
   var myName  = currentUser ? currentUser.name : '';
-  // Tech sees only their jobs; admin/office see all assigned+unassigned
+  // Tech sees only their jobs; admin/office/parts see all assigned+unassigned
   var allJobs = isAdmin ? JOBS : JOBS.filter(function(j){ return j.tech === myName; });
   var reviewCount = allJobs.filter(function(j){ return j.status==='review'; }).length;
   var activeCount = allJobs.filter(function(j){ return j.status==='progress'; }).length;
