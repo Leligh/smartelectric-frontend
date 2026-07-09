@@ -2024,7 +2024,7 @@ function startJob(id) {
   const clientPhone = (j.overrides && j.overrides.phone) || j.phone || '';
   const techFirst = j.tech ? j.tech.split(' ')[0] : 'Your technician';
   const dialNum = clientPhone.replace(/\D/g,'');
-  const msg = `Hi ${clientName.split(' ')[0]}, this is ${techFirst} from Smart Electric Service Pro. We have arrived and are now working on your ${j.title} at ${j.address}. We'll update you when the job is complete.`;
+  const msg = `Hi ${clientName.split(' ')[0]}, this is ${techFirst} from Smart Electric. We have arrived and are now working on your ${j.title} at ${j.address}. We'll update you when the job is complete.`;
 
   // Build arrival SMS modal
   const existing = document.getElementById('arrival-modal');
@@ -2042,6 +2042,7 @@ function startJob(id) {
         <button onclick="closeArrivalModal()" style="background:var(--bg3);border:1px solid var(--border);width:28px;height:28px;border-radius:50%;cursor:pointer;color:var(--text2);font-size:14px;display:flex;align-items:center;justify-content:center">✕</button>
       </div>
 
+      ${clientPhone ? `
       <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg2);border-radius:var(--r-sm);border:1px solid var(--border);margin-bottom:14px">
         <div style="width:36px;height:36px;border-radius:50%;background:rgba(79,142,247,.15);border:1px solid rgba(79,142,247,.25);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">👤</div>
         <div style="flex:1;min-width:0">
@@ -2050,7 +2051,6 @@ function startJob(id) {
         </div>
         <div style="font-size:11px;color:var(--green);font-weight:500">✓ Will receive SMS</div>
       </div>
-
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:16px">
         <div style="font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between">
           MESSAGE PREVIEW
@@ -2058,15 +2058,19 @@ function startJob(id) {
         </div>
         <textarea id="arrival-msg" rows="4" style="width:100%;background:transparent;border:none;font-size:13px;color:var(--text1);font-family:var(--font);line-height:1.6;resize:none;outline:none;padding:0">${msg}</textarea>
         <div style="font-size:10px;color:var(--text3);margin-top:6px;text-align:right">via Twilio</div>
-      </div>
+      </div>` :
+      `<div style="padding:12px 14px;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:var(--r-sm);margin-bottom:16px;font-size:13px;color:var(--amber)">
+        ⚠ No phone number on file for ${clientName} — SMS will be skipped
+      </div>`}
 
       <div style="display:flex;gap:8px">
-        <button onclick="startJobNoSms('${id}')" class="btn btn-ghost" style="flex:1;padding:12px;font-size:12px">Skip SMS</button>
-        <button onclick="startJobWithSms('${id}')" class="btn btn-green" style="flex:2;padding:12px">📱 Start &amp; text client</button>
+        <button onclick="startJobNoSms('${id}')" class="btn btn-ghost" style="flex:1;padding:12px;font-size:13px">Skip SMS</button>
+        ${clientPhone ? `<button onclick="startJobWithSms('${id}')" class="btn btn-green" style="flex:2;padding:12px">📱 Start & text client</button>` : ''}
       </div>
     </div>`;
   document.getElementById('app').appendChild(modal);
 }
+
 
 function closeArrivalModal() {
   const m = document.getElementById('arrival-modal');
