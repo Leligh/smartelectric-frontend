@@ -3140,8 +3140,15 @@ async function confirmAddTech() {
     TECHS_LIST.push({ name, phone, email, av: ini, bg: rc.bg, tc: rc.tc, role, pendingSetup: true });
     closeAddTech();
     renderTeamSection();
-    if(email) emailUserInvite(email, name, role);
-    toast(`Invite sent to ${name} via SMS ✓ — setup link included`);
+    let emailSent = false;
+    if(email) emailSent = await emailUserInvite(email, name, role);
+    if(email) {
+      toast(emailSent
+        ? `Invite sent to ${name} via SMS & email ✓`
+        : `Invite sent to ${name} via SMS ✓ — email failed, check Microsoft 365 connection`, emailSent ? 'success' : 'warning');
+    } else {
+      toast(`Invite sent to ${name} via SMS ✓`);
+    }
   } catch(e) {
     // Fallback to local add if backend invite fails
     TECHS_LIST.push({ name, phone, email, av: ini, bg: rc.bg, tc: rc.tc, role, pendingSetup: true });
@@ -4729,13 +4736,14 @@ async function emailPartsUpdate(partsReq, recipientEmail, recipientName, updateT
 }
 
 async function emailUserInvite(recipientEmail, recipientName, role) {
-  if(!recipientEmail || !m365Connected) return;
+  if(!recipientEmail) return false;
   try {
     await apiCall('/email/invite', {
       method: 'POST',
       body: JSON.stringify({ recipientEmail, recipientName, role })
     });
-  } catch(e) { console.warn('[email] invite failed:', e.message); }
+    return true;
+  } catch(e) { console.warn('[email] invite failed:', e.message); return false; }
 }
 
 // ── NEW JOB MODAL ─────────────────────────────────────────────────────────────
