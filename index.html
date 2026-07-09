@@ -3922,13 +3922,24 @@ async function saveJobToApi(job) {
       tech_id:        (tech && tech.id) ? tech.id : null,
       scheduled_at:   (job.time && job.time !== 'TBD') ? job.time : null,
       due_date:       job.dueDate || null,
+      status:         job.status || 'new',
+      tech_notes:     job.techUpdate || null,
+      po_number:      job.po || null,
     };
-    console.log('[jobs] Saving to backend:', payload);
-    const data = await apiCall('/jobs', { method:'POST', body: JSON.stringify(payload) });
-    if(data && data.job) {
-      const idx = JOBS.findIndex(j => j.id === job.id);
-      if(idx >= 0) JOBS[idx] = mapJobFromApi(data.job);
-      console.log('[jobs] Saved successfully, API ID:', data.job.id);
+
+    // Use PUT to update existing jobs, POST to create new ones
+    const isExisting = job._apiId || (typeof job.id === 'string' && job.id.includes('-'));
+    const apiId = job._apiId || job.id;
+
+    let data;
+    if(isExisting) {
+      data = await apiCall(`/jobs/${apiId}`, { method:'PUT', body: JSON.stringify(payload) });
+    } else {
+      data = await apiCall('/jobs', { method:'POST', body: JSON.stringify(payload) });
+      if(data && data.job) {
+        const idx = JOBS.findIndex(j => j.id === job.id);
+        if(idx >= 0) JOBS[idx] = mapJobFromApi(data.job);
+      }
     }
     return data;
   } catch(e) {
