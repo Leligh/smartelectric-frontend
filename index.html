@@ -2122,7 +2122,6 @@ async function startJobWithSms(id) {
   if(IS_DESKTOP()) renderDesktopView(desktopTab);
   toast('Job started — texting client ✓');
   // Real Twilio SMS
-  const j = jobById(id);
   if(!j) return;
   const clientPhone = (j.overrides&&j.overrides.phone)||j.phone;
   const clientName  = (j.overrides&&j.overrides.name)||j.client;
