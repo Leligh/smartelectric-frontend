@@ -5397,6 +5397,29 @@ function renderDesktopProfile(el) {
       + '</div>';
   }).join('');
 
+  var viewAsCard = '';
+  if (actualRole === 'admin' || actualRole === 'office') {
+    var vRoles = ['admin','office','tech','parts'];
+    var vColors = { tech:{bg:'rgba(79,142,247,.15)',border:'#7bb3ff',tc:'#7bb3ff'}, parts:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#f5c56a'}, office:{bg:'rgba(62,207,142,.12)',border:'#5ce0a8',tc:'#5ce0a8'}, admin:{bg:'rgba(167,139,250,.15)',border:'#c4b0ff',tc:'#c4b0ff'} };
+    var vIcons = { tech:'🔧', parts:'📦', office:'🏢', admin:'🛡' };
+    var isPreview = currentRole !== actualRole;
+    viewAsCard = '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px;margin-bottom:16px">'
+      + '<div style="font-size:13px;font-weight:600;margin-bottom:4px">🔍 View as</div>'
+      + '<div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:12px">Preview only — never changes your real role</div>'
+      + (isPreview ? '<div style="display:flex;align-items:center;gap:8px;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.25);border-radius:8px;padding:8px 10px;margin-bottom:12px"><span style="font-size:13px">👁</span><div style="flex:1;font-size:11px;color:#7bb3ff">Previewing as ' + (ROLE_COLORS[currentRole]?.label||currentRole) + '</div><button onclick="viewAsRole(actualRole)" style="padding:4px 10px;border-radius:20px;background:#4f8ef7;border:none;color:#fff;font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font)">Back</button></div>' : '')
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+      + vRoles.map(function(r){
+          var active = r === currentRole;
+          var c = vColors[r];
+          return '<button onclick="viewAsRole(\''+r+'\')" style="display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;background:'+(active?c.bg:'rgba(255,255,255,.03)')+';border:1px solid '+(active?c.border:'rgba(255,255,255,.1)')+';cursor:pointer;font-family:var(--font);text-align:left">'
+            + '<span style="font-size:15px">'+vIcons[r]+'</span>'
+            + '<span style="font-size:12px;font-weight:600;color:'+(active?c.tc:'rgba(255,255,255,.6)')+'">'+(ROLE_COLORS[r]?.label||r)+'</span>'
+            + '</button>';
+        }).join('')
+      + '</div>'
+      + '</div>';
+  }
+
   el.innerHTML = '<div style="display:grid;grid-template-columns:300px 1fr;gap:20px">'
     // Left: profile card
     + '<div>'
@@ -5411,6 +5434,7 @@ function renderDesktopProfile(el) {
     + '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px"><span style="color:rgba(255,255,255,.4)">Twilio SMS</span><button onclick="openTwilioModal()" style="background:none;border:none;cursor:pointer;font-size:12px;color:'+(twilioConnected?'#5ce0a8':'#f5c56a')+';font-family:var(--font)">'+(twilioConnected?'✓ Connected':'Not connected')+'</button></div>'
     + '<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px"><span style="color:rgba(255,255,255,.4)">Microsoft 365</span><button onclick="openM365Modal()" style="background:none;border:none;cursor:pointer;font-size:12px;color:'+(m365Connected?'#5ce0a8':'#f5c56a')+';font-family:var(--font)">'+(m365Connected?'✓ Connected':'Not connected')+'</button></div>'
     + '</div></div>'
+    + viewAsCard
     + '<button onclick="showLogin()" class="btn btn-ghost" style="width:100%;padding:11px">Sign out</button>'
     + '</div>'
     // Right: users table
