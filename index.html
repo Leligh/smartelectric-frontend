@@ -2815,15 +2815,12 @@ async function importClientsFromExcel(input) {
         return obj;
       });
 
-      toast(`Checking ${rows.length} clients…`);
-
-      // Build duplicate check set from existing clients
-      // Match on normalized name OR phone number
+      // Build duplicate sets
       const existingNames = new Set(CLIENTS.map(c=>(c.name||'').toLowerCase().replace(/\s+/g,' ').trim()));
       const existingPhones = new Set(CLIENTS.map(c=>(c.phone||'').replace(/\D/g,'')).filter(p=>p.length>=7));
 
-      let imported = 0, skipped = 0, errors = 0;
-
+      // Filter to only new clients
+      const toImport = [];
       for(const r of rows) {
         const name    = (r['name']||'').trim();
         const company = (r['company']||'').trim();
@@ -2832,32 +2829,42 @@ async function importClientsFromExcel(input) {
         const address = (r['address']||'').trim();
         const city    = (r['city']||'').trim();
         if(!name && !company) continue;
-
         const clientName = name || company;
         const normName = clientName.toLowerCase().replace(/\s+/g,' ').trim();
         const normPhone = phone.replace(/\D/g,'');
+        if(existingNames.has(normName)) continue;
+        if(normPhone.length>=7 && existingPhones.has(normPhone)) continue;
+        existingNames.add(normName);
+        if(normPhone.length>=7) existingPhones.add(normPhone);
+        toImport.push({ name: clientName, company: (company&&company.toLowerCase()!==clientName.toLowerCase())?company:'', phone, email, address, city });
+      }
 
-        // Skip if name already exists OR if phone matches an existing client
-        if(existingNames.has(normName)) { skipped++; continue; }
-        if(normPhone.length >= 7 && existingPhones.has(normPhone)) { skipped++; continue; }
+      toast(`Importing ${toImport.length} new clients…`);
+      let imported = 0, errors = 0;
+      const CHUNK = 100; // send 100 clients per request
 
+      for(let i=0; i<toImport.length; i+=CHUNK) {
+        const chunk = toImport.slice(i, i+CHUNK);
         try {
-          await apiCall('/clients', { method:'POST', body: JSON.stringify({
-            name: clientName,
-            company: (company && company.toLowerCase()!==clientName.toLowerCase()) ? company : '',
-            phone, email, address, city
-          })});
-          existingNames.add(normName);
-          if(normPhone.length>=7) existingPhones.add(normPhone);
-          imported++;
+          const result = await apiCall('/clients/bulk', {
+            method: 'POST',
+            body: JSON.stringify({ clients: chunk })
+          });
+          imported += result.inserted || chunk.length;
         } catch(e) {
-          errors++;
-          console.warn('[import]', clientName, e.message||e.error);
+          // Fall back to individual inserts if bulk fails
+          for(const client of chunk) {
+            try {
+              await apiCall('/clients', { method:'POST', body: JSON.stringify(client) });
+              imported++;
+            } catch(e2) { errors++; }
+          }
         }
+        toast(`Importing… ${Math.min(i+CHUNK, toImport.length)} of ${toImport.length}`);
       }
 
       await loadClients();
-      toast(`✓ ${imported} imported · ${skipped} already existed · ${errors} errors`);
+      toast(`✓ ${imported} imported · ${rows.length - toImport.length} already existed · ${errors} errors`);
       input.value = '';
     } catch(err) {
       toast('Could not parse file', 'warning');
