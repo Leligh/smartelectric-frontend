@@ -948,7 +948,14 @@ select option{background:var(--bg2);color:var(--text1)}
         </div>
         <div class="field">
           <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">NOTES / BRIEF</label>
-          <textarea id="nj-brief" placeholder="Job description or special instructions..." style="width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font);resize:vertical;min-height:72px;box-sizing:border-box"></textarea>
+          <div style="display:flex;gap:6px;align-items:flex-start">
+            <textarea id="nj-brief" placeholder="Job description or special instructions..." style="flex:1;padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font);resize:vertical;min-height:72px;box-sizing:border-box"></textarea>
+            <div class="mic-wrap" style="flex-shrink:0;margin-top:2px">
+              <div class="mic-ring" id="nj-brief-mic-ring"></div>
+              <button class="mic-btn" id="nj-brief-mic-btn" onclick="toggleNewJobMic()" style="font-size:14px" title="Tap to dictate notes">🎤</button>
+            </div>
+          </div>
+          <div id="nj-brief-mic-hint" style="font-size:11px;color:var(--text3);margin-top:4px;display:none">🔴 Recording — tap mic to stop</div>
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:20px">
@@ -3216,6 +3223,21 @@ function openClientDetail(id) {
       </div>
     </div>`).join('') : '<div style="font-size:12px;color:var(--text3)">No saved locations yet — use the map to drop a pin and save it here</div>';
 
+  const canEdit = currentRole==='admin'||currentRole==='office'||currentRole==='tech';
+  const contacts = c.contacts || [];
+  const contactsHTML = contacts.length ? contacts.map((ct,i) => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:13px;font-weight:600">${ct.name}</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px">${ct.role||''}</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center">
+        ${ct.phone?`<a href="tel:${ct.phone.replace(/\D/g,'')}" style="padding:5px 10px;border-radius:var(--r-sm);background:rgba(62,207,142,.12);border:1px solid rgba(62,207,142,.25);color:var(--green);font-size:11px;text-decoration:none">📞 ${ct.phone}</a>`:''}
+        ${canEdit?`<button onclick="deleteClientContact('${c.id}',${i})" style="padding:5px 8px;border-radius:var(--r-sm);background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.2);color:var(--red);font-size:11px;cursor:pointer;font-family:var(--font)">✕</button>`:''}
+      </div>
+    </div>`).join('') :
+    '<div style="font-size:12px;color:var(--text3)">No additional contacts</div>';
+
   document.getElementById('client-detail-body').innerHTML = `
     <div class="slide-up">
       <div class="card-sm" style="margin-bottom:12px">
@@ -3223,6 +3245,13 @@ function openClientDetail(id) {
         <div class="info-row"><span class="info-label">📧 Email</span><span class="info-value">${c.email||'—'}</span></div>
         <div class="info-row"><span class="info-label">📍 Address</span><span class="info-value">${c.address||'—'}${c.city?', '+c.city:''}</span></div>
         ${c.notes?`<div class="info-row" style="border:none"><span class="info-label">📝 Notes</span><span class="info-value" style="white-space:pre-wrap">${c.notes}</span></div>`:''}
+      </div>
+      <div class="card-sm" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">👥 CONTACTS</div>
+          ${canEdit?`<button onclick="openAddContactModal('${c.id}')" style="padding:4px 10px;border-radius:20px;background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.25);color:var(--accent);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add contact</button>`:''}
+        </div>
+        ${contactsHTML}
       </div>
       <div class="card-sm" style="margin-bottom:12px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
@@ -3238,6 +3267,89 @@ function openClientDetail(id) {
       <button onclick="openNewJobForClient(${c.id})" class="btn btn-primary" style="width:100%;padding:13px">+ New job for this client</button>
     </div>`;
   document.getElementById('client-detail').classList.add('open');
+}
+
+function openAddContactModal(clientId) {
+  const existing = document.getElementById('add-contact-modal');
+  if(existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'add-contact-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:400;display:flex;align-items:flex-end;padding:0';
+  modal.innerHTML = `
+    <div style="width:100%;background:var(--bg1);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 16px 32px;animation:slideUp .3s ease-out">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:15px;font-weight:600">Add contact</div>
+        <button onclick="document.getElementById('add-contact-modal').remove()" style="background:var(--bg3);border:1px solid var(--border);width:28px;height:28px;border-radius:50%;cursor:pointer;color:var(--text2);font-size:14px">✕</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <input id="contact-name-input" type="text" placeholder="Contact name (e.g. John Smith)" style="padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font)">
+        <input id="contact-phone-input" type="tel" placeholder="Phone number" style="padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font)">
+        <input id="contact-role-input" type="text" placeholder="Role (e.g. Farm manager, Owner, Operator)" style="padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font)">
+        <button onclick="saveClientContact('${clientId}')" class="btn btn-primary" style="padding:12px;margin-top:4px">Save contact</button>
+      </div>
+    </div>`;
+  document.getElementById('app').appendChild(modal);
+  setTimeout(()=>document.getElementById('contact-name-input')?.focus(), 100);
+}
+
+async function saveClientContact(clientId) {
+  const name = document.getElementById('contact-name-input')?.value?.trim();
+  const phone = document.getElementById('contact-phone-input')?.value?.trim();
+  const role = document.getElementById('contact-role-input')?.value?.trim();
+  if(!name && !phone) { toast('Enter a name or phone number', 'warning'); return; }
+  const client = CLIENTS.find(c=>String(c.id)===String(clientId));
+  if(!client) return;
+  if(!client.contacts) client.contacts = [];
+  client.contacts.push({ name: name||'', phone: phone||'', role: role||'' });
+  try {
+    await apiCall(`/clients/${clientId}`, { method:'PUT', body: JSON.stringify({...client}) });
+    document.getElementById('add-contact-modal')?.remove();
+    toast('Contact saved ✓');
+    openClientDetail(clientId);
+  } catch(e) { toast('Save failed: ' + (e.error||e.message), 'warning'); }
+}
+
+async function deleteClientContact(clientId, idx) {
+  const client = CLIENTS.find(c=>String(c.id)===String(clientId));
+  if(!client || !client.contacts) return;
+  client.contacts.splice(idx, 1);
+  await apiCall(`/clients/${clientId}`, { method:'PUT', body: JSON.stringify({...client}) });
+  toast('Contact removed ✓');
+  openClientDetail(clientId);
+}
+
+// ── SMS CONTACT PICKER — shown when texting a client with multiple contacts ──
+function pickSmsContact(job, onPick) {
+  const client = CLIENTS.find(c=>c.name===job.client);
+  const contacts = client?.contacts || [];
+  const allNumbers = [];
+  if(job.phone || client?.phone) allNumbers.push({ name: job.client, phone: job.phone||client?.phone, role: 'Primary' });
+  contacts.forEach(ct => { if(ct.phone) allNumbers.push(ct); });
+  if(allNumbers.length <= 1) { onPick(allNumbers[0]?.phone || job.phone || ''); return; }
+  // Show picker
+  const existing = document.getElementById('sms-contact-picker');
+  if(existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'sms-contact-picker';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;display:flex;align-items:flex-end;padding:0';
+  modal.innerHTML = `
+    <div style="width:100%;background:var(--bg1);border-radius:20px 20px 0 0;border-top:1px solid var(--border2);padding:20px 16px 32px;animation:slideUp .3s ease-out">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-size:15px;font-weight:600">Send SMS to…</div>
+        <button onclick="document.getElementById('sms-contact-picker').remove()" style="background:var(--bg3);border:1px solid var(--border);width:28px;height:28px;border-radius:50%;cursor:pointer;color:var(--text2);font-size:14px">✕</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${allNumbers.map((ct,i)=>`
+          <button onclick="document.getElementById('sms-contact-picker').remove();(${onPick.toString()})('${ct.phone}')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:var(--r-sm);background:var(--bg2);border:1px solid var(--border2);cursor:pointer;font-family:var(--font);text-align:left;width:100%">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text1)">${ct.name}</div>
+              <div style="font-size:11px;color:var(--text3);margin-top:2px">${ct.role||''}</div>
+            </div>
+            <div style="font-size:13px;color:var(--accent)">${ct.phone}</div>
+          </button>`).join('')}
+      </div>
+    </div>`;
+  document.getElementById('app').appendChild(modal);
 }
 
 function openClientMapPin(clientId) {
@@ -4478,6 +4590,69 @@ function geoLocateJobMap() {
   });
 }
 
+// ── NEW JOB MIC ──────────────────────────────────────────────────────────────
+let _njMicActive = false, _njMicRec = null, _njMicInterval = null;
+
+function toggleNewJobMic() {
+  _njMicActive ? stopNewJobMic() : startNewJobMic();
+}
+
+function startNewJobMic() {
+  _njMicActive = true;
+  const btn = document.getElementById('nj-brief-mic-btn');
+  const ring = document.getElementById('nj-brief-mic-ring');
+  const hint = document.getElementById('nj-brief-mic-hint');
+  if(btn) btn.classList.add('on');
+  if(ring) ring.classList.add('pulse');
+  if(hint) hint.style.display = 'block';
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(SR) {
+    try {
+      const r = new SR(); r.continuous=true; r.interimResults=true; r.lang='en-CA';
+      const ta = document.getElementById('nj-brief');
+      let final = ta ? ta.value : '';
+      r.onresult = e => {
+        let interim = '';
+        for(let i=e.resultIndex;i<e.results.length;i++) {
+          if(e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+          else interim = e.results[i][0].transcript;
+        }
+        if(ta) ta.value = final + (interim ? `[${interim}]` : '');
+      };
+      r.onerror = () => stopNewJobMic();
+      r.onend = () => { if(_njMicActive) r.start(); };
+      r.start();
+      _njMicRec = r;
+      return;
+    } catch(e) {}
+  }
+  // Demo fallback
+  const ta = document.getElementById('nj-brief');
+  let acc = ta ? ta.value : '';
+  const phrase = 'Client reports issue started last week. Equipment is in the south field. Access via east gate.';
+  let ci = 0;
+  _njMicInterval = setInterval(() => {
+    if(!_njMicActive) { clearInterval(_njMicInterval); return; }
+    if(ci < phrase.length) { acc += phrase[ci]; ci++; if(ta) ta.value = acc; }
+    else clearInterval(_njMicInterval);
+  }, 40);
+}
+
+function stopNewJobMic() {
+  _njMicActive = false;
+  if(_njMicRec) { try { _njMicRec.stop(); } catch(e){} _njMicRec = null; }
+  if(_njMicInterval) { clearInterval(_njMicInterval); _njMicInterval = null; }
+  const btn = document.getElementById('nj-brief-mic-btn');
+  const ring = document.getElementById('nj-brief-mic-ring');
+  const hint = document.getElementById('nj-brief-mic-hint');
+  if(btn) btn.classList.remove('on');
+  if(ring) ring.classList.remove('pulse');
+  if(hint) hint.style.display = 'none';
+  // Clean up interim brackets
+  const ta = document.getElementById('nj-brief');
+  if(ta) ta.value = ta.value.replace(/\[.*?\]/g, '').trim();
+}
+
 function openNewJobModal() {
   const isTech = currentRole==='tech';
   const techField = document.getElementById('nj-tech-field');
@@ -4501,6 +4676,7 @@ function openNewJobModal() {
 }
 
 function closeNewJobModal() {
+  stopNewJobMic();
   document.getElementById('new-job-modal').style.display = 'none';
 }
 
