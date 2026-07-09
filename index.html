@@ -2802,7 +2802,6 @@ async function importClientsFromExcel(input) {
       const lines = text.trim().split('\n');
       const headers = lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,'').toLowerCase());
       const rows = lines.slice(1).filter(l=>l.trim()).map(line => {
-        // Handle quoted CSV fields
         const vals = [];
         let cur = '', inQ = false;
         for(let i=0;i<line.length;i++){
@@ -2816,10 +2815,12 @@ async function importClientsFromExcel(input) {
         return obj;
       });
 
-      toast(`Checking ${rows.length} clients against existing records…`);
+      toast(`Checking ${rows.length} clients…`);
 
-      // Build set of existing client names for dedup check
-      const existingNames = new Set(CLIENTS.map(c=>(c.name||'').toLowerCase().trim()));
+      // Build duplicate check set from existing clients
+      // Match on normalized name OR phone number
+      const existingNames = new Set(CLIENTS.map(c=>(c.name||'').toLowerCase().replace(/\s+/g,' ').trim()));
+      const existingPhones = new Set(CLIENTS.map(c=>(c.phone||'').replace(/\D/g,'')).filter(p=>p.length>=7));
 
       let imported = 0, skipped = 0, errors = 0;
 
@@ -2830,19 +2831,24 @@ async function importClientsFromExcel(input) {
         const email   = (r['email']||'').trim();
         const address = (r['address']||'').trim();
         const city    = (r['city']||'').trim();
-
         if(!name && !company) continue;
-        const clientName = name || company;
 
-        // Skip if already exists
-        if(existingNames.has(clientName.toLowerCase())) {
-          skipped++;
-          continue;
-        }
+        const clientName = name || company;
+        const normName = clientName.toLowerCase().replace(/\s+/g,' ').trim();
+        const normPhone = phone.replace(/\D/g,'');
+
+        // Skip if name already exists OR if phone matches an existing client
+        if(existingNames.has(normName)) { skipped++; continue; }
+        if(normPhone.length >= 7 && existingPhones.has(normPhone)) { skipped++; continue; }
 
         try {
-          await apiCall('/clients', { method:'POST', body: JSON.stringify({ name: clientName, company: company!==name?company:'', phone, email, address, city }) });
-          existingNames.add(clientName.toLowerCase());
+          await apiCall('/clients', { method:'POST', body: JSON.stringify({
+            name: clientName,
+            company: (company && company.toLowerCase()!==clientName.toLowerCase()) ? company : '',
+            phone, email, address, city
+          })});
+          existingNames.add(normName);
+          if(normPhone.length>=7) existingPhones.add(normPhone);
           imported++;
         } catch(e) {
           errors++;
@@ -2851,7 +2857,7 @@ async function importClientsFromExcel(input) {
       }
 
       await loadClients();
-      toast(`✓ Imported ${imported} new clients · ${skipped} already existed · ${errors} errors`);
+      toast(`✓ ${imported} imported · ${skipped} already existed · ${errors} errors`);
       input.value = '';
     } catch(err) {
       toast('Could not parse file', 'warning');
