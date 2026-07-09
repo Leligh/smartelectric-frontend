@@ -2083,11 +2083,21 @@ function closeArrivalModal() {
 
 function startJobNoSms(id) {
   closeArrivalModal();
-  const _sj=jobById(id); if(_sj){_sj.status='progress';_sj.arrivedAt=new Date().toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});}
-  const j=jobById(id); if(j) saveJobToApi(j).catch(e=>console.warn('[save]',e.message));
+  const j = jobById(id);
+  if(j) {
+    j.status = 'progress';
+    j.arrivedAt = new Date().toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});
+    // Save to backend using status endpoint
+    const apiId = j._apiId || j.id;
+    apiCall(`/jobs/${apiId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'progress', note: 'Job started' })
+    }).catch(e => console.warn('[start job]', e.message));
+  }
   renderDetail();
   updateHomeCounts();
   renderJobList();
+  if(IS_DESKTOP()) renderDesktopView(desktopTab);
   toast('Job started');
 }
 
@@ -2095,10 +2105,21 @@ async function startJobWithSms(id) {
   const msgEl = document.getElementById('arrival-msg');
   const message = msgEl ? msgEl.value.trim() : null;
   closeArrivalModal();
-  const _swj=jobById(id); if(_swj){_swj.status='progress';_swj.arrivedAt=new Date().toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});_swj.arrivalSmsSent=true;}
+  const j = jobById(id);
+  if(j) {
+    j.status = 'progress';
+    j.arrivedAt = new Date().toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});
+    j.arrivalSmsSent = true;
+    const apiId = j._apiId || j.id;
+    apiCall(`/jobs/${apiId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'progress', note: 'Job started' })
+    }).catch(e => console.warn('[start job]', e.message));
+  }
   renderDetail();
   updateHomeCounts();
   renderJobList();
+  if(IS_DESKTOP()) renderDesktopView(desktopTab);
   toast('Job started — texting client ✓');
   // Real Twilio SMS
   const j = jobById(id);
@@ -2562,10 +2583,13 @@ async function _doApproveJobComplete(id) {
   renderDetail();
   updateHomeCounts();
   renderJobList();
+  if(IS_DESKTOP()) renderDesktopView(desktopTab);
   toast('Job marked complete — texting customer ✓');
   const clientPhone = (j.overrides&&j.overrides.phone)||j.phone;
   const clientName  = (j.overrides&&j.overrides.name)||j.client;
-  // Save to backend
+  // Save status to backend
+  const apiId = j._apiId || j.id;
+  apiCall(`/jobs/${apiId}/status`, { method:'PATCH', body: JSON.stringify({ status:'done' }) }).catch(()=>{});
   approveJobApi(id);
   // SMS to customer
   try {
@@ -2574,27 +2598,26 @@ async function _doApproveJobComplete(id) {
       body: JSON.stringify({ clientPhone, clientName, job: j, techName: j.tech })
     });
   } catch(e) { console.warn('[sms] job-complete failed:', e.message); }
-  // Email tech about completion
   const tech = TECHS_LIST.find(x=>x.name===j.tech);
   if(tech?.email) emailJobStatus(j, tech.name, tech.email, oldStatus, 'done');
 }
 
 function rejectReview(id) {
-  const _rej=jobById(id); if(_rej) _rej.status='progress';
+  const j = jobById(id); if(!j) return;
+  j.status = 'progress';
+  const apiId = j._apiId || j.id;
+  apiCall(`/jobs/${apiId}/status`, { method:'PATCH', body: JSON.stringify({ status:'progress' }) }).catch(()=>{});
   renderDetail();
   updateHomeCounts();
-  // SMS tech to go ahead
-  const j = jobById(id);
-  if(j) {
-    const tech = TECHS_LIST.find(t=>t.name===j.tech);
-    if(tech?.phone) {
-      apiCall('/sms/job-status', {
-        method:'POST',
-        body: JSON.stringify({ techPhone: tech.phone, techName: tech.name, job: j, newStatus: 'Go ahead approved — proceed with the job' })
-      }).catch(e=>console.warn('[sms]',e.message));
-    }
-    toast('Sent back to ' + (j.tech||'technician') + ' with go-ahead ✓');
+  if(IS_DESKTOP()) renderDesktopView(desktopTab);
+  const tech = TECHS_LIST.find(t=>t.name===j.tech);
+  if(tech?.phone) {
+    apiCall('/sms/job-status', {
+      method:'POST',
+      body: JSON.stringify({ techPhone: tech.phone, techName: tech.name, job: j, newStatus: 'Go ahead approved — proceed with the job' })
+    }).catch(e=>console.warn('[sms]',e.message));
   }
+  toast('Sent back to ' + (j.tech||'technician') + ' with go-ahead ✓');
 }
 
 
