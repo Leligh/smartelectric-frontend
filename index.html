@@ -5842,6 +5842,8 @@ function geoLocateMe() {
     const detailOpen = document.querySelector('.detail-screen.open');
     const modalOpen = document.querySelector('[id$="-modal"]:not([style*="display:none"])');
     if(detailOpen || modalOpen) return;
+    // Don't swipe while on the Map tab — panning the map looks identical to a swipe gesture
+    if(currentTab === 'map') return;
     // Don't swipe if inside a scrollable element that's actually scrolling
     const dx = e.changedTouches[0].clientX - touchStartX;
     const dy = e.changedTouches[0].clientY - touchStartY;
