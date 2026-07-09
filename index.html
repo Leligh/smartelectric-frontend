@@ -2841,7 +2841,7 @@ async function importClientsFromExcel(input) {
 
       toast(`Importing ${toImport.length} new clients…`);
       let imported = 0, errors = 0;
-      const CHUNK = 100; // send 100 clients per request
+      const CHUNK = 50; // send 50 clients per request
 
       for(let i=0; i<toImport.length; i+=CHUNK) {
         const chunk = toImport.slice(i, i+CHUNK);
@@ -2850,17 +2850,14 @@ async function importClientsFromExcel(input) {
             method: 'POST',
             body: JSON.stringify({ clients: chunk })
           });
-          imported += result.inserted || chunk.length;
+          imported += result.inserted || 0;
+          console.log(`[import] chunk ${i}-${i+CHUNK}: inserted ${result.inserted}`);
         } catch(e) {
-          // Fall back to individual inserts if bulk fails
-          for(const client of chunk) {
-            try {
-              await apiCall('/clients', { method:'POST', body: JSON.stringify(client) });
-              imported++;
-            } catch(e2) { errors++; }
-          }
+          console.error('[import] bulk failed:', e.message||e.error, 'chunk:', i);
+          errors += chunk.length;
         }
         toast(`Importing… ${Math.min(i+CHUNK, toImport.length)} of ${toImport.length}`);
+        await new Promise(r => setTimeout(r, 200));
       }
 
       await loadClients();
