@@ -444,7 +444,7 @@ select option{background:var(--bg2);color:var(--text1)}
           <div class="stat-box" onclick="filterJobListByStatus('new')" style="cursor:pointer"><div class="stat-num" id="cnt-todo" style="color:var(--text1)">0</div><div class="stat-lbl">TO DO</div></div>
           <div class="stat-box" onclick="filterJobListByStatus('progress')" style="cursor:pointer"><div class="stat-num" id="cnt-active" style="color:var(--amber)">0</div><div class="stat-lbl">ACTIVE</div></div>
           <div class="stat-box" onclick="filterJobListByStatus('review')" style="cursor:pointer"><div class="stat-num" id="cnt-review" style="color:var(--purple)">0</div><div class="stat-lbl">REVIEW</div></div>
-          <div class="stat-box" onclick="filterJobListByStatus('done')" style="cursor:pointer"><div class="stat-num" id="cnt-done" style="color:var(--green)">0</div><div class="stat-lbl">DONE</div></div>
+          <div class="stat-box" onclick="switchTab('completed')" style="cursor:pointer"><div class="stat-num" id="cnt-done" style="color:var(--green)">0</div><div class="stat-lbl">DONE</div></div>
         </div>
       </div>
       <div style="padding:14px 14px 0">
@@ -1586,6 +1586,7 @@ function renderJobList() {
   let jobs = isAdmin ? JOBS
            : currentRole==='tech' ? JOBS.filter(j=>j.tech===myName)
            : JOBS;
+  jobs = jobs.filter(j=>j.status!=='done'); // completed jobs live under the Completed tab only
   if(activeStatusFilter) jobs = jobs.filter(j=>j.status===activeStatusFilter);
   const el = document.getElementById('job-list-home');
   if(!el) return;
@@ -5182,10 +5183,10 @@ function renderDesktopDashboard(el) {
 
   var statsHTML = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px">'
     + [['Total jobs',allJobs.length,'#f0f0f5',null],['Active',activeCount,'#f5c56a','progress'],['Pending review',reviewCount,'#c4b0ff','review'],['Complete',doneCount,'#5ce0a8','done']]
-      .map(function(s){ return '<div onclick="'+(s[3]?'filterJobListByStatus(\''+s[3]+'\')':'filterJobListByStatus(null)')+'" style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor=\'rgba(255,255,255,.2)\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,.07)\'"><div style="font-size:26px;font-weight:600;color:'+s[2]+';line-height:1.1">'+s[1]+'</div><div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:4px">'+s[0].toUpperCase()+'</div></div>'; })
+      .map(function(s){ return '<div onclick="'+(s[3]==='done' ? 'desktopNav(\'completed\')' : s[3] ? 'filterJobListByStatus(\''+s[3]+'\')' : 'filterJobListByStatus(null)')+'" style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor=\'rgba(255,255,255,.2)\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,.07)\'"><div style="font-size:26px;font-weight:600;color:'+s[2]+';line-height:1.1">'+s[1]+'</div><div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:4px">'+s[0].toUpperCase()+'</div></div>'; })
       .join('') + '</div>';
 
-  var tableRows = allJobs.filter(function(j){ return !activeStatusFilter || j.status===activeStatusFilter; }).map(function(j){
+  var tableRows = allJobs.filter(function(j){ return j.status!=='done' && (!activeStatusFilter || j.status===activeStatusFilter); }).map(function(j){
     var t = TECHS_LIST.find(function(t){ return t.name===j.tech; }) || {bg:'rgba(79,142,247,.2)',tc:'#7bb3ff',av:'?'};
     var priColors = {normal:'color:rgba(255,255,255,.35)',urgent:'color:#f5c56a',overdue:'color:#f06060'};
     return '<tr style="border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer" onclick="desktopOpenJob(\''+j.id+'\')">'
