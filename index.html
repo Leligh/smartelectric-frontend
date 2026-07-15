@@ -3415,9 +3415,9 @@ function openClientDetail(id) {
   document.getElementById('client-detail-body').innerHTML = `
     <div class="slide-up">
       <div class="card-sm" style="margin-bottom:12px">
-        <div class="info-row"><span class="info-label">📞 Phone</span><span class="info-value"><a href="tel:${c.phone}" style="color:var(--accent)">${c.phone||'—'}</a></span></div>
-        <div class="info-row"><span class="info-label">📧 Email</span><span class="info-value">${c.email||'—'}</span></div>
-        <div class="info-row"><span class="info-label">📍 Address</span><span class="info-value">${c.address||'—'}${c.city?', '+c.city:''}</span></div>
+        <div class="info-row"><span class="info-label">📞 Phone</span><span class="info-value" style="margin-left:0"><a href="tel:${c.phone}" style="color:var(--accent)">${c.phone||'—'}</a></span></div>
+        <div class="info-row"><span class="info-label">📧 Email</span><span class="info-value" style="margin-left:0">${c.email||'—'}</span></div>
+        <div class="info-row"><span class="info-label">📍 Address</span><span class="info-value" style="margin-left:0">${c.address||'—'}${c.city?', '+c.city:''}</span></div>
         ${c.notes?`<div class="info-row" style="border:none"><span class="info-label">📝 Notes</span><span class="info-value" style="white-space:pre-wrap">${c.notes}</span></div>`:''}
       </div>
       <div class="card-sm" style="margin-bottom:12px">
