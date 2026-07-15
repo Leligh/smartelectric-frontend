@@ -736,6 +736,7 @@ select option{background:var(--bg2);color:var(--text1)}
         <button onclick="closeEditUser()" style="background:var(--bg3);border:1px solid var(--border);width:28px;height:28px;border-radius:50%;cursor:pointer;color:var(--text2);font-size:14px;display:flex;align-items:center;justify-content:center">✕</button>
       </div>
       <div style="font-size:13px;color:var(--text2);margin-bottom:18px" id="edit-user-subtitle">Change role</div>
+      <div id="edit-user-resend-slot"></div>
       <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:10px">ROLE</div>
       <div id="edit-role-picker" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px"></div>
       <div style="display:flex;gap:8px;margin-bottom:8px">
@@ -3178,6 +3179,16 @@ function openEditUser(idx) {
   }
   editUserSelectedRole = t.role || 'tech';
   document.getElementById('edit-user-subtitle').textContent = t.name;
+  const resendSlot = document.getElementById('edit-user-resend-slot');
+  if (resendSlot) {
+    resendSlot.innerHTML = t.pendingSetup
+      ? `<div style="display:flex;align-items:center;gap:10px;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:var(--r-sm);padding:10px 12px;margin-bottom:18px">
+           <span style="font-size:16px">⏳</span>
+           <div style="flex:1;font-size:12px;color:var(--amber)">Setup link not used yet</div>
+           <button onclick="resendInvite('${t.id}')" id="resend-invite-btn" style="padding:6px 12px;border-radius:20px;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.3);color:var(--amber);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap">↻ Resend invite</button>
+         </div>`
+      : '';
+  }
   const roles = ['tech','parts','office','admin'];
   const colors = { tech:{bg:'rgba(79,142,247,.15)',border:'#7bb3ff',tc:'#7bb3ff'}, parts:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#f5c56a'}, office:{bg:'rgba(62,207,142,.12)',border:'#5ce0a8',tc:'#5ce0a8'}, admin:{bg:'rgba(167,139,250,.15)',border:'#c4b0ff',tc:'#c4b0ff'} };
   const descriptions = { tech:'Field work, job updates, parts requests', parts:'Orders, inventory, supplier contacts', office:'Scheduling, open calls, client comms', admin:'Full access, user management, settings' };
@@ -4746,6 +4757,24 @@ async function emailUserInvite(recipientEmail, recipientName, role) {
     });
     return true;
   } catch(e) { console.warn('[email] invite failed:', e.message); return false; }
+}
+
+async function resendInvite(userId) {
+  const t = TECHS_LIST.find(u => String(u.id) === String(userId));
+  const btn = document.getElementById('resend-invite-btn');
+  if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
+  try {
+    await apiCall(`/auth/resend-invite/${userId}`, { method: 'POST' });
+    let emailSent = false;
+    if (t && t.email) emailSent = await emailUserInvite(t.email, t.name, t.role);
+    toast(t && t.email
+      ? (emailSent ? `Invite resent to ${t.name} via SMS & email ✓` : `Invite resent to ${t.name} via SMS ✓ — email failed, check Microsoft 365 connection`)
+      : `Invite resent to ${t ? t.name : 'user'} via SMS ✓`, emailSent || !(t && t.email) ? 'success' : 'warning');
+  } catch (e) {
+    toast('Resend failed: ' + (e.error || e.message || 'check backend'), 'warning');
+  } finally {
+    if (btn) { btn.textContent = '↻ Resend invite'; btn.disabled = false; }
+  }
 }
 
 // ── NEW JOB MODAL ─────────────────────────────────────────────────────────────
