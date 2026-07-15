@@ -5126,6 +5126,7 @@ function checkExistingSession() {
 // ── DESKTOP MODE ──────────────────────────────────────────────────────────────
 function IS_DESKTOP() { return window.innerWidth >= 1024; }
 let desktopTab = 'home';
+let desktopJobsSearch = '';
 let techDriftD = 0;
 let animFrameD;
 
@@ -5215,7 +5216,22 @@ function renderDesktopDashboard(el) {
       .map(function(s){ return '<div onclick="'+(s[3]==='done' ? 'desktopNav(\'completed\')' : s[3] ? 'filterJobListByStatus(\''+s[3]+'\')' : 'filterJobListByStatus(null)')+'" style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:16px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor=\'rgba(0,0,0,.2)\'" onmouseout="this.style.borderColor=\'rgba(0,0,0,.07)\'"><div style="font-size:26px;font-weight:600;color:'+s[2]+';line-height:1.1">'+s[1]+'</div><div style="font-size:12px;color:rgba(0,0,0,.4);margin-top:4px">'+s[0].toUpperCase()+'</div></div>'; })
       .join('') + '</div>';
 
-  var tableRows = allJobs.filter(function(j){ return j.status!=='done' && (!activeStatusFilter || j.status===activeStatusFilter); }).map(function(j){
+  var tableRows = allJobs.filter(function(j){
+      if (j.status==='done') return false;
+      if (activeStatusFilter && j.status!==activeStatusFilter) return false;
+      if (desktopJobsSearch) {
+        var q = desktopJobsSearch.toLowerCase();
+        var haystack = ((j.client||'')+' '+(j.title||'')+' '+(j.tech||'')+' '+(j.address||'')).toLowerCase();
+        if (haystack.indexOf(q) === -1) return false;
+      }
+      return true;
+    })
+    .sort(function(a,b){
+      var ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      var tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return tb - ta; // newest first
+    })
+    .map(function(j){
     var t = TECHS_LIST.find(function(t){ return t.name===j.tech; }) || {bg:'rgba(79,142,247,.2)',tc:'#1d4ed8',av:'?'};
     var priColors = {normal:'color:rgba(0,0,0,.35)',urgent:'color:#b45309',overdue:'color:#f06060'};
     return '<tr style="border-bottom:1px solid rgba(0,0,0,.05);cursor:pointer" onclick="desktopOpenJob(\''+j.id+'\')">'
@@ -5233,13 +5249,30 @@ function renderDesktopDashboard(el) {
   el.innerHTML = statsHTML
     + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
     + '<div style="font-size:13px;font-weight:600;color:rgba(0,0,0,.5);letter-spacing:.6px">ALL JOBS TODAY</div>'
+    + '<div style="display:flex;align-items:center;gap:10px">'
+    + '<input type="text" id="desktop-jobs-search" placeholder="🔍 Search client, job, tech…" value="'+desktopJobsSearch.replace(/"/g,'&quot;')+'" oninput="filterDesktopJobs(this.value)" style="padding:7px 12px;background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:8px;font-size:12px;font-family:var(--font);width:220px">'
     + (isAdmin ? '<button onclick="openNewJobModal()" style="padding:6px 14px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#059669;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:5px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New job</button>' : '')
+    + '</div>'
     + '</div>'
     + '<div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;overflow:hidden">'
     + '<table style="width:100%;border-collapse:collapse;font-size:13px">'
     + '<thead><tr style="border-bottom:1px solid rgba(0,0,0,.07)">'
     + ['Client','Job','Tech','Date created','Status','Priority'].map(function(h){ return '<th style="text-align:left;padding:11px 14px;font-size:11px;font-weight:600;color:rgba(0,0,0,.35)">'+h+'</th>'; }).join('')
     + '</tr></thead><tbody>' + tableRows + '</tbody></table></div>';
+}
+
+function filterDesktopJobs(q) {
+  desktopJobsSearch = q;
+  var el = document.getElementById('desktop-view-home');
+  if (!el) return;
+  renderDesktopDashboard(el);
+  // Restore focus and cursor position after re-render
+  var input = document.getElementById('desktop-jobs-search');
+  if (input) {
+    input.focus();
+    var pos = q.length;
+    input.setSelectionRange(pos, pos);
+  }
 }
 
 function renderDesktopOpen(el) {
