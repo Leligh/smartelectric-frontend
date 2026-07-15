@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Smart Electric">
 <meta name="application-name" content="Smart Electric">
-<meta name="theme-color" content="#0f1117">
+<meta name="theme-color" content="#f4f5f7">
 <meta name="description" content="Smart Electric Service Pro — Field service management">
 <meta name="mobile-web-app-capable" content="yes">
 <title>Smart Electric Service Pro</title>
@@ -25,15 +25,15 @@
 <style>
 
 :root {
-  --bg0: #0f1117;
-  --bg1: #171921;
-  --bg2: #1e2030;
-  --bg3: #252840;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.13);
-  --text1: #f0f0f5;
-  --text2: #8b8fa8;
-  --text3: #565a70;
+  --bg0: #f4f5f7;
+  --bg1: #ffffff;
+  --bg2: #eef0f3;
+  --bg3: #e7e9ee;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.14);
+  --text1: #14151a;
+  --text2: #5b5f74;
+  --text3: #8a8da0;
   --accent: #4f8ef7;
   --accent2: #6c63ff;
   --green: #3ecf8e;
@@ -63,7 +63,7 @@ body{min-height:100%;background:var(--bg0);color:var(--text1);font-family:var(--
 }
 .screen::-webkit-scrollbar{display:none}
 /* NAV BAR */
-.nav-bar{height:76px;background:rgba(15,17,23,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 8px 12px;position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;z-index:200}
+.nav-bar{height:76px;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 8px 12px;position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;z-index:200}
 @media (min-width: 1024px) {
   .nav-bar{display:none;}
 }
@@ -78,12 +78,12 @@ body{min-height:100%;background:var(--bg0);color:var(--text1);font-family:var(--
 .card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px}
 /* PILLS */
 .pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;letter-spacing:.2px}
-.pill-new{background:rgba(79,142,247,.15);color:#7bb3ff;border:1px solid rgba(79,142,247,.25)}
-.pill-prog{background:rgba(245,166,35,.12);color:#f5c56a;border:1px solid rgba(245,166,35,.2)}
-.pill-review{background:rgba(167,139,250,.12);color:#c4b0ff;border:1px solid rgba(167,139,250,.2)}
-.pill-done{background:rgba(62,207,142,.12);color:#5ce0a8;border:1px solid rgba(62,207,142,.2)}
-.pill-over{background:rgba(240,96,96,.12);color:#f08080;border:1px solid rgba(240,96,96,.2)}
-.pill-parts{background:rgba(245,166,35,.12);color:#f5a623;border:1px solid rgba(245,166,35,.2)}
+.pill-new{background:rgba(79,142,247,.15);color:#1d4ed8;border:1px solid rgba(79,142,247,.25)}
+.pill-prog{background:rgba(245,166,35,.12);color:#b45309;border:1px solid rgba(245,166,35,.2)}
+.pill-review{background:rgba(167,139,250,.12);color:#7c3aed;border:1px solid rgba(167,139,250,.2)}
+.pill-done{background:rgba(62,207,142,.12);color:#059669;border:1px solid rgba(62,207,142,.2)}
+.pill-over{background:rgba(240,96,96,.12);color:#dc2626;border:1px solid rgba(240,96,96,.2)}
+.pill-parts{background:rgba(245,166,35,.12);color:#b45309;border:1px solid rgba(245,166,35,.2)}
 /* BUTTONS */
 .btn{width:100%;padding:14px;border-radius:var(--r);border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font);letter-spacing:.3px;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn:active{transform:scale(.97)}
@@ -106,8 +106,8 @@ label{font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bot
 .sec-head{font-size:12px;font-weight:600;color:var(--text3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
 /* TAG */
 .tag{display:inline-flex;align-items:center;gap:5px;background:var(--bg3);color:var(--text2);border:1px solid var(--border2);border-radius:20px;padding:3px 9px;font-size:11px;font-weight:500;margin:2px}
-.tag-green{background:rgba(62,207,142,.1);color:#5ce0a8;border-color:rgba(62,207,142,.2)}
-.tag-amber{background:rgba(245,166,35,.1);color:#f5c56a;border-color:rgba(245,166,35,.2)}
+.tag-green{background:rgba(62,207,142,.1);color:#059669;border-color:rgba(62,207,142,.2)}
+.tag-amber{background:rgba(245,166,35,.1);color:#b45309;border-color:rgba(245,166,35,.2)}
 /* MIC */
 .mic-wrap{position:relative;display:inline-flex;justify-content:center;align-items:center}
 .mic-ring{position:absolute;width:56px;height:56px;border-radius:50%;border:2px solid var(--red);opacity:0;pointer-events:none}
@@ -184,7 +184,7 @@ select option{background:var(--bg2);color:var(--text1)}
 .edit-cancel{padding:6px 8px;border-radius:var(--r-sm);background:transparent;color:var(--text3);border:1px solid var(--border);font-size:12px;cursor:pointer;font-family:var(--font)}
 
 /* PWA install banner */
-.install-banner{position:absolute;top:0;left:0;right:0;z-index:500;background:linear-gradient(135deg,#1a2a1a,#1e301e);border-bottom:1px solid rgba(62,207,142,.3);padding:12px 14px;display:flex;align-items:center;gap:10px;transform:translateY(-100%);transition:transform .4s cubic-bezier(.32,.72,0,1)}
+.install-banner{position:absolute;top:0;left:0;right:0;z-index:500;background:linear-gradient(135deg,#eafaf1,#f0faf5);border-bottom:1px solid rgba(62,207,142,.3);padding:12px 14px;display:flex;align-items:center;gap:10px;transform:translateY(-100%);transition:transform .4s cubic-bezier(.32,.72,0,1)}
 .install-banner.show{transform:translateY(0)}
 .install-btn{padding:7px 14px;border-radius:20px;background:var(--green);color:#0f1117;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:var(--font);white-space:nowrap;flex-shrink:0}
 .install-dismiss{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:0;flex-shrink:0;line-height:1}
@@ -198,12 +198,12 @@ select option{background:var(--bg2);color:var(--text1)}
 
 /* ── DESKTOP RESPONSIVE ─────────────────────────────────────────────────── */
 @media (min-width: 1024px) {
-  #desktop-sidebar { flex-direction: column; width: 220px; height: 100vh; position: fixed; top: 0; left: 0; background: #111318; border-right: 1px solid rgba(255,255,255,.07); z-index: 100; }
-  #desktop-topbar  { position: fixed; top: 0; left: 220px; right: 0; height: 56px; background: #111318; border-bottom: 1px solid rgba(255,255,255,.07); z-index: 99; align-items: center; justify-content: space-between; padding: 0 24px; }
-  #desktop-content { position: fixed; top: 56px; left: 220px; right: 0; bottom: 0; overflow-y: auto; padding: 24px; background: #0a0c12; }
-  .sidebar-item { display: flex; align-items: center; gap: 12px; padding: 11px 20px; cursor: pointer; color: rgba(255,255,255,.45); font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; background: none; border-top: none; border-right: none; border-bottom: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
-  .sidebar-item:hover { color: rgba(255,255,255,.8); background: rgba(255,255,255,.04); }
-  .sidebar-item.active { color: #fff; border-left-color: #4f8ef7; background: rgba(79,142,247,.08); }
+  #desktop-sidebar { flex-direction: column; width: 220px; height: 100vh; position: fixed; top: 0; left: 0; background: #ffffff; border-right: 1px solid rgba(0,0,0,.08); z-index: 100; }
+  #desktop-topbar  { position: fixed; top: 0; left: 220px; right: 0; height: 56px; background: #ffffff; border-bottom: 1px solid rgba(0,0,0,.08); z-index: 99; align-items: center; justify-content: space-between; padding: 0 24px; }
+  #desktop-content { position: fixed; top: 56px; left: 220px; right: 0; bottom: 0; overflow-y: auto; padding: 24px; background: #f4f5f7; }
+  .sidebar-item { display: flex; align-items: center; gap: 12px; padding: 11px 20px; cursor: pointer; color: rgba(0,0,0,.45); font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all .15s; background: none; border-top: none; border-right: none; border-bottom: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
+  .sidebar-item:hover { color: rgba(0,0,0,.8); background: rgba(0,0,0,.04); }
+  .sidebar-item.active { color: #4f8ef7; border-left-color: #4f8ef7; background: rgba(79,142,247,.08); }
   .sidebar-item svg { width: 18px; height: 18px; flex-shrink: 0; }
   .sidebar-badge { margin-left: auto; min-width: 18px; height: 18px; border-radius: 9px; background: #f06060; color: #fff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
   .desktop-only { display: block; }
@@ -273,10 +273,10 @@ select option{background:var(--bg2);color:var(--text1)}
 
   <!-- DESKTOP SIDEBAR (hidden on mobile) -->
   <div id="desktop-sidebar" style="display:none">
-    <div style="padding:0 20px 20px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:8px">
+    <div style="padding:0 20px 20px;border-bottom:1px solid rgba(0,0,0,.07);margin-bottom:8px">
       
       <img id="sidebar-logo" src="data:image/webp;base64,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" alt="Smart Electric" style="height:36px;width:auto;object-fit:contain;margin-bottom:10px">
-      <div style="font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.8px;font-weight:600">SERVICE PRO</div>
+      <div style="font-size:11px;color:rgba(0,0,0,.35);letter-spacing:.8px;font-weight:600">SERVICE PRO</div>
     </div>
     <div style="flex:1;overflow-y:auto;padding:4px 0">
       <button class="sidebar-item active" id="sb-home" onclick="desktopNav('home')">
@@ -323,14 +323,14 @@ select option{background:var(--bg2);color:var(--text1)}
         Documents
       </a>
     </div>
-    <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,.07)">
+    <div style="padding:16px 20px;border-top:1px solid rgba(0,0,0,.07)">
       <div style="display:flex;align-items:center;gap:10px">
         <div class="av" style="width:32px;height:32px;font-size:11px" id="sb-av">AD</div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.9)" id="sb-name">Admin</div>
-          <div style="font-size:10px;color:rgba(255,255,255,.4)" id="sb-role">Administrator</div>
+          <div style="font-size:12px;font-weight:600;color:rgba(0,0,0,.9)" id="sb-name">Admin</div>
+          <div style="font-size:10px;color:rgba(0,0,0,.4)" id="sb-role">Administrator</div>
         </div>
-        <button onclick="showLogin()" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,.3);font-size:12px;padding:0" title="Sign out">⏻</button>
+        <button onclick="showLogin()" style="background:none;border:none;cursor:pointer;color:rgba(0,0,0,.3);font-size:12px;padding:0" title="Sign out">⏻</button>
       </div>
     </div>
   </div>
@@ -338,13 +338,13 @@ select option{background:var(--bg2);color:var(--text1)}
   <!-- DESKTOP TOPBAR (hidden on mobile) -->
   <div id="desktop-topbar" style="display:none">
     <div style="display:flex;align-items:center;gap:12px">
-      <div style="font-size:16px;font-weight:600;color:rgba(255,255,255,.9)" id="desktop-page-title">Dashboard</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.35)" id="desktop-page-sub">Smart Electric Service Pro</div>
+      <div style="font-size:16px;font-weight:600;color:rgba(0,0,0,.9)" id="desktop-page-title">Dashboard</div>
+      <div style="font-size:12px;color:rgba(0,0,0,.35)" id="desktop-page-sub">Smart Electric Service Pro</div>
     </div>
     <div style="display:flex;align-items:center;gap:12px">
-      <div style="font-size:12px;color:rgba(255,255,255,.4)" id="desktop-clock"></div>
-      <div style="width:1px;height:20px;background:rgba(255,255,255,.1)"></div>
-      <button onclick="openNewJobModal()" style="padding:7px 16px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:6px">
+      <div style="font-size:12px;color:rgba(0,0,0,.4)" id="desktop-clock"></div>
+      <div style="width:1px;height:20px;background:rgba(0,0,0,.1)"></div>
+      <button onclick="openNewJobModal()" style="padding:7px 16px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#059669;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:6px">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New job
       </button>
@@ -436,7 +436,7 @@ select option{background:var(--bg2);color:var(--text1)}
             <div style="font-size:13px;color:var(--text2);margin-top:2px" id="hero-date">Today</div>
           </div>
           <div style="display:flex;align-items:center;gap:8px">
-            <button onclick="openNewJobModal()" id="hero-new-job-btn" style="display:none;padding:6px 12px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ New job</button>
+            <button onclick="openNewJobModal()" id="hero-new-job-btn" style="display:none;padding:6px 12px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#059669;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ New job</button>
             <div class="av" style="width:40px;height:40px;background:rgba(79,142,247,.2);color:var(--accent)" id="hero-av">AD</div>
           </div>
         </div>
@@ -473,11 +473,11 @@ select option{background:var(--bg2);color:var(--text1)}
         <div style="position:absolute;top:10px;left:10px;right:10px;z-index:5;display:flex;gap:6px">
           <div style="flex:1;position:relative">
             <input type="text" id="map-search-input" placeholder="Search client, job or address…" autocomplete="off"
-              style="width:100%;box-sizing:border-box;padding:9px 12px;background:rgba(15,17,23,.95);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:var(--r-sm);font-size:13px;color:var(--text1);font-family:var(--font)"
+              style="width:100%;box-sizing:border-box;padding:9px 12px;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:var(--r-sm);font-size:13px;color:var(--text1);font-family:var(--font)"
               oninput="mapSearchInput(this.value)" onkeydown="if(event.key==='Enter'){mapFlyToAddress(this.value,this.value);this.blur()}">
             <div id="map-search-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg1);border:1px solid var(--border2);border-radius:var(--r-sm);z-index:6;max-height:220px;overflow-y:auto;margin-top:4px;box-shadow:0 8px 24px rgba(0,0,0,.5)"></div>
           </div>
-          <button onclick="geoLocateMe()" style="background:rgba(15,17,23,.95);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:var(--r-sm);padding:9px 12px;font-size:13px;cursor:pointer;color:var(--accent);white-space:nowrap">📍 Me</button>
+          <button onclick="geoLocateMe()" style="background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:var(--r-sm);padding:9px 12px;font-size:13px;cursor:pointer;color:var(--accent);white-space:nowrap">📍 Me</button>
         </div>
       </div>
     </div>
@@ -703,7 +703,7 @@ select option{background:var(--bg2);color:var(--text1)}
         <div id="new-tech-role-picker" style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
           <button onclick="selectNewRole('tech')" id="role-pick-tech" class="role-pick-btn role-pick-active" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--r-sm);background:rgba(79,142,247,.15);border:1.5px solid #7bb3ff;cursor:pointer;font-family:var(--font);text-align:left">
             <span style="font-size:20px">🔧</span>
-            <div><div style="font-size:13px;font-weight:600;color:#7bb3ff">Technician</div><div style="font-size:11px;color:var(--text3)">Field work, job updates, parts requests</div></div>
+            <div><div style="font-size:13px;font-weight:600;color:#1d4ed8">Technician</div><div style="font-size:11px;color:var(--text3)">Field work, job updates, parts requests</div></div>
           </button>
           <button onclick="selectNewRole('parts')" id="role-pick-parts" class="role-pick-btn" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--r-sm);background:var(--bg3);border:1.5px solid var(--border2);cursor:pointer;font-family:var(--font);text-align:left">
             <span style="font-size:20px">📦</span>
@@ -832,15 +832,15 @@ select option{background:var(--bg2);color:var(--text1)}
       <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:10px">AZURE APP REGISTRATION — 3 STEPS</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px">
         <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--bg2);border-radius:var(--r-sm);border:1px solid var(--border)">
-          <div style="width:20px;height:20px;border-radius:50%;background:rgba(79,142,247,.2);color:#7bb3ff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">1</div>
+          <div style="width:20px;height:20px;border-radius:50%;background:rgba(79,142,247,.2);color:#1d4ed8;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">1</div>
           <div style="font-size:12px;color:var(--text2);line-height:1.5"><strong style="color:var(--text1)">portal.azure.com</strong> → App registrations → New registration → name it "Smart Electric Service Pro"</div>
         </div>
         <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--bg2);border-radius:var(--r-sm);border:1px solid var(--border)">
-          <div style="width:20px;height:20px;border-radius:50%;background:rgba(79,142,247,.2);color:#7bb3ff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">2</div>
+          <div style="width:20px;height:20px;border-radius:50%;background:rgba(79,142,247,.2);color:#1d4ed8;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">2</div>
           <div style="font-size:12px;color:var(--text2);line-height:1.5"><strong style="color:var(--text1)">API permissions</strong> → Add → Microsoft Graph → Application permissions → <strong style="color:var(--accent)">Mail.Send</strong> → Grant admin consent</div>
         </div>
         <div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--bg2);border-radius:var(--r-sm);border:1px solid var(--border)">
-          <div style="width:20px;height:20px;border-radius:50%;background:rgba(79,142,247,.2);color:#7bb3ff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">3</div>
+          <div style="width:20px;height:20px;border-radius:50%;background:rgba(79,142,247,.2);color:#1d4ed8;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">3</div>
           <div style="font-size:12px;color:var(--text2);line-height:1.5"><strong style="color:var(--text1)">Certificates &amp; secrets</strong> → New client secret → copy the Value (shown once only)</div>
         </div>
       </div>
@@ -918,7 +918,7 @@ select option{background:var(--bg2);color:var(--text1)}
             <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">ADDRESS</label>
             <div style="display:flex;gap:6px;align-items:center">
               <input type="text" id="nj-address" placeholder="123 Main St" style="flex:1" oninput="this.style.border=''">
-              <button type="button" onclick="if(typeof openJobCreationMap==='function'){openJobCreationMap('nj-address')}else{toast('Map loading, try again','warning')}" style="padding:10px 12px;border-radius:var(--r-sm);background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.4);color:#7bb3ff;font-size:13px;cursor:pointer;white-space:nowrap;flex-shrink:0;min-height:44px;font-family:var(--font)">📍</button>
+              <button type="button" onclick="if(typeof openJobCreationMap==='function'){openJobCreationMap('nj-address')}else{toast('Map loading, try again','warning')}" style="padding:10px 12px;border-radius:var(--r-sm);background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.4);color:#1d4ed8;font-size:13px;cursor:pointer;white-space:nowrap;flex-shrink:0;min-height:44px;font-family:var(--font)">📍</button>
             </div>
           </div>
           <div class="field">
@@ -945,7 +945,7 @@ select option{background:var(--bg2);color:var(--text1)}
         <div class="field">
           <label style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px">PRIORITY</label>
           <div style="display:flex;gap:8px;margin-top:6px">
-            <button onclick="selectNewJobPriority('normal')" id="njp-normal" style="flex:1;padding:8px;border-radius:var(--r-sm);background:rgba(62,207,142,.15);border:1.5px solid #5ce0a8;color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">Normal</button>
+            <button onclick="selectNewJobPriority('normal')" id="njp-normal" style="flex:1;padding:8px;border-radius:var(--r-sm);background:rgba(62,207,142,.15);border:1.5px solid #5ce0a8;color:#059669;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">Normal</button>
             <button onclick="selectNewJobPriority('urgent')" id="njp-urgent" style="flex:1;padding:8px;border-radius:var(--r-sm);background:var(--bg3);border:1.5px solid var(--border2);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">Urgent</button>
             <button onclick="selectNewJobPriority('overdue')" id="njp-overdue" style="flex:1;padding:8px;border-radius:var(--r-sm);background:var(--bg3);border:1.5px solid var(--border2);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">Overdue</button>
           </div>
@@ -1104,18 +1104,18 @@ const PARTS_REQS = [
 ];
 
 const TECHS_ADMIN = [
-  {av:'DK',name:'Dale K.',bg:'rgba(79,142,247,.2)',tc:'#7bb3ff',tx:.38,ty:.55,status:'In progress'},
-  {av:'SM',name:'Sarah M.',bg:'rgba(62,207,142,.15)',tc:'#5ce0a8',tx:.72,ty:.38,status:'En route'},
-  {av:'RT',name:'Rick T.',bg:'rgba(245,166,35,.15)',tc:'#f5c56a',tx:.20,ty:.30,status:'Overdue'},
-  {av:'JW',name:'Jen W.',bg:'rgba(167,139,250,.15)',tc:'#c4b0ff',tx:.55,ty:.68,status:'New'},
+  {av:'DK',name:'Dale K.',bg:'rgba(79,142,247,.2)',tc:'#1d4ed8',tx:.38,ty:.55,status:'In progress'},
+  {av:'SM',name:'Sarah M.',bg:'rgba(62,207,142,.15)',tc:'#059669',tx:.72,ty:.38,status:'En route'},
+  {av:'RT',name:'Rick T.',bg:'rgba(245,166,35,.15)',tc:'#b45309',tx:.20,ty:.30,status:'Overdue'},
+  {av:'JW',name:'Jen W.',bg:'rgba(167,139,250,.15)',tc:'#7c3aed',tx:.55,ty:.68,status:'New'},
 ];
 
 
 let TECHS_LIST = [
-  {name:'Dale K.',  phone:'(204) 555-9001', av:'DK', bg:'rgba(79,142,247,.2)',  tc:'#7bb3ff',  role:'tech', pendingSetup:false},
-  {name:'Sarah M.', phone:'(204) 555-9002', av:'SM', bg:'rgba(62,207,142,.15)', tc:'#5ce0a8', role:'tech', pendingSetup:false},
-  {name:'Rick T.',  phone:'(204) 555-9003', av:'RT', bg:'rgba(245,166,35,.15)', tc:'#f5c56a',  role:'tech', pendingSetup:false},
-  {name:'Jen W.',   phone:'(204) 555-9004', av:'JW', bg:'rgba(167,139,250,.15)',tc:'#c4b0ff', role:'office', pendingSetup:false},
+  {name:'Dale K.',  phone:'(204) 555-9001', av:'DK', bg:'rgba(79,142,247,.2)',  tc:'#1d4ed8',  role:'tech', pendingSetup:false},
+  {name:'Sarah M.', phone:'(204) 555-9002', av:'SM', bg:'rgba(62,207,142,.15)', tc:'#059669', role:'tech', pendingSetup:false},
+  {name:'Rick T.',  phone:'(204) 555-9003', av:'RT', bg:'rgba(245,166,35,.15)', tc:'#b45309',  role:'tech', pendingSetup:false},
+  {name:'Jen W.',   phone:'(204) 555-9004', av:'JW', bg:'rgba(167,139,250,.15)',tc:'#7c3aed', role:'office', pendingSetup:false},
 ];
 
 // Helper: get job by ID (not array index) - handles both numeric and UUID string IDs
@@ -1218,11 +1218,11 @@ async function apiCall(endpoint, options = {}) {
 // ── PERMISSIONS & AUTH ───────────────────────────────────────────────────────
 // Demo user credentials mapped to roles
 const DEMO_USERS = [
-  {email:'admin@smartelectric.ca',    password:'admin123',  role:'admin',  name:'Admin',    av:'AD', bg:'rgba(79,142,247,.2)',  tc:'#7bb3ff'},
-  {email:'office@smartelectric.ca',   password:'office123', role:'office', name:'Office',   av:'OF', bg:'rgba(62,207,142,.15)', tc:'#5ce0a8'},
-  {email:'dale@smartelectric.ca',     password:'tech123',   role:'tech',   name:'Dale K.',  av:'DK', bg:'rgba(79,142,247,.2)',  tc:'#7bb3ff'},
-  {email:'sarah@smartelectric.ca',    password:'tech123',   role:'tech',   name:'Sarah M.', av:'SM', bg:'rgba(62,207,142,.15)', tc:'#5ce0a8'},
-  {email:'linda@smartelectric.ca',    password:'parts123',  role:'parts',  name:'Linda P.', av:'LP', bg:'rgba(245,166,35,.15)', tc:'#f5c56a'},
+  {email:'admin@smartelectric.ca',    password:'admin123',  role:'admin',  name:'Admin',    av:'AD', bg:'rgba(79,142,247,.2)',  tc:'#1d4ed8'},
+  {email:'office@smartelectric.ca',   password:'office123', role:'office', name:'Office',   av:'OF', bg:'rgba(62,207,142,.15)', tc:'#059669'},
+  {email:'dale@smartelectric.ca',     password:'tech123',   role:'tech',   name:'Dale K.',  av:'DK', bg:'rgba(79,142,247,.2)',  tc:'#1d4ed8'},
+  {email:'sarah@smartelectric.ca',    password:'tech123',   role:'tech',   name:'Sarah M.', av:'SM', bg:'rgba(62,207,142,.15)', tc:'#059669'},
+  {email:'linda@smartelectric.ca',    password:'parts123',  role:'parts',  name:'Linda P.', av:'LP', bg:'rgba(245,166,35,.15)', tc:'#b45309'},
 ];
 
 // Tab permissions per role
@@ -2501,7 +2501,7 @@ function renderOpenCallDetail() {
             <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:4px">CLIENT</div>
             <div style="font-size:15px;font-weight:600">${c.client}</div>
           </div>
-          <span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.05)">${(c.priority||'routine').toUpperCase()}</span>
+          <span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(0,0,0,.05)">${(c.priority||'routine').toUpperCase()}</span>
         </div>
         <div class="info-row"><span class="info-label">📍 Address</span><span class="info-value">${c.address}</span></div>
         <div class="info-row"><span class="info-label">🕐 Timing</span><span class="info-value">${c.time}</span></div>
@@ -2729,10 +2729,10 @@ function drawMap() {
   const ctx=canvas.getContext('2d');
   const bg='#0f1117';
   const road='#1e2030';
-  const roadLine='rgba(255,255,255,.06)';
+  const roadLine='rgba(0,0,0,.06)';
   const grass='#141620';
   const bldg='#1a1d2e';
-  const bldgBdr='rgba(255,255,255,.08)';
+  const bldgBdr='rgba(0,0,0,.08)';
   const water='#0d1a2e';
   const cx=.50, cy=.52;
 
@@ -2794,7 +2794,7 @@ function drawMap() {
     ctx.beginPath(); ctx.arc(yx,yy,18*mapZoom,0,Math.PI*2); ctx.fill();
     ctx.fillStyle='#3ecf8e'; ctx.strokeStyle='#0f1117'; ctx.lineWidth=2;
     ctx.beginPath(); ctx.arc(yx,yy,7*mapZoom,0,Math.PI*2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='rgba(255,255,255,.5)'; ctx.font=`${9*mapZoom}px sans-serif`; ctx.textAlign='center';
+    ctx.fillStyle='rgba(0,0,0,.5)'; ctx.font=`${9*mapZoom}px sans-serif`; ctx.textAlign='center';
     ctx.fillText('You',yx,yy+16*mapZoom);
   }
 
@@ -2820,7 +2820,7 @@ function drawMap() {
 
   const pillsEl=document.getElementById('map-job-pills');
   if(pillsEl) pillsEl.innerHTML=JOBS.filter(j=>j.tech==='Dale K.').map((j,i)=>`
-    <span style="background:rgba(15,17,23,.85);backdrop-filter:blur(8px);border:1px solid var(--border2);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:500;white-space:nowrap;cursor:pointer;display:inline-block;margin-right:5px" onclick="focusJob(${i})">${i+1}. ${j.address}</span>`).join('');
+    <span style="background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border:1px solid var(--border2);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:500;white-space:nowrap;cursor:pointer;display:inline-block;margin-right:5px" onclick="focusJob(${i})">${i+1}. ${j.address}</span>`).join('');
 }
 
 function locateMe() {
@@ -2856,10 +2856,10 @@ updateClock();
 // ── TEAM MANAGEMENT ──────────────────────────────────────────────────────────
 let removeTechTarget = null;
 const ROLE_COLORS = {
-  tech:   {bg:'rgba(79,142,247,.15)',  tc:'#7bb3ff',  label:'Technician'},
-  office: {bg:'rgba(62,207,142,.12)',  tc:'#5ce0a8',  label:'Office'},
-  parts:  {bg:'rgba(245,166,35,.12)',  tc:'#f5c56a',  label:'Parts coordinator'},
-  admin:  {bg:'rgba(167,139,250,.12)', tc:'#c4b0ff',  label:'Admin'},
+  tech:   {bg:'rgba(79,142,247,.15)',  tc:'#1d4ed8',  label:'Technician'},
+  office: {bg:'rgba(62,207,142,.12)',  tc:'#059669',  label:'Office'},
+  parts:  {bg:'rgba(245,166,35,.12)',  tc:'#b45309',  label:'Parts coordinator'},
+  admin:  {bg:'rgba(167,139,250,.12)', tc:'#7c3aed',  label:'Admin'},
 };
 
 // ── EXCEL IMPORT ─────────────────────────────────────────────────────────────
@@ -3092,7 +3092,7 @@ const ROLE_ICONS = { tech:'🔧', parts:'📦', office:'🏢', admin:'🛡' };
 function selectNewRole(role) {
   document.getElementById('new-tech-role').value = role;
   const roles = ['tech','parts','office','admin'];
-  const colors = { tech:{bg:'rgba(79,142,247,.15)',border:'#7bb3ff',tc:'#7bb3ff'}, parts:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#f5c56a'}, office:{bg:'rgba(62,207,142,.12)',border:'#5ce0a8',tc:'#5ce0a8'}, admin:{bg:'rgba(167,139,250,.15)',border:'#c4b0ff',tc:'#c4b0ff'} };
+  const colors = { tech:{bg:'rgba(79,142,247,.15)',border:'#7bb3ff',tc:'#1d4ed8'}, parts:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#b45309'}, office:{bg:'rgba(62,207,142,.12)',border:'#5ce0a8',tc:'#059669'}, admin:{bg:'rgba(167,139,250,.15)',border:'#c4b0ff',tc:'#7c3aed'} };
   roles.forEach(r => {
     const btn = document.getElementById('role-pick-'+r);
     if(!btn) return;
@@ -3190,7 +3190,7 @@ function openEditUser(idx) {
       : '';
   }
   const roles = ['tech','parts','office','admin'];
-  const colors = { tech:{bg:'rgba(79,142,247,.15)',border:'#7bb3ff',tc:'#7bb3ff'}, parts:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#f5c56a'}, office:{bg:'rgba(62,207,142,.12)',border:'#5ce0a8',tc:'#5ce0a8'}, admin:{bg:'rgba(167,139,250,.15)',border:'#c4b0ff',tc:'#c4b0ff'} };
+  const colors = { tech:{bg:'rgba(79,142,247,.15)',border:'#7bb3ff',tc:'#1d4ed8'}, parts:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#b45309'}, office:{bg:'rgba(62,207,142,.12)',border:'#5ce0a8',tc:'#059669'}, admin:{bg:'rgba(167,139,250,.15)',border:'#c4b0ff',tc:'#7c3aed'} };
   const descriptions = { tech:'Field work, job updates, parts requests', parts:'Orders, inventory, supplier contacts', office:'Scheduling, open calls, client comms', admin:'Full access, user management, settings' };
   document.getElementById('edit-role-picker').innerHTML = roles.map(r => {
     const rc = ROLE_COLORS[r];
@@ -3211,7 +3211,7 @@ function openEditUser(idx) {
 function selectEditRole(role) {
   editUserSelectedRole = role;
   const roles = ['tech','parts','office','admin'];
-  const colors = { tech:{bg:'rgba(79,142,247,.15)',border:'#7bb3ff',tc:'#7bb3ff'}, parts:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#f5c56a'}, office:{bg:'rgba(62,207,142,.12)',border:'#5ce0a8',tc:'#5ce0a8'}, admin:{bg:'rgba(167,139,250,.15)',border:'#c4b0ff',tc:'#c4b0ff'} };
+  const colors = { tech:{bg:'rgba(79,142,247,.15)',border:'#7bb3ff',tc:'#1d4ed8'}, parts:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#b45309'}, office:{bg:'rgba(62,207,142,.12)',border:'#5ce0a8',tc:'#059669'}, admin:{bg:'rgba(167,139,250,.15)',border:'#c4b0ff',tc:'#7c3aed'} };
   const descriptions = { tech:'Field work, job updates, parts requests', parts:'Orders, inventory, supplier contacts', office:'Scheduling, open calls, client comms', admin:'Full access, user management, settings' };
   roles.forEach(r => {
     const btn = document.getElementById('edit-role-pick-'+r);
@@ -3355,7 +3355,7 @@ function renderClientList(filter) {
   el.innerHTML = list.map(c => {
     const jobs = JOBS.filter(j=>j.client===c.name||j.client===c.name);
     return `<div onclick="openClientDetail(${c.id})" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px">
-      <div style="width:40px;height:40px;border-radius:50%;background:rgba(79,142,247,.2);color:#7bb3ff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">${(c.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
+      <div style="width:40px;height:40px;border-radius:50%;background:rgba(79,142,247,.2);color:#1d4ed8;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">${(c.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
       <div style="flex:1;min-width:0">
         <div style="font-size:14px;font-weight:600;margin-bottom:2px">${c.name}</div>
         <div style="font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">📍 ${c.address||'No address'}${c.city?', '+c.city:''}</div>
@@ -3585,22 +3585,22 @@ function openClientMapPin(clientId) {
   modal.id = 'client-pin-modal';
   modal.style.cssText = 'position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;background:#000';
   modal.innerHTML = `
-    <div style="background:#171921;padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0">
-      <button onclick="document.getElementById('client-pin-modal').remove()" style="background:rgba(255,255,255,.1);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+    <div style="background:#ffffff;padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(0,0,0,.1);flex-shrink:0">
+      <button onclick="document.getElementById('client-pin-modal').remove()" style="background:rgba(0,0,0,.1);border:none;color:#14151a;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
       <div style="flex:1">
-        <div style="font-size:14px;font-weight:600;color:#fff">Add pin for ${client.name}</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.4)">Tap map to drop pin</div>
+        <div style="font-size:14px;font-weight:600;color:#14151a">Add pin for ${client.name}</div>
+        <div style="font-size:12px;color:rgba(0,0,0,.4)">Tap map to drop pin</div>
       </div>
     </div>
     <div id="client-pin-map" style="width:100%;height:calc(100vh - 160px);background:#1a1f2e;display:flex;align-items:center;justify-content:center">
-      <div style="color:rgba(255,255,255,.5);font-size:14px">Loading map…</div>
+      <div style="color:rgba(0,0,0,.5);font-size:14px">Loading map…</div>
     </div>
-    <div style="background:#171921;padding:12px 16px;border-top:1px solid rgba(255,255,255,.1);flex-shrink:0">
-      <input id="client-pin-label" type="text" placeholder="Label (e.g. Home yard, Field 3, Shop…)" style="width:100%;padding:9px 12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);margin-bottom:10px;box-sizing:border-box">
-      <div id="client-pin-coords" style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px">Tap the map to pin a location</div>
+    <div style="background:#ffffff;padding:12px 16px;border-top:1px solid rgba(0,0,0,.1);flex-shrink:0">
+      <input id="client-pin-label" type="text" placeholder="Label (e.g. Home yard, Field 3, Shop…)" style="width:100%;padding:9px 12px;background:rgba(0,0,0,.07);border:1px solid rgba(0,0,0,.15);border-radius:8px;color:#14151a;font-size:13px;font-family:var(--font);margin-bottom:10px;box-sizing:border-box">
+      <div id="client-pin-coords" style="font-size:12px;color:rgba(0,0,0,.4);margin-bottom:10px">Tap the map to pin a location</div>
       <div style="display:flex;gap:8px">
-        <button id="client-pin-save-btn" onclick="saveClientPinFromModal('${clientId}')" disabled style="flex:1;padding:11px;border-radius:8px;background:rgba(62,207,142,.3);border:none;color:#5ce0a8;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);opacity:.4">💾 Save pin</button>
-        <button onclick="geoLocateClientMap()" style="padding:11px 14px;border-radius:8px;background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.3);color:#7bb3ff;font-size:13px;cursor:pointer;font-family:var(--font)">📍 Me</button>
+        <button id="client-pin-save-btn" onclick="saveClientPinFromModal('${clientId}')" disabled style="flex:1;padding:11px;border-radius:8px;background:rgba(62,207,142,.3);border:none;color:#059669;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);opacity:.4">💾 Save pin</button>
+        <button onclick="geoLocateClientMap()" style="padding:11px 14px;border-radius:8px;background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.3);color:#1d4ed8;font-size:13px;cursor:pointer;font-family:var(--font)">📍 Me</button>
       </div>
     </div>`;
   document.body.appendChild(modal);
@@ -3831,12 +3831,12 @@ function renderDesktopClients(el) {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div>
         <div style="font-size:18px;font-weight:600">Clients</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">${CLIENTS.length} client${CLIENTS.length!==1?'s':''}</div>
+        <div style="font-size:12px;color:rgba(0,0,0,.4);margin-top:2px">${CLIENTS.length} client${CLIENTS.length!==1?'s':''}</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
-        <input type="text" placeholder="Search clients..." oninput="filterDesktopClients(this.value)" style="padding:8px 14px;background:#171921;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);width:220px">
-        ${isAdmin?`<button onclick="openAddClientModal()" style="padding:8px 16px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add client</button>
-        <button onclick="document.getElementById('import-clients-file').click()" style="padding:8px 16px;border-radius:20px;background:rgba(79,142,247,.15);border:1px solid rgba(79,142,247,.3);color:#7bb3ff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">📥 Import Excel</button>`:''}
+        <input type="text" placeholder="Search clients..." oninput="filterDesktopClients(this.value)" style="padding:8px 14px;background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:8px;color:#14151a;font-size:13px;font-family:var(--font);width:220px">
+        ${isAdmin?`<button onclick="openAddClientModal()" style="padding:8px 16px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#059669;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add client</button>
+        <button onclick="document.getElementById('import-clients-file').click()" style="padding:8px 16px;border-radius:20px;background:rgba(79,142,247,.15);border:1px solid rgba(79,142,247,.3);color:#1d4ed8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">📥 Import Excel</button>`:''}
       </div>
     </div>
     <div id="desktop-clients-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px"></div>`;
@@ -3847,7 +3847,7 @@ function renderDesktopClientCards(list) {
   const el = document.getElementById('desktop-clients-grid');
   if(!el) return;
   if(!list.length) {
-    el.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:rgba(255,255,255,.3)">
+    el.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:rgba(0,0,0,.3)">
       <div style="font-size:40px;margin-bottom:12px">👥</div>
       <div style="font-size:15px;font-weight:600">No clients yet</div>
       <div style="font-size:13px;margin-top:6px">Add your first client to get started</div>
@@ -3857,20 +3857,20 @@ function renderDesktopClientCards(list) {
   el.innerHTML = list.map(c=>{
     const jobs = JOBS.filter(j=>j.client===c.name);
     const ini  = (c.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    return `<div onclick="openClientDetail(${c.id})" style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(79,142,247,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'">
+    return `<div onclick="openClientDetail(${c.id})" style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:18px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(79,142,247,.3)'" onmouseout="this.style.borderColor='rgba(0,0,0,.07)'">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="width:42px;height:42px;border-radius:50%;background:rgba(79,142,247,.2);color:#7bb3ff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ini}</div>
+        <div style="width:42px;height:42px;border-radius:50%;background:rgba(79,142,247,.2);color:#1d4ed8;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ini}</div>
         <div style="flex:1;min-width:0">
           <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.name}</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">${c.phone||'No phone'}</div>
+          <div style="font-size:11px;color:rgba(0,0,0,.35);margin-top:2px">${c.phone||'No phone'}</div>
         </div>
       </div>
-      <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:8px">📍 ${c.address||'No address'}${c.city?', '+c.city:''}</div>
-      ${c.email?`<div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:8px">✉ ${c.email}</div>`:''}
-      ${c.notes?`<div style="font-size:11px;color:rgba(255,255,255,.3);font-style:italic;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">"${c.notes}"</div>`:''}
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05)">
-        <span style="font-size:11px;color:rgba(255,255,255,.3)">${jobs.length} job${jobs.length!==1?'s':''}</span>
-        <span style="font-size:11px;color:#7bb3ff">View →</span>
+      <div style="font-size:12px;color:rgba(0,0,0,.4);margin-bottom:8px">📍 ${c.address||'No address'}${c.city?', '+c.city:''}</div>
+      ${c.email?`<div style="font-size:12px;color:rgba(0,0,0,.4);margin-bottom:8px">✉ ${c.email}</div>`:''}
+      ${c.notes?`<div style="font-size:11px;color:rgba(0,0,0,.3);font-style:italic;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">"${c.notes}"</div>`:''}
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.05)">
+        <span style="font-size:11px;color:rgba(0,0,0,.3)">${jobs.length} job${jobs.length!==1?'s':''}</span>
+        <span style="font-size:11px;color:#1d4ed8">View →</span>
       </div>
     </div>`;
   }).join('');
@@ -4059,14 +4059,14 @@ function renderDesktopInbox(el) {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div>
         <div style="font-size:18px;font-weight:600">Inbox</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">Customer SMS replies</div>
+        <div style="font-size:12px;color:rgba(0,0,0,.4);margin-top:2px">Customer SMS replies</div>
       </div>
-      <button onclick="loadInbox()" style="padding:8px 16px;border-radius:20px;background:var(--bg3);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;font-family:var(--font)">↻ Refresh</button>
+      <button onclick="loadInbox()" style="padding:8px 16px;border-radius:20px;background:var(--bg3);border:1px solid rgba(0,0,0,.1);color:rgba(0,0,0,.6);font-size:12px;cursor:pointer;font-family:var(--font)">↻ Refresh</button>
     </div>
     <div style="display:grid;grid-template-columns:320px 1fr;gap:16px;height:calc(100vh - 160px)">
-      <div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow-y:auto" id="desktop-inbox-list"></div>
-      <div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;display:flex;flex-direction:column" id="desktop-inbox-thread">
-        <div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.3)">
+      <div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;overflow-y:auto" id="desktop-inbox-list"></div>
+      <div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;display:flex;flex-direction:column" id="desktop-inbox-thread">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(0,0,0,.3)">
           <div style="text-align:center"><div style="font-size:32px;margin-bottom:10px">💬</div><div>Select a message to view</div></div>
         </div>
       </div>
@@ -4078,7 +4078,7 @@ function renderDesktopInboxList() {
   const el = document.getElementById('desktop-inbox-list');
   if(!el) return;
   if(!INBOX_MESSAGES.length) {
-    el.innerHTML=`<div style="text-align:center;padding:40px;color:rgba(255,255,255,.3)"><div style="font-size:32px;margin-bottom:10px">📭</div><div>No messages yet</div></div>`;
+    el.innerHTML=`<div style="text-align:center;padding:40px;color:rgba(0,0,0,.3)"><div style="font-size:32px;margin-bottom:10px">📭</div><div>No messages yet</div></div>`;
     return;
   }
   // Group by phone — latest message per contact
@@ -4093,16 +4093,16 @@ function renderDesktopInboxList() {
   el.innerHTML = contacts.map(m=>{
     const time = new Date(m.created_at).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
     const unread = INBOX_MESSAGES.filter(x=>x.from_number===m.from_number&&!x.read).length;
-    return `<div onclick="openDesktopThread(${m.id})" style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;background:${unread?'rgba(79,142,247,.05)':'transparent'}" onmouseover="this.style.background='rgba(255,255,255,.04)'" onmouseout="this.style.background='${unread?'rgba(79,142,247,.05)':'transparent'}'">
+    return `<div onclick="openDesktopThread(${m.id})" style="padding:14px 16px;border-bottom:1px solid rgba(0,0,0,.05);cursor:pointer;background:${unread?'rgba(79,142,247,.05)':'transparent'}" onmouseover="this.style.background='rgba(0,0,0,.04)'" onmouseout="this.style.background='${unread?'rgba(79,142,247,.05)':'transparent'}'">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
         <div style="display:flex;align-items:center;gap:6px">
           ${unread?'<div style="width:7px;height:7px;border-radius:50%;background:#4f8ef7;flex-shrink:0"></div>':''}
-          <div style="font-size:13px;font-weight:${unread?'700':'500'};color:#fff">${m.client_name||m.from_number}</div>
+          <div style="font-size:13px;font-weight:${unread?'700':'500'};color:#14151a">${m.client_name||m.from_number}</div>
         </div>
-        <div style="font-size:10px;color:rgba(255,255,255,.3)">${time}</div>
+        <div style="font-size:10px;color:rgba(0,0,0,.3)">${time}</div>
       </div>
-      ${m.client_name?`<div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:2px">${m.from_number}</div>`:''}
-      <div style="font-size:12px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.body}</div>
+      ${m.client_name?`<div style="font-size:11px;color:rgba(0,0,0,.35);margin-bottom:2px">${m.from_number}</div>`:''}
+      <div style="font-size:12px;color:rgba(0,0,0,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.body}</div>
       ${unread?`<div style="font-size:10px;color:#4f8ef7;margin-top:3px">${unread} unread</div>`:''}
     </div>`;
   }).join('');
@@ -4123,15 +4123,15 @@ async function openDesktopThread(id) {
 
   // Show loading state
   thread.innerHTML = `
-    <div style="padding:20px;border-bottom:1px solid rgba(255,255,255,.07)">
+    <div style="padding:20px;border-bottom:1px solid rgba(0,0,0,.07)">
       <div style="font-size:15px;font-weight:600">${m.from_number}</div>
-      ${m.client_name?`<div style="font-size:12px;color:#7bb3ff;margin-top:3px">👤 ${m.client_name}${m.job_title?' · '+m.job_title:''}</div>`:''}
+      ${m.client_name?`<div style="font-size:12px;color:#1d4ed8;margin-top:3px">👤 ${m.client_name}${m.job_title?' · '+m.job_title:''}</div>`:''}
     </div>
-    <div style="flex:1;padding:20px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.3)">Loading conversation…</div>
-    <div style="padding:16px;border-top:1px solid rgba(255,255,255,.07)">
+    <div style="flex:1;padding:20px;display:flex;align-items:center;justify-content:center;color:rgba(0,0,0,.3)">Loading conversation…</div>
+    <div style="padding:16px;border-top:1px solid rgba(0,0,0,.07)">
       <div style="display:flex;gap:8px">
-        <textarea id="desktop-reply-text" placeholder="Reply to ${m.from_number}..." style="flex:1;padding:10px 12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);resize:none;height:44px;line-height:1.5"></textarea>
-        <button onclick="sendDesktopReply('${m.from_number}',${m.id})" style="padding:10px 20px;border-radius:8px;background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.3);color:#7bb3ff;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap">Send →</button>
+        <textarea id="desktop-reply-text" placeholder="Reply to ${m.from_number}..." style="flex:1;padding:10px 12px;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.1);border-radius:8px;color:#14151a;font-size:13px;font-family:var(--font);resize:none;height:44px;line-height:1.5"></textarea>
+        <button onclick="sendDesktopReply('${m.from_number}',${m.id})" style="padding:10px 20px;border-radius:8px;background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.3);color:#1d4ed8;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap">Send →</button>
       </div>
     </div>`;
 
@@ -4146,13 +4146,13 @@ function renderDesktopThreadMessages(thread, m, messages) {
     const time = new Date(msg.created_at).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
     return `<div style="display:flex;justify-content:${isOut?'flex-end':'flex-start'};margin-bottom:12px">
       <div style="max-width:75%">
-        <div style="background:${isOut?'rgba(79,142,247,.25)':'rgba(255,255,255,.08)'};border:1px solid ${isOut?'rgba(79,142,247,.3)':'rgba(255,255,255,.1)'};border-radius:${isOut?'12px 12px 2px 12px':'12px 12px 12px 2px'};padding:10px 14px">
-          <div style="font-size:13px;color:#fff;line-height:1.6">${msg.body}</div>
+        <div style="background:${isOut?'rgba(79,142,247,.25)':'rgba(0,0,0,.08)'};border:1px solid ${isOut?'rgba(79,142,247,.3)':'rgba(0,0,0,.1)'};border-radius:${isOut?'12px 12px 2px 12px':'12px 12px 12px 2px'};padding:10px 14px">
+          <div style="font-size:13px;color:#14151a;line-height:1.6">${msg.body}</div>
         </div>
-        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;text-align:${isOut?'right':'left'}">${isOut?'You · ':''} ${time}</div>
+        <div style="font-size:10px;color:rgba(0,0,0,.3);margin-top:3px;text-align:${isOut?'right':'left'}">${isOut?'You · ':''} ${time}</div>
       </div>
     </div>`;
-  }).join('') : `<div style="text-align:center;color:rgba(255,255,255,.3);font-size:13px">No messages yet</div>`;
+  }).join('') : `<div style="text-align:center;color:rgba(0,0,0,.3);font-size:13px">No messages yet</div>`;
 
   const msgContainer = thread.querySelector('#thread-messages');
   if(msgContainer) {
@@ -4162,19 +4162,19 @@ function renderDesktopThreadMessages(thread, m, messages) {
   }
 
   thread.innerHTML = `
-    <div style="padding:20px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
+    <div style="padding:20px;border-bottom:1px solid rgba(0,0,0,.07);flex-shrink:0">
       <div style="font-size:15px;font-weight:600">${m.from_number}</div>
-      ${m.client_name?`<div style="font-size:12px;color:#7bb3ff;margin-top:3px">👤 ${m.client_name}${m.job_title?' · '+m.job_title:''}</div>`:''}
+      ${m.client_name?`<div style="font-size:12px;color:#1d4ed8;margin-top:3px">👤 ${m.client_name}${m.job_title?' · '+m.job_title:''}</div>`:''}
     </div>
     <div id="thread-messages" style="flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column">
       ${messagesHtml}
     </div>
-    <div style="padding:16px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0">
+    <div style="padding:16px;border-top:1px solid rgba(0,0,0,.07);flex-shrink:0">
       <div style="display:flex;gap:8px">
-        <textarea id="desktop-reply-text" placeholder="Reply to ${m.from_number}..." style="flex:1;padding:10px 12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);resize:none;height:44px;line-height:1.5" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDesktopReply('${m.from_number}',${m.id})}"></textarea>
-        <button onclick="sendDesktopReply('${m.from_number}',${m.id})" style="padding:10px 20px;border-radius:8px;background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.3);color:#7bb3ff;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap">Send →</button>
+        <textarea id="desktop-reply-text" placeholder="Reply to ${m.from_number}..." style="flex:1;padding:10px 12px;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.1);border-radius:8px;color:#14151a;font-size:13px;font-family:var(--font);resize:none;height:44px;line-height:1.5" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDesktopReply('${m.from_number}',${m.id})}"></textarea>
+        <button onclick="sendDesktopReply('${m.from_number}',${m.id})" style="padding:10px 20px;border-radius:8px;background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.3);color:#1d4ed8;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap">Send →</button>
       </div>
-      <div style="font-size:10px;color:rgba(255,255,255,.25);margin-top:6px">Press Enter to send · Shift+Enter for new line</div>
+      <div style="font-size:10px;color:rgba(0,0,0,.25);margin-top:6px">Press Enter to send · Shift+Enter for new line</div>
     </div>`;
 
   const mc = thread.querySelector('#thread-messages');
@@ -4788,17 +4788,17 @@ function openJobCreationMap(addressField) {
   modal.id = 'job-map-modal';
   modal.style.cssText = 'position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;background:#000';
   modal.innerHTML = `
-    <div style="background:#171921;padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0">
-      <button onclick="document.getElementById('job-map-modal').remove()" style="background:rgba(255,255,255,.1);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
-      <div style="font-size:14px;font-weight:600;color:#fff">Pick job location</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.4)">Tap map to pin</div>
+    <div style="background:#ffffff;padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(0,0,0,.1);flex-shrink:0">
+      <button onclick="document.getElementById('job-map-modal').remove()" style="background:rgba(0,0,0,.1);border:none;color:#14151a;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px">✕</button>
+      <div style="font-size:14px;font-weight:600;color:#14151a">Pick job location</div>
+      <div style="font-size:12px;color:rgba(0,0,0,.4)">Tap map to pin</div>
     </div>
     <div id="job-creation-map" style="width:100%;height:calc(100vh - 160px)"></div>
-    <div style="background:#171921;padding:12px 16px;border-top:1px solid rgba(255,255,255,.1);flex-shrink:0">
-      <div id="job-map-coords" style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:8px">Tap the map to drop a pin</div>
+    <div style="background:#ffffff;padding:12px 16px;border-top:1px solid rgba(0,0,0,.1);flex-shrink:0">
+      <div id="job-map-coords" style="font-size:12px;color:rgba(0,0,0,.4);margin-bottom:8px">Tap the map to drop a pin</div>
       <div style="display:flex;gap:8px">
-        <button id="job-map-confirm" onclick="confirmJobMapPin('${addressField}')" disabled style="flex:1;padding:11px;border-radius:8px;background:rgba(62,207,142,.3);border:none;color:#5ce0a8;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);opacity:.4">✓ Use this location</button>
-        <button onclick="geoLocateJobMap()" style="padding:11px 14px;border-radius:8px;background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.3);color:#7bb3ff;font-size:13px;cursor:pointer;font-family:var(--font)">📍 Me</button>
+        <button id="job-map-confirm" onclick="confirmJobMapPin('${addressField}')" disabled style="flex:1;padding:11px;border-radius:8px;background:rgba(62,207,142,.3);border:none;color:#059669;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);opacity:.4">✓ Use this location</button>
+        <button onclick="geoLocateJobMap()" style="padding:11px 14px;border-radius:8px;background:rgba(79,142,247,.2);border:1px solid rgba(79,142,247,.3);color:#1d4ed8;font-size:13px;cursor:pointer;font-family:var(--font)">📍 Me</button>
       </div>
     </div>`;
   document.body.appendChild(modal);
@@ -4956,7 +4956,7 @@ function closeNewJobModal() {
 
 function selectNewJobPriority(p) {
   newJobPriority = p;
-  const colors = { normal:{bg:'rgba(62,207,142,.15)',border:'#5ce0a8',tc:'#5ce0a8'}, urgent:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#f5c56a'}, overdue:{bg:'rgba(240,96,96,.15)',border:'#f06060',tc:'#f06060'} };
+  const colors = { normal:{bg:'rgba(62,207,142,.15)',border:'#5ce0a8',tc:'#059669'}, urgent:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#b45309'}, overdue:{bg:'rgba(240,96,96,.15)',border:'#f06060',tc:'#f06060'} };
   ['normal','urgent','overdue'].forEach(x=>{
     const btn = document.getElementById('njp-'+x);
     if(!btn) return;
@@ -5211,20 +5211,20 @@ function renderDesktopDashboard(el) {
   var doneCount   = allJobs.filter(function(j){ return j.status==='done'; }).length;
 
   var statsHTML = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px">'
-    + [['Total jobs',allJobs.length,'#f0f0f5',null],['Active',activeCount,'#f5c56a','progress'],['Pending review',reviewCount,'#c4b0ff','review'],['Complete',doneCount,'#5ce0a8','done']]
-      .map(function(s){ return '<div onclick="'+(s[3]==='done' ? 'desktopNav(\'completed\')' : s[3] ? 'filterJobListByStatus(\''+s[3]+'\')' : 'filterJobListByStatus(null)')+'" style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor=\'rgba(255,255,255,.2)\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,.07)\'"><div style="font-size:26px;font-weight:600;color:'+s[2]+';line-height:1.1">'+s[1]+'</div><div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:4px">'+s[0].toUpperCase()+'</div></div>'; })
+    + [['Total jobs',allJobs.length,'#14151a',null],['Active',activeCount,'#b45309','progress'],['Pending review',reviewCount,'#7c3aed','review'],['Complete',doneCount,'#059669','done']]
+      .map(function(s){ return '<div onclick="'+(s[3]==='done' ? 'desktopNav(\'completed\')' : s[3] ? 'filterJobListByStatus(\''+s[3]+'\')' : 'filterJobListByStatus(null)')+'" style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:16px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor=\'rgba(0,0,0,.2)\'" onmouseout="this.style.borderColor=\'rgba(0,0,0,.07)\'"><div style="font-size:26px;font-weight:600;color:'+s[2]+';line-height:1.1">'+s[1]+'</div><div style="font-size:12px;color:rgba(0,0,0,.4);margin-top:4px">'+s[0].toUpperCase()+'</div></div>'; })
       .join('') + '</div>';
 
   var tableRows = allJobs.filter(function(j){ return j.status!=='done' && (!activeStatusFilter || j.status===activeStatusFilter); }).map(function(j){
-    var t = TECHS_LIST.find(function(t){ return t.name===j.tech; }) || {bg:'rgba(79,142,247,.2)',tc:'#7bb3ff',av:'?'};
-    var priColors = {normal:'color:rgba(255,255,255,.35)',urgent:'color:#f5c56a',overdue:'color:#f06060'};
-    return '<tr style="border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer" onclick="desktopOpenJob(\''+j.id+'\')">'
-      + '<td style="padding:11px 14px;font-weight:600;color:rgba(255,255,255,.9);white-space:nowrap">'+j.client+'</td>'
-      + '<td style="padding:11px 14px;color:rgba(255,255,255,.5);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+j.title+'</td>'
+    var t = TECHS_LIST.find(function(t){ return t.name===j.tech; }) || {bg:'rgba(79,142,247,.2)',tc:'#1d4ed8',av:'?'};
+    var priColors = {normal:'color:rgba(0,0,0,.35)',urgent:'color:#b45309',overdue:'color:#f06060'};
+    return '<tr style="border-bottom:1px solid rgba(0,0,0,.05);cursor:pointer" onclick="desktopOpenJob(\''+j.id+'\')">'
+      + '<td style="padding:11px 14px;font-weight:600;color:rgba(0,0,0,.9);white-space:nowrap">'+j.client+'</td>'
+      + '<td style="padding:11px 14px;color:rgba(0,0,0,.5);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+j.title+'</td>'
       + '<td style="padding:11px 14px"><div style="display:flex;align-items:center;gap:6px">'
-      + (j.tech ? '<div class="av" style="width:22px;height:22px;font-size:8px;background:'+t.bg+';color:'+t.tc+'">'+t.av+'</div><span style="color:rgba(255,255,255,.7);font-size:12px">'+j.tech+'</span>' : '<span style="color:var(--red);font-size:11px">Unassigned</span>')
+      + (j.tech ? '<div class="av" style="width:22px;height:22px;font-size:8px;background:'+t.bg+';color:'+t.tc+'">'+t.av+'</div><span style="color:rgba(0,0,0,.7);font-size:12px">'+j.tech+'</span>' : '<span style="color:var(--red);font-size:11px">Unassigned</span>')
       + '</div></td>'
-      + '<td style="padding:11px 14px;color:rgba(255,255,255,.5);white-space:nowrap">'+(j.createdAt ? new Date(j.createdAt).toLocaleDateString('en-CA',{month:'short',day:'numeric'}) : '—')+'</td>'
+      + '<td style="padding:11px 14px;color:rgba(0,0,0,.5);white-space:nowrap">'+(j.createdAt ? new Date(j.createdAt).toLocaleDateString('en-CA',{month:'short',day:'numeric'}) : '—')+'</td>'
       + '<td style="padding:11px 14px">'+spill(j.status)+'</td>'
       + '<td style="padding:11px 14px;font-size:11px;font-weight:600;'+(priColors[j.priority||'normal']||priColors.normal)+'">'+((j.priority||'normal').toUpperCase())+'</td>'
       + '</tr>';
@@ -5232,13 +5232,13 @@ function renderDesktopDashboard(el) {
 
   el.innerHTML = statsHTML
     + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
-    + '<div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.6px">ALL JOBS TODAY</div>'
-    + (isAdmin ? '<button onclick="openNewJobModal()" style="padding:6px 14px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:5px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New job</button>' : '')
+    + '<div style="font-size:13px;font-weight:600;color:rgba(0,0,0,.5);letter-spacing:.6px">ALL JOBS TODAY</div>'
+    + (isAdmin ? '<button onclick="openNewJobModal()" style="padding:6px 14px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#059669;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:5px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New job</button>' : '')
     + '</div>'
-    + '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden">'
+    + '<div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;overflow:hidden">'
     + '<table style="width:100%;border-collapse:collapse;font-size:13px">'
-    + '<thead><tr style="border-bottom:1px solid rgba(255,255,255,.07)">'
-    + ['Client','Job','Tech','Date created','Status','Priority'].map(function(h){ return '<th style="text-align:left;padding:11px 14px;font-size:11px;font-weight:600;color:rgba(255,255,255,.35)">'+h+'</th>'; }).join('')
+    + '<thead><tr style="border-bottom:1px solid rgba(0,0,0,.07)">'
+    + ['Client','Job','Tech','Date created','Status','Priority'].map(function(h){ return '<th style="text-align:left;padding:11px 14px;font-size:11px;font-weight:600;color:rgba(0,0,0,.35)">'+h+'</th>'; }).join('')
     + '</tr></thead><tbody>' + tableRows + '</tbody></table></div>';
 }
 
@@ -5251,23 +5251,23 @@ function renderDesktopOpen(el) {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div>
         <div style="font-size:18px;font-weight:600">Open calls</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">${open.length} unassigned</div>
+        <div style="font-size:12px;color:rgba(0,0,0,.4);margin-top:2px">${open.length} unassigned</div>
       </div>
-      <input type="text" placeholder="🔍 Search..." oninput="renderDesktopView('open')" style="padding:8px 14px;background:#171921;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);width:220px">
+      <input type="text" placeholder="🔍 Search..." oninput="renderDesktopView('open')" style="padding:8px 14px;background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:8px;color:#14151a;font-size:13px;font-family:var(--font);width:220px">
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
       ${open.length ? open.map(j=>`
-        <div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;cursor:pointer" onclick="openCallDetail('${j.id}')" onmouseover="this.style.borderColor='rgba(79,142,247,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'">
+        <div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:16px;cursor:pointer" onclick="openCallDetail('${j.id}')" onmouseover="this.style.borderColor='rgba(79,142,247,.3)'" onmouseout="this.style.borderColor='rgba(0,0,0,.07)'">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
             <div style="font-size:14px;font-weight:600">${j.title}</div>
             <span style="font-size:11px;font-weight:600;color:var(--amber)">${(j.priority||'routine').toUpperCase()}</span>
           </div>
-          <div style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:6px">👤 ${j.client} · 📍 ${j.address}</div>
-          <div style="font-size:12px;color:rgba(255,255,255,.45);margin-bottom:10px">🕐 ${j.time}</div>
-          ${j.brief?`<div style="font-size:12px;color:rgba(255,255,255,.35);margin-bottom:10px;font-style:italic">${j.brief.slice(0,80)}${j.brief.length>80?'…':''}</div>`:''}
-          ${(j.requests||[]).length?`<div style="font-size:11px;color:rgba(255,255,255,.3)">✋ ${j.requests.join(', ')} requested</div>`:''}
+          <div style="font-size:12px;color:rgba(0,0,0,.45);margin-bottom:6px">👤 ${j.client} · 📍 ${j.address}</div>
+          <div style="font-size:12px;color:rgba(0,0,0,.45);margin-bottom:10px">🕐 ${j.time}</div>
+          ${j.brief?`<div style="font-size:12px;color:rgba(0,0,0,.35);margin-bottom:10px;font-style:italic">${j.brief.slice(0,80)}${j.brief.length>80?'…':''}</div>`:''}
+          ${(j.requests||[]).length?`<div style="font-size:11px;color:rgba(0,0,0,.3)">✋ ${j.requests.join(', ')} requested</div>`:''}
         </div>`).join('') :
-        '<div style="grid-column:1/-1;text-align:center;padding:60px;color:rgba(255,255,255,.3)"><div style="font-size:40px;margin-bottom:12px">✅</div><div>No unassigned jobs</div></div>'
+        '<div style="grid-column:1/-1;text-align:center;padding:60px;color:rgba(0,0,0,.3)"><div style="font-size:40px;margin-bottom:12px">✅</div><div>No unassigned jobs</div></div>'
       }
     </div>`;
 }
@@ -5283,12 +5283,12 @@ function renderDesktopMap(el) {
       <div style="position:absolute;top:12px;left:12px;right:12px;z-index:5;display:flex;gap:8px">
         <div style="flex:1;position:relative">
           <input type="text" id="map-search-input" placeholder="Search client, job or address…" autocomplete="off"
-            style="width:100%;box-sizing:border-box;padding:10px 14px;background:rgba(15,17,23,.95);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.15);border-radius:8px;font-size:13px;color:#fff;font-family:var(--font)"
+            style="width:100%;box-sizing:border-box;padding:10px 14px;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border:1px solid rgba(0,0,0,.15);border-radius:8px;font-size:13px;color:#fff;font-family:var(--font)"
             oninput="mapSearchInput(this.value)" onkeydown="if(event.key==='Enter'){mapFlyToAddress(this.value,this.value);this.blur()}">
-          <div id="map-search-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:#171921;border:1px solid rgba(255,255,255,.1);border-radius:8px;z-index:6;max-height:280px;overflow-y:auto;margin-top:4px;box-shadow:0 8px 24px rgba(0,0,0,.6)"></div>
+          <div id="map-search-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:8px;z-index:6;max-height:280px;overflow-y:auto;margin-top:4px;box-shadow:0 8px 24px rgba(0,0,0,.6)"></div>
         </div>
-        <button onclick="geoLocateMe()" style="padding:10px 14px;border-radius:8px;background:rgba(15,17,23,.95);border:1px solid rgba(255,255,255,.15);color:#7bb3ff;font-size:13px;cursor:pointer;white-space:nowrap">📍 Me</button>
-        <button onclick="plotJobMarkers();plotClientPins();toast('Map refreshed ✓')" style="padding:10px 14px;border-radius:8px;background:rgba(15,17,23,.95);border:1px solid rgba(255,255,255,.15);color:#5ce0a8;font-size:13px;cursor:pointer;white-space:nowrap">↻ Refresh</button>
+        <button onclick="geoLocateMe()" style="padding:10px 14px;border-radius:8px;background:rgba(255,255,255,.95);border:1px solid rgba(0,0,0,.15);color:#1d4ed8;font-size:13px;cursor:pointer;white-space:nowrap">📍 Me</button>
+        <button onclick="plotJobMarkers();plotClientPins();toast('Map refreshed ✓')" style="padding:10px 14px;border-radius:8px;background:rgba(255,255,255,.95);border:1px solid rgba(0,0,0,.15);color:#059669;font-size:13px;cursor:pointer;white-space:nowrap">↻ Refresh</button>
       </div>
     </div>`;
   // Reset map state so it reinitializes with the new container
@@ -5307,31 +5307,31 @@ function renderDesktopParts(el) {
   var html = '<div style="display:flex;flex-direction:column;gap:14px">';
 
   if(!pending.length && !ordered.length) {
-    html += '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:32px;text-align:center;color:rgba(255,255,255,.4);font-size:13px">✅ All parts ordered</div>';
+    html += '<div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:32px;text-align:center;color:rgba(0,0,0,.4);font-size:13px">✅ All parts ordered</div>';
   }
 
   pending.forEach(function(r) {
-    html += '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px">'
+    html += '<div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:16px">'
       + (r.urgent ? '<div style="font-size:11px;font-weight:700;color:#f06060;margin-bottom:8px">⚠ Urgent</div>' : '')
       + '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">'
-      + '<div><div style="font-size:14px;font-weight:600">'+r.job+'</div><div style="font-size:12px;color:rgba(255,255,255,.45);margin-top:2px">👤 '+r.client+' · '+r.tech+'</div></div>'
-      + '<span style="font-size:11px;padding:3px 8px;border-radius:20px;background:rgba(245,166,35,.15);color:#f5c56a">'+r.status+'</span>'
+      + '<div><div style="font-size:14px;font-weight:600">'+r.job+'</div><div style="font-size:12px;color:rgba(0,0,0,.45);margin-top:2px">👤 '+r.client+' · '+r.tech+'</div></div>'
+      + '<span style="font-size:11px;padding:3px 8px;border-radius:20px;background:rgba(245,166,35,.15);color:#b45309">'+r.status+'</span>'
       + '</div>'
-      + '<div style="margin-bottom:10px">'+r.parts.map(p=>'<span style="display:inline-block;padding:3px 8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:20px;font-size:11px;color:#f5c56a;margin:2px">'+p+'</span>').join('')+'</div>'
-      + (r.notes ? '<div style="font-size:12px;color:rgba(255,255,255,.4);font-style:italic;margin-bottom:10px">"'+r.notes+'"</div>' : '')
-      + (currentRole==='parts' ? '<button onclick="confirmOrder('+r.id+')" style="padding:7px 14px;border-radius:8px;background:rgba(62,207,142,.15);color:#5ce0a8;border:1px solid rgba(62,207,142,.3);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">✓ Confirm ordered</button>' : '')
+      + '<div style="margin-bottom:10px">'+r.parts.map(p=>'<span style="display:inline-block;padding:3px 8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:20px;font-size:11px;color:#b45309;margin:2px">'+p+'</span>').join('')+'</div>'
+      + (r.notes ? '<div style="font-size:12px;color:rgba(0,0,0,.4);font-style:italic;margin-bottom:10px">"'+r.notes+'"</div>' : '')
+      + (currentRole==='parts' ? '<button onclick="confirmOrder('+r.id+')" style="padding:7px 14px;border-radius:8px;background:rgba(62,207,142,.15);color:#059669;border:1px solid rgba(62,207,142,.3);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">✓ Confirm ordered</button>' : '')
       + '</div>';
   });
 
   ordered.forEach(function(r) {
-    html += '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px">'
+    html += '<div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:16px">'
       + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'
       + '<div style="font-size:14px;font-weight:600">'+r.job+'</div>'
-      + '<span style="font-size:11px;padding:3px 8px;border-radius:20px;background:rgba(79,142,247,.15);color:#7bb3ff">Ordered</span>'
+      + '<span style="font-size:11px;padding:3px 8px;border-radius:20px;background:rgba(79,142,247,.15);color:#1d4ed8">Ordered</span>'
       + '</div>'
-      + '<div style="margin-bottom:8px">'+r.parts.map(p=>'<span style="display:inline-block;padding:3px 8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:20px;font-size:11px;color:#f5c56a;margin:2px">'+p+'</span>').join('')+'</div>'
-      + '<div style="font-size:11px;color:rgba(255,255,255,.3)">Ordered by '+r.orderedBy+'</div>'
-      + (currentRole==='parts' ? '<button onclick="markReceived('+r.id+')" style="margin-top:10px;padding:5px 12px;border-radius:8px;background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.1);font-size:11px;cursor:pointer;font-family:var(--font)">Mark received</button>' : '')
+      + '<div style="margin-bottom:8px">'+r.parts.map(p=>'<span style="display:inline-block;padding:3px 8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:20px;font-size:11px;color:#b45309;margin:2px">'+p+'</span>').join('')+'</div>'
+      + '<div style="font-size:11px;color:rgba(0,0,0,.3)">Ordered by '+r.orderedBy+'</div>'
+      + (currentRole==='parts' ? '<button onclick="markReceived('+r.id+')" style="margin-top:10px;padding:5px 12px;border-radius:8px;background:rgba(0,0,0,.05);color:rgba(0,0,0,.5);border:1px solid rgba(0,0,0,.1);font-size:11px;cursor:pointer;font-family:var(--font)">Mark received</button>' : '')
       + '</div>';
   });
 
@@ -5356,27 +5356,27 @@ function renderDesktopReview(el) {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div>
         <div style="font-size:18px;font-weight:600">Pending Review</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">${reviewJobs.length} job${reviewJobs.length!==1?'s':''} awaiting approval</div>
+        <div style="font-size:12px;color:rgba(0,0,0,.4);margin-top:2px">${reviewJobs.length} job${reviewJobs.length!==1?'s':''} awaiting approval</div>
       </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px">
       ${reviewJobs.length ? reviewJobs.map(j=>{
-        const t = TECHS_LIST.find(t=>t.name===j.tech) || {bg:'rgba(79,142,247,.2)',tc:'#7bb3ff',av:'?'};
-        return `<div onclick="desktopOpenJob('${j.id}')" style="background:#171921;border:1px solid rgba(167,139,250,.25);border-radius:12px;padding:18px;cursor:pointer;display:flex;align-items:flex-start;gap:16px" onmouseover="this.style.borderColor='rgba(167,139,250,.5)'" onmouseout="this.style.borderColor='rgba(167,139,250,.25)'">
+        const t = TECHS_LIST.find(t=>t.name===j.tech) || {bg:'rgba(79,142,247,.2)',tc:'#1d4ed8',av:'?'};
+        return `<div onclick="desktopOpenJob('${j.id}')" style="background:#ffffff;border:1px solid rgba(167,139,250,.25);border-radius:12px;padding:18px;cursor:pointer;display:flex;align-items:flex-start;gap:16px" onmouseover="this.style.borderColor='rgba(167,139,250,.5)'" onmouseout="this.style.borderColor='rgba(167,139,250,.25)'">
           <div class="av" style="width:40px;height:40px;background:${t.bg};color:${t.tc};font-size:14px;flex-shrink:0">${t.av}</div>
           <div style="flex:1">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
               <div style="font-size:15px;font-weight:600">${j.title}</div>
-              <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,.15);color:#c4b0ff;font-weight:600">⏳ Pending review</span>
+              <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,.15);color:#7c3aed;font-weight:600">⏳ Pending review</span>
             </div>
-            <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:8px">👤 ${j.client} · 🔧 ${j.tech} · 📍 ${j.address}</div>
-            ${j.po?`<div style="font-size:11px;color:#f5c56a;margin-bottom:8px">PO: ${j.po}</div>`:`<div style="font-size:11px;color:#f06060;margin-bottom:8px">⚠ No PO number</div>`}
-            ${j.techUpdate?`<div style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.5;font-style:italic;background:rgba(255,255,255,.03);border-radius:8px;padding:10px 12px">"${j.techUpdate.slice(0,200)}${j.techUpdate.length>200?'…':''}"</div>`:''}
-            ${j.partsUsed?.length?`<div style="margin-top:8px">${j.partsUsed.map(p=>`<span style="display:inline-block;padding:2px 8px;background:rgba(62,207,142,.1);border:1px solid rgba(62,207,142,.2);border-radius:20px;font-size:11px;color:#5ce0a8;margin:2px">${p}</span>`).join('')}</div>`:''}
+            <div style="font-size:12px;color:rgba(0,0,0,.4);margin-bottom:8px">👤 ${j.client} · 🔧 ${j.tech} · 📍 ${j.address}</div>
+            ${j.po?`<div style="font-size:11px;color:#b45309;margin-bottom:8px">PO: ${j.po}</div>`:`<div style="font-size:11px;color:#f06060;margin-bottom:8px">⚠ No PO number</div>`}
+            ${j.techUpdate?`<div style="font-size:13px;color:rgba(0,0,0,.6);line-height:1.5;font-style:italic;background:rgba(0,0,0,.03);border-radius:8px;padding:10px 12px">"${j.techUpdate.slice(0,200)}${j.techUpdate.length>200?'…':''}"</div>`:''}
+            ${j.partsUsed?.length?`<div style="margin-top:8px">${j.partsUsed.map(p=>`<span style="display:inline-block;padding:2px 8px;background:rgba(62,207,142,.1);border:1px solid rgba(62,207,142,.2);border-radius:20px;font-size:11px;color:#059669;margin:2px">${p}</span>`).join('')}</div>`:''}
           </div>
         </div>`;
       }).join('') :
-      '<div style="text-align:center;padding:60px;color:rgba(255,255,255,.3)"><div style="font-size:40px;margin-bottom:12px">✅</div><div style="font-size:15px;font-weight:600">No jobs pending review</div><div style="font-size:13px;margin-top:6px">All caught up!</div></div>'
+      '<div style="text-align:center;padding:60px;color:rgba(0,0,0,.3)"><div style="font-size:40px;margin-bottom:12px">✅</div><div style="font-size:15px;font-weight:600">No jobs pending review</div><div style="font-size:13px;margin-top:6px">All caught up!</div></div>'
       }
     </div>`;
 }
@@ -5387,9 +5387,9 @@ function renderDesktopCompleted(el) {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
       <div>
         <div style="font-size:18px;font-weight:600">Completed Jobs</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">${done.length} completed</div>
+        <div style="font-size:12px;color:rgba(0,0,0,.4);margin-top:2px">${done.length} completed</div>
       </div>
-      <input type="text" id="desktop-completed-search" placeholder="Search by client or job…" oninput="filterDesktopCompleted(this.value)" style="padding:8px 14px;background:#171921;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:13px;font-family:var(--font);width:240px">
+      <input type="text" id="desktop-completed-search" placeholder="Search by client or job…" oninput="filterDesktopCompleted(this.value)" style="padding:8px 14px;background:#ffffff;border:1px solid rgba(0,0,0,.1);border-radius:8px;color:#14151a;font-size:13px;font-family:var(--font);width:240px">
     </div>
     <div id="desktop-completed-list" style="display:flex;flex-direction:column;gap:10px;margin-top:20px"></div>`;
   renderDesktopCompletedCards(done);
@@ -5399,17 +5399,17 @@ function renderDesktopCompletedCards(list) {
   const el = document.getElementById('desktop-completed-list');
   if(!el) return;
   if(!list.length) {
-    el.innerHTML='<div style="text-align:center;padding:60px;color:rgba(255,255,255,.3)"><div style="font-size:40px;margin-bottom:12px">✅</div><div>No completed jobs found</div></div>';
+    el.innerHTML='<div style="text-align:center;padding:60px;color:rgba(0,0,0,.3)"><div style="font-size:40px;margin-bottom:12px">✅</div><div>No completed jobs found</div></div>';
     return;
   }
   el.innerHTML = list.map(j=>`
-    <div onclick="desktopOpenJob('${j.id}')" style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;cursor:pointer;display:flex;align-items:flex-start;gap:16px" onmouseover="this.style.borderColor='rgba(62,207,142,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)'">
-      <div style="width:40px;height:40px;border-radius:50%;background:rgba(62,207,142,.15);color:#5ce0a8;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px">✓</div>
+    <div onclick="desktopOpenJob('${j.id}')" style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:18px;cursor:pointer;display:flex;align-items:flex-start;gap:16px" onmouseover="this.style.borderColor='rgba(62,207,142,.3)'" onmouseout="this.style.borderColor='rgba(0,0,0,.07)'">
+      <div style="width:40px;height:40px;border-radius:50%;background:rgba(62,207,142,.15);color:#059669;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px">✓</div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:600;margin-bottom:4px">${j.title}</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.4)">👤 ${j.client} · 🔧 ${j.tech||'Unassigned'} · 📍 ${j.address}${j.city?', '+j.city:''}</div>
-        ${j.techUpdate?`<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;font-style:italic">"${j.techUpdate.slice(0,120)}${j.techUpdate.length>120?'…':''}"</div>`:''}
-        ${j.partsUsed?.length?`<div style="margin-top:8px">${j.partsUsed.map(p=>`<span style="display:inline-block;padding:2px 8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:20px;font-size:11px;color:#f5c56a;margin:2px">${p}</span>`).join('')}</div>`:''}
+        <div style="font-size:12px;color:rgba(0,0,0,.4)">👤 ${j.client} · 🔧 ${j.tech||'Unassigned'} · 📍 ${j.address}${j.city?', '+j.city:''}</div>
+        ${j.techUpdate?`<div style="font-size:12px;color:rgba(0,0,0,.5);margin-top:6px;font-style:italic">"${j.techUpdate.slice(0,120)}${j.techUpdate.length>120?'…':''}"</div>`:''}
+        ${j.partsUsed?.length?`<div style="margin-top:8px">${j.partsUsed.map(p=>`<span style="display:inline-block;padding:2px 8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:20px;font-size:11px;color:#b45309;margin:2px">${p}</span>`).join('')}</div>`:''}
       </div>
     </div>`).join('');
 }
@@ -5427,32 +5427,32 @@ function renderDesktopProfile(el) {
   var memberRows = TECHS_LIST.map(function(t, i) {
     var trc = ROLE_COLORS[t.role||'tech'];
     var canEdit = currentRole==='admin';
-    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);'+(canEdit?'cursor:pointer':'')+'" '+(canEdit?'onclick="openEditUser('+i+')"':'')+' >'
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.05);'+(canEdit?'cursor:pointer':'')+'" '+(canEdit?'onclick="openEditUser('+i+')"':'')+' >'
       + '<div class="av" style="width:34px;height:34px;background:'+trc.bg+';color:'+trc.tc+';font-size:12px">'+t.av+'</div>'
       + '<div style="flex:1"><div style="font-size:13px;font-weight:600">'+t.name+'</div>'
-      + '<div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px"><span style="background:'+trc.bg+';color:'+trc.tc+';padding:1px 7px;border-radius:20px;font-size:10px">'+trc.label+'</span> '+t.phone+'</div></div>'
-      + (t.pendingSetup ? '<span style="font-size:10px;color:#f5c56a">⏳ Pending</span>' : '<span style="font-size:10px;color:#5ce0a8">✓ Active</span>')
-      + (canEdit ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:rgba(255,255,255,.25)"><polyline points="9 18 15 12 9 6"/></svg>' : '')
+      + '<div style="font-size:11px;color:rgba(0,0,0,.35);margin-top:2px"><span style="background:'+trc.bg+';color:'+trc.tc+';padding:1px 7px;border-radius:20px;font-size:10px">'+trc.label+'</span> '+t.phone+'</div></div>'
+      + (t.pendingSetup ? '<span style="font-size:10px;color:#b45309">⏳ Pending</span>' : '<span style="font-size:10px;color:#059669">✓ Active</span>')
+      + (canEdit ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:rgba(0,0,0,.25)"><polyline points="9 18 15 12 9 6"/></svg>' : '')
       + '</div>';
   }).join('');
 
   var viewAsCard = '';
   if (actualRole === 'admin' || actualRole === 'office') {
     var vRoles = ['admin','office','tech','parts'];
-    var vColors = { tech:{bg:'rgba(79,142,247,.15)',border:'#7bb3ff',tc:'#7bb3ff'}, parts:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#f5c56a'}, office:{bg:'rgba(62,207,142,.12)',border:'#5ce0a8',tc:'#5ce0a8'}, admin:{bg:'rgba(167,139,250,.15)',border:'#c4b0ff',tc:'#c4b0ff'} };
+    var vColors = { tech:{bg:'rgba(79,142,247,.15)',border:'#7bb3ff',tc:'#1d4ed8'}, parts:{bg:'rgba(245,166,35,.15)',border:'#f5c56a',tc:'#b45309'}, office:{bg:'rgba(62,207,142,.12)',border:'#5ce0a8',tc:'#059669'}, admin:{bg:'rgba(167,139,250,.15)',border:'#c4b0ff',tc:'#7c3aed'} };
     var vIcons = { tech:'🔧', parts:'📦', office:'🏢', admin:'🛡' };
     var isPreview = currentRole !== actualRole;
-    viewAsCard = '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px;margin-bottom:16px">'
+    viewAsCard = '<div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:20px;margin-bottom:16px">'
       + '<div style="font-size:13px;font-weight:600;margin-bottom:4px">🔍 View as</div>'
-      + '<div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:12px">Preview only — never changes your real role</div>'
-      + (isPreview ? '<div style="display:flex;align-items:center;gap:8px;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.25);border-radius:8px;padding:8px 10px;margin-bottom:12px"><span style="font-size:13px">👁</span><div style="flex:1;font-size:11px;color:#7bb3ff">Previewing as ' + (ROLE_COLORS[currentRole]?.label||currentRole) + '</div><button onclick="viewAsRole(actualRole)" style="padding:4px 10px;border-radius:20px;background:#4f8ef7;border:none;color:#fff;font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font)">Back</button></div>' : '')
+      + '<div style="font-size:11px;color:rgba(0,0,0,.35);margin-bottom:12px">Preview only — never changes your real role</div>'
+      + (isPreview ? '<div style="display:flex;align-items:center;gap:8px;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.25);border-radius:8px;padding:8px 10px;margin-bottom:12px"><span style="font-size:13px">👁</span><div style="flex:1;font-size:11px;color:#1d4ed8">Previewing as ' + (ROLE_COLORS[currentRole]?.label||currentRole) + '</div><button onclick="viewAsRole(actualRole)" style="padding:4px 10px;border-radius:20px;background:#4f8ef7;border:none;color:#fff;font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font)">Back</button></div>' : '')
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
       + vRoles.map(function(r){
           var active = r === currentRole;
           var c = vColors[r];
-          return '<button onclick="viewAsRole(\''+r+'\')" style="display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;background:'+(active?c.bg:'rgba(255,255,255,.03)')+';border:1px solid '+(active?c.border:'rgba(255,255,255,.1)')+';cursor:pointer;font-family:var(--font);text-align:left">'
+          return '<button onclick="viewAsRole(\''+r+'\')" style="display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;background:'+(active?c.bg:'rgba(0,0,0,.03)')+';border:1px solid '+(active?c.border:'rgba(0,0,0,.1)')+';cursor:pointer;font-family:var(--font);text-align:left">'
             + '<span style="font-size:15px">'+vIcons[r]+'</span>'
-            + '<span style="font-size:12px;font-weight:600;color:'+(active?c.tc:'rgba(255,255,255,.6)')+'">'+(ROLE_COLORS[r]?.label||r)+'</span>'
+            + '<span style="font-size:12px;font-weight:600;color:'+(active?c.tc:'rgba(0,0,0,.6)')+'">'+(ROLE_COLORS[r]?.label||r)+'</span>'
             + '</button>';
         }).join('')
       + '</div>'
@@ -5462,37 +5462,37 @@ function renderDesktopProfile(el) {
   el.innerHTML = '<div style="display:grid;grid-template-columns:300px 1fr;gap:20px">'
     // Left: profile card
     + '<div>'
-    + '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px;margin-bottom:16px">'
+    + '<div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:20px;margin-bottom:16px">'
     + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">'
     + '<div class="av" style="width:48px;height:48px;font-size:17px;background:'+rc.bg+';color:'+rc.tc+'">'+ini+'</div>'
     + '<div><div style="font-size:16px;font-weight:600">'+(currentUser?.name||'Admin')+'</div>'
-    + '<div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">'+rc.label+'</div></div>'
+    + '<div style="font-size:12px;color:rgba(0,0,0,.4);margin-top:2px">'+rc.label+'</div></div>'
     + '</div>'
-    + '<div style="border-top:1px solid rgba(255,255,255,.05);padding-top:14px">'
-    + '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px"><span style="color:rgba(255,255,255,.4)">QuickBooks</span><span style="color:#5ce0a8">Connected ✓</span></div>'
-    + '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px"><span style="color:rgba(255,255,255,.4)">Twilio SMS</span><button onclick="openTwilioModal()" style="background:none;border:none;cursor:pointer;font-size:12px;color:'+(twilioConnected?'#5ce0a8':'#f5c56a')+';font-family:var(--font)">'+(twilioConnected?'✓ Connected':'Not connected')+'</button></div>'
-    + '<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px"><span style="color:rgba(255,255,255,.4)">Microsoft 365</span><button onclick="openM365Modal()" style="background:none;border:none;cursor:pointer;font-size:12px;color:'+(m365Connected?'#5ce0a8':'#f5c56a')+';font-family:var(--font)">'+(m365Connected?'✓ Connected':'Not connected')+'</button></div>'
+    + '<div style="border-top:1px solid rgba(0,0,0,.05);padding-top:14px">'
+    + '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.04);font-size:13px"><span style="color:rgba(0,0,0,.4)">QuickBooks</span><span style="color:#059669">Connected ✓</span></div>'
+    + '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.04);font-size:13px"><span style="color:rgba(0,0,0,.4)">Twilio SMS</span><button onclick="openTwilioModal()" style="background:none;border:none;cursor:pointer;font-size:12px;color:'+(twilioConnected?'#059669':'#b45309')+';font-family:var(--font)">'+(twilioConnected?'✓ Connected':'Not connected')+'</button></div>'
+    + '<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px"><span style="color:rgba(0,0,0,.4)">Microsoft 365</span><button onclick="openM365Modal()" style="background:none;border:none;cursor:pointer;font-size:12px;color:'+(m365Connected?'#059669':'#b45309')+';font-family:var(--font)">'+(m365Connected?'✓ Connected':'Not connected')+'</button></div>'
     + '</div></div>'
     + viewAsCard
     + '<button onclick="showLogin()" class="btn btn-ghost" style="width:100%;padding:11px">Sign out</button>'
     + '</div>'
     // Right: users table
     + '<div>'
-    + '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px">'
+    + '<div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:20px">'
     + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">'
     + '<div style="font-size:15px;font-weight:600">Users</div>'
-    + (currentRole==='admin' ? '<button onclick="openAddTech()" style="padding:6px 14px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add user</button>' : '')
+    + (currentRole==='admin' ? '<button onclick="openAddTech()" style="padding:6px 14px;border-radius:20px;background:rgba(62,207,142,.15);border:1px solid rgba(62,207,142,.3);color:#059669;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add user</button>' : '')
     + '</div>'
     + memberRows
     + '</div>'
-    + ((currentRole==='admin'||currentRole==='office') ? '<div style="background:#171921;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px;margin-top:16px">'
+    + ((currentRole==='admin'||currentRole==='office') ? '<div style="background:#ffffff;border:1px solid rgba(0,0,0,.07);border-radius:12px;padding:20px;margin-top:16px">'
       + '<div style="font-size:15px;font-weight:600;margin-bottom:14px">Import from Excel</div>'
-      + '<div style="font-size:13px;color:rgba(255,255,255,.4);margin-bottom:14px">Import clients or employees from a .xlsx or .csv file</div>'
+      + '<div style="font-size:13px;color:rgba(0,0,0,.4);margin-bottom:14px">Import clients or employees from a .xlsx or .csv file</div>'
       + '<div style="display:flex;gap:10px">'
-      + '<button onclick="document.getElementById(\'import-clients-file\').click()" style="padding:10px 18px;border-radius:8px;background:rgba(79,142,247,.15);border:1px solid rgba(79,142,247,.3);color:#7bb3ff;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)">👥 Import clients</button>'
-      + '<button onclick="document.getElementById(\'import-employees-file\').click()" style="padding:10px 18px;border-radius:8px;background:rgba(62,207,142,.12);border:1px solid rgba(62,207,142,.3);color:#5ce0a8;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)">🔧 Import employees</button>'
+      + '<button onclick="document.getElementById(\'import-clients-file\').click()" style="padding:10px 18px;border-radius:8px;background:rgba(79,142,247,.15);border:1px solid rgba(79,142,247,.3);color:#1d4ed8;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)">👥 Import clients</button>'
+      + '<button onclick="document.getElementById(\'import-employees-file\').click()" style="padding:10px 18px;border-radius:8px;background:rgba(62,207,142,.12);border:1px solid rgba(62,207,142,.3);color:#059669;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)">🔧 Import employees</button>'
       + '</div>'
-      + '<div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:10px;line-height:1.6"><strong style="color:rgba(255,255,255,.5)">Clients:</strong> Name, Company, Phone, Email, Address, City &nbsp;·&nbsp; <strong style="color:rgba(255,255,255,.5)">Employees:</strong> Name, Role, Phone, Email</div>'
+      + '<div style="font-size:11px;color:rgba(0,0,0,.3);margin-top:10px;line-height:1.6"><strong style="color:rgba(0,0,0,.5)">Clients:</strong> Name, Company, Phone, Email, Address, City &nbsp;·&nbsp; <strong style="color:rgba(0,0,0,.5)">Employees:</strong> Name, Role, Phone, Email</div>'
       + '</div>' : '')
     + '</div></div>'
     + '</div>';
