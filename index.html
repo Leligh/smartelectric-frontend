@@ -1741,6 +1741,23 @@ function showDuePicker() {
   renderDetail();
 }
 
+function setCompletedDate(jobId, val) {
+  const j = jobById(jobId);
+  if(!j) return;
+  j.completedDate = val || null;
+  renderDetail();
+  if(val) toast('Completed date set ✓');
+  const apiId = j._apiId || j.id;
+  apiCall(`/jobs/${apiId}/notes`, {
+    method: 'PATCH',
+    body: JSON.stringify({ techNotes: j.techUpdate || null, po: j.po || null, completedDate: j.completedDate })
+  }).catch(e => console.warn('[completed date] save failed:', e.message));
+}
+function clearCompletedDate(jobId) {
+  setCompletedDate(jobId, null);
+  toast('Completed date cleared', 'warning');
+}
+
 // ── JOB DETAIL ───────────────────────────────────────────────────────────────
 function openJob(id) {
   currentJobId = id;
@@ -1784,7 +1801,7 @@ function renderDetail() {
     const val = getOverride(j, f.key);
     const orig = j[f.key];
     const changed = hasOverride(j, f.key);
-    const canEdit = currentRole==='tech' && !isDone && !isReview;
+    const canEdit = currentRole==='tech' && !isDone;
 
     if(editingField===f.key) {
       return `<div class="edit-row-wrap">
@@ -1841,7 +1858,7 @@ function renderDetail() {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
       <div class="card-sm">
         <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">NOTES ${isProgress?'<span style="color:var(--red)">*</span>':''}</div>
-        ${isProgress ? `
+        ${(isProgress||isReview) ? `
           ${micActive.notes?`<div style="background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.2);border-radius:var(--r-sm);padding:6px 10px;font-size:11px;color:var(--red);margin-bottom:6px;display:flex;align-items:center;gap:5px"><span style="animation:micpulse 1s infinite;display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red)"></span> Recording</div>`:''}
           <div style="font-size:11px;color:var(--text3);margin-bottom:4px;min-height:13px" id="notes-hint">🎤 Tap mic to transcribe</div>
           <div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:8px">
@@ -1855,7 +1872,7 @@ function renderDetail() {
       </div>
       <div class="card-sm">
         <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">PARTS USED</div>
-        ${isProgress ? `
+        ${(isProgress||isReview) ? `
           ${micActive.used?`<div style="background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.2);border-radius:var(--r-sm);padding:6px 10px;font-size:11px;color:var(--red);margin-bottom:6px;display:flex;align-items:center;gap:5px"><span style="animation:micpulse 1s infinite;display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red)"></span> Recording</div>`:''}
           <div style="font-size:11px;color:var(--text3);margin-bottom:5px;min-height:13px" id="used-hint">🎤 Tap mic</div>
           <div style="display:flex;gap:6px;align-items:flex-start">
@@ -1874,7 +1891,7 @@ function renderDetail() {
     </div>`;
 
   // Photos
-  const photosSection = isProgress ? `
+  const photosSection = (isProgress||isReview) ? `
     <div class="card-sm" style="margin-bottom:12px">
       <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">📷 PHOTOS</div>
       <div id="job-photos-${j.id}" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">
@@ -1897,7 +1914,7 @@ function renderDetail() {
         <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:var(--r-sm);padding:10px;font-size:12px;color:var(--amber);margin-bottom:0">
           ✓ Sent to Linda P. — ${j.partsReq.length} part${j.partsReq.length!==1?'s':''} listed: ${j.partsReq.join(', ')}
         </div>` :
-        (isProgress||isNew) ? `
+        (isProgress||isReview||isNew) ? `
           ${micActive.req?`<div style="background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.2);border-radius:var(--r-sm);padding:6px 10px;font-size:11px;color:var(--red);margin-bottom:6px;display:flex;align-items:center;gap:5px"><span style="animation:micpulse 1s infinite;display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red)"></span> Recording</div>`:''}
           <div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:8px">
             <textarea id="req-ta" rows="2" style="flex:1;font-size:12px;min-height:52px" placeholder="Speak parts needed…"></textarea>
@@ -2021,6 +2038,25 @@ function renderDetail() {
             : `<button onclick="showDuePicker()" style="padding:5px 12px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font)">✏️ Edit</button>`
           }
         </div>
+        ${(isProgress||isReview||isDone) ? `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:12px;font-weight:600;color:var(--text3);letter-spacing:.3px">DATE COMPLETED</span>
+            ${j.completedDate
+              ? `<span style="font-size:12px;font-weight:600;color:var(--green)">✓ ${new Date(j.completedDate+'T12:00:00').toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'})}</span>`
+              : `<span style="font-size:12px;color:var(--text3);font-style:italic">Not set</span>`
+            }
+          </div>
+          ${(!isDone && (currentRole==='tech'||currentRole==='admin'||currentRole==='office'))
+            ? `<div style="display:flex;align-items:center;gap:6px">
+                <input type="date" id="completed-date-input" value="${j.completedDate||''}"
+                  style="font-size:12px;padding:5px 8px;border-radius:var(--r-sm);background:var(--bg3);border:1px solid var(--border2);color:var(--text1);font-family:var(--font)"
+                  onchange="setCompletedDate('${j.id}',this.value)">
+                ${j.completedDate?`<button onclick="clearCompletedDate('${j.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:2px" title="Clear">✕</button>`:''}
+              </div>`
+            : ''
+          }
+        </div>` : ''}
       </div>
       ${overrideBanner}
       <div class="card-sm" style="margin-bottom:12px">
@@ -4271,6 +4307,7 @@ function mapJobFromApi(j) {
     jx: j.jx || 0.5,
     jy: j.jy || 0.5,
     createdAt: j.created_at || null,
+    completedDate: j.completed_date || null,
   };
 }
 
