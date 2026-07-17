@@ -4345,11 +4345,12 @@ async function saveJobToApi(job) {
         if(idx >= 0) JOBS[idx] = mapJobFromApi(data.job);
       }
     }
-    return data;
+    return { success: true, data };
   } catch(e) {
     const errMsg = e.error || e.message || JSON.stringify(e);
     console.warn('[jobs] Failed to save to backend:', errMsg);
     toast('Job saved locally — backend sync failed: ' + errMsg, 'warning');
+    return { success: false, error: errMsg };
   }
 }
 
@@ -5005,7 +5006,7 @@ function selectNewJobPriority(p) {
   });
 }
 
-function confirmNewJob() {
+async function confirmNewJob() {
   const title   = document.getElementById('nj-title')?.value?.trim();
   const client  = document.getElementById('nj-client')?.value?.trim();
   const phone   = document.getElementById('nj-phone')?.value?.trim();
@@ -5041,7 +5042,9 @@ function confirmNewJob() {
   });
   if(hasError) { toast('Please fill in the highlighted fields', 'warning'); return; }
 
-  const newId   = Math.max(...JOBS.map(j=>j.id), 0) + 1;
+  // Temporary local-only id — must NOT contain a dash, since saveJobToApi
+  // treats any dash-containing string id as an existing backend UUID (PUT vs POST)
+  const newId  = 'tmp' + Date.now();
   const techObj = tech ? TECHS_LIST.find(t=>t.name===tech) : null;
 
   // Tech submits for admin review; admin creates directly
@@ -5059,8 +5062,38 @@ function confirmNewJob() {
     submittedByTech: isTech,
   };
 
-  JOBS.unshift(newJob);
+  // Show a saving state on the button so it's clear something is happening
+  const saveBtn = document.querySelector('#new-job-modal .btn-primary');
+  const originalBtnText = saveBtn ? saveBtn.textContent : '';
+  if (saveBtn) { saveBtn.textContent = 'Saving…'; saveBtn.disabled = true; }
+  let errEl = document.getElementById('nj-save-error');
+  if (errEl) errEl.remove();
+
+  const result = await saveJobToApi(newJob);
+
+  if (!result || !result.success) {
+    // Do NOT close the modal or add the job locally — nothing was actually saved.
+    if (saveBtn) { saveBtn.textContent = originalBtnText; saveBtn.disabled = false; }
+    const modalBody = document.querySelector('#new-job-modal > div');
+    if (modalBody) {
+      const banner = document.createElement('div');
+      banner.id = 'nj-save-error';
+      banner.style.cssText = 'background:rgba(240,96,96,.1);border:1px solid rgba(240,96,96,.3);border-radius:var(--r-sm);padding:12px 14px;margin-top:14px;font-size:13px;color:var(--red)';
+      banner.innerHTML = `⚠ This job was <strong>not saved</strong> — ${result?.error||'connection failed'}.<br>Check your connection and tap "Create job" again. Your entries are still here.`;
+      modalBody.insertBefore(banner, modalBody.querySelector('div[style*="display:flex;gap:8px;margin-top:20px"]'));
+    }
+    toast('Job NOT saved — check connection and try again', 'warning');
+    return;
+  }
+
+  // Success — now safe to add locally, close modal, and notify
+  if (result.data && result.data.job) {
+    JOBS.unshift(mapJobFromApi(result.data.job));
+  } else {
+    JOBS.unshift(newJob);
+  }
   closeNewJobModal();
+  if (saveBtn) { saveBtn.textContent = originalBtnText; saveBtn.disabled = false; }
   updateHomeCounts();
   renderJobList();
   if(IS_DESKTOP()) renderDesktopView(desktopTab);
@@ -5079,9 +5112,8 @@ function confirmNewJob() {
       if(techObj.email) emailJobAssigned(newJob, techObj.name, techObj.email);
     }
   }
-  // Save to backend
-  saveJobToApi(newJob);
 }
+
 // ── ACCOUNT SETUP (invite link) ───────────────────────────────────────────────
 let setupInviteToken = null;
 
