@@ -2510,7 +2510,7 @@ function renderOpenCallDetail() {
 
   let assignSection = '';
   if(isAdmin) {
-    const techButtons = TECHS_LIST.filter(t=>t.role==='tech').map(t=>{
+    const techButtons = TECHS_LIST.map(t=>{
       const isAssigned = c.tech===t.name;
       return `<button onclick="assignOpenCall('${c.id}','${t.name}')" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:var(--r-sm);background:${isAssigned?t.bg:'var(--bg3)'};border:1px solid ${isAssigned?t.tc:'var(--border2)'};cursor:pointer;font-family:var(--font);width:100%;text-align:left;transition:all .15s">
         <div class="av" style="width:30px;height:30px;background:${t.bg};color:${t.tc};font-size:10px;flex-shrink:0">${t.av}</div>
@@ -4997,7 +4997,7 @@ function openNewJobModal() {
   if(techField) techField.style.display = isTech ? 'none' : 'block';
   if(sel && !isTech) {
     sel.innerHTML = '<option value="">— Unassigned —</option>' +
-      TECHS_LIST.filter(t=>t.role==='tech').map(t=>`<option value="${t.name}">${t.name}</option>`).join('');
+      TECHS_LIST.map(t=>`<option value="${t.name}">${t.name}</option>`).join('');
   }
   const saveBtn = document.querySelector('#new-job-modal .btn-primary');
   if(saveBtn) saveBtn.textContent = isTech ? 'Submit for admin review' : 'Create job';
