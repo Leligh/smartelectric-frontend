@@ -449,6 +449,7 @@ select option{background:var(--bg2);color:var(--text1)}
       </div>
       <div style="padding:14px 14px 0">
         <div class="sec-head">My jobs today</div>
+        <input type="text" id="home-jobs-search" placeholder="🔍 Search client, job, tech…" oninput="filterHomeJobsSearch(this.value)" style="width:100%;padding:9px 12px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--text1);font-size:13px;font-family:var(--font);margin-bottom:12px;box-sizing:border-box">
         <div id="job-list-home"></div>
       </div>
     </div>
@@ -1560,6 +1561,18 @@ function updateHomeCounts() {
 }
 
 let activeStatusFilter = null;
+let homeJobsSearch = '';
+
+function filterHomeJobsSearch(q) {
+  homeJobsSearch = q;
+  renderJobList();
+  const input = document.getElementById('home-jobs-search');
+  if (input) {
+    input.focus();
+    const pos = q.length;
+    input.setSelectionRange(pos, pos);
+  }
+}
 
 function filterJobListByStatus(status) {
   if(activeStatusFilter === status) {
@@ -1589,10 +1602,21 @@ function renderJobList() {
            : JOBS;
   jobs = jobs.filter(j=>j.status!=='done'); // completed jobs live under the Completed tab only
   if(activeStatusFilter) jobs = jobs.filter(j=>j.status===activeStatusFilter);
+  if(homeJobsSearch) {
+    const q = homeJobsSearch.toLowerCase();
+    jobs = jobs.filter(j => ((j.client||'')+' '+(j.title||'')+' '+(j.tech||'')+' '+(j.address||'')).toLowerCase().includes(q));
+  }
+  const searchInput = document.getElementById('home-jobs-search');
+  if(searchInput && searchInput.value !== homeJobsSearch) searchInput.value = homeJobsSearch;
+  jobs = jobs.slice().sort((a,b) => {
+    const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return tb - ta; // newest first
+  });
   const el = document.getElementById('job-list-home');
   if(!el) return;
   if(!jobs.length) {
-    el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text3)"><div style="font-size:32px;margin-bottom:10px">${activeStatusFilter?'🔍':'✅'}</div><div>${activeStatusFilter?'No '+activeStatusFilter+' jobs':'No jobs yet'}</div>${activeStatusFilter?`<button onclick="filterJobListByStatus(null)" style="margin-top:12px;padding:6px 14px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--font)">Show all</button>`:''}</div>`;
+    el.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text3)"><div style="font-size:32px;margin-bottom:10px">${(activeStatusFilter||homeJobsSearch)?'🔍':'✅'}</div><div>${homeJobsSearch?'No jobs match your search':activeStatusFilter?'No '+activeStatusFilter+' jobs':'No jobs yet'}</div>${activeStatusFilter?`<button onclick="filterJobListByStatus(null)" style="margin-top:12px;padding:6px 14px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--font)">Show all</button>`:''}</div>`;
     return;
   }
   el.innerHTML = jobs.map(j=>{
@@ -1609,6 +1633,7 @@ function renderJobList() {
         ${j.tech?`<span style="color:var(--text3)">🔧 ${j.tech}</span>`:'<span style="color:var(--red);font-size:11px">⚠ Unassigned</span>'}
         ${j.arrivalSmsSent?`<span style="color:var(--green);font-size:11px">📱 Arrival SMS sent</span>`:''}
         ${j.dueDate?`<span style="color:${isDueSoon(j.dueDate)?'var(--red)':isDueToday(j.dueDate)?'var(--amber)':'var(--green)'}">📅 ${formatDue(j.dueDate)}</span>`:''}
+        ${j.createdAt?`<span style="color:var(--text3)">🗓️ Created ${new Date(j.createdAt).toLocaleDateString('en-CA',{month:'short',day:'numeric'})}</span>`:''}
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border)">
         <span style="font-size:12px;color:var(--text3)">${j.phone||''}</span>
