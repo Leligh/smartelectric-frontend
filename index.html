@@ -4333,6 +4333,7 @@ function mapJobFromApi(j) {
     jy: j.jy || 0.5,
     createdAt: j.created_at || null,
     completedDate: j.completed_date || null,
+    po: j.po_number || j.po || '',
   };
 }
 
