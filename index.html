@@ -1099,10 +1099,39 @@ const OPEN_CALLS = [
   {id:3,title:'Annual boiler',client:'G. Friesen',address:'201 Maple Ave',time:'This week',priority:'routine',desc:'Yearly maintenance. Flexible on timing.',requests:['Dale K.'],status:'open'},
 ];
 
-const PARTS_REQS = [
-  {id:0,job:'Gas line inspect',client:'H. Wiebe',tech:'Rick T.',techAv:'RT',time:'Yesterday 3:15 PM',parts:['3/4 gas valve','Teflon tape','Pipe union'],photos:1,notes:'Gas valve leaking at stem.',status:'followup',urgent:true,orderedBy:null},
-  {id:1,job:'Furnace inspection',client:'M. Olson',tech:'Dale K.',techAv:'DK',time:'Today 8:42 AM',parts:['HC21ZE117 igniter','Pressure switch'],photos:2,notes:'Igniter worn.',status:'pending',urgent:false,orderedBy:null},
-];
+let PARTS_REQS = [];
+
+function mapPartsFromApi(p) {
+  let parts = p.parts;
+  if (typeof parts === 'string') { try { parts = JSON.parse(parts); } catch(e) { parts = [parts]; } }
+  if (!Array.isArray(parts)) parts = [];
+  return {
+    id: p.id,
+    job: p.job_title || '',
+    client: p.client_name || '',
+    tech: p.requested_by_name || '',
+    time: p.created_at ? new Date(p.created_at).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '',
+    parts,
+    photos: 0,
+    notes: p.notes || '',
+    status: p.status || 'pending',
+    urgent: !!p.urgent,
+    orderedBy: p.confirmed_by_name || null,
+  };
+}
+
+async function loadPartsList() {
+  try {
+    const data = await apiCall('/parts');
+    if (data && data.parts) {
+      PARTS_REQS = data.parts.map(mapPartsFromApi);
+      renderPartsList();
+      if (IS_DESKTOP() && desktopTab === 'parts') renderDesktopView('parts');
+    }
+  } catch (e) {
+    console.warn('[parts] Failed to load:', e.message);
+  }
+}
 
 const TECHS_ADMIN = [
   {av:'DK',name:'Dale K.',bg:'rgba(79,142,247,.2)',tc:'#1d4ed8',tx:.38,ty:.55,status:'In progress'},
@@ -1370,6 +1399,7 @@ function applyLogin(user) {
   loadUsers();
   loadClients();
   loadJobs();
+  loadPartsList();
   setTimeout(function() {
     initLayout();
     if (IS_DESKTOP()) renderDesktopView(desktopTab);
@@ -2380,16 +2410,28 @@ function rerenderReqTags() {
   const el = document.getElementById('req-tags');
   if(el) el.innerHTML = tempReqTags.map((t,i)=>`<span class="tag tag-amber" style="cursor:pointer" onclick="removeReq(${i})">${t} ✕</span>`).join('');
 }
-function sendPartsReq() {
+async function sendPartsReq() {
   if(!tempReqTags.length){toast('Add at least one part','warning');return;}
-  jobById(currentJobId).partsReq=[...tempReqTags];
-  jobById(currentJobId).partsSent=true;
-  renderDetail();
-  toast('Parts request sent to Linda P.');
-  // Email parts coordinators
   const j = jobById(currentJobId);
+  j.partsReq=[...tempReqTags];
+  j.partsSent=true;
+  renderDetail();
+  toast('Sending to parts coordinator…');
   const partsReqObj = { job: j.title, client: j.client, tech: j.tech, parts: tempReqTags, notes: j.techUpdate, urgent: j.status==='overdue' };
-  TECHS_LIST.filter(u=>u.role==='parts'||u.role==='admin').forEach(u=>{
+  try {
+    const apiId = j._apiId || j.id;
+    await apiCall('/parts', {
+      method: 'POST',
+      body: JSON.stringify({ jobId: apiId, parts: tempReqTags, notes: j.techUpdate || '', urgent: j.status==='overdue' })
+    });
+    await loadPartsList();
+    toast('Parts request sent to Linda P. ✓');
+  } catch(e) {
+    console.warn('[parts] save failed:', e.message);
+    toast('Parts request NOT saved — ' + (e.error||e.message||'check connection'), 'warning');
+  }
+  // Email parts coordinators
+  TECHS_LIST.filter(u=>u.role==='parts').forEach(u=>{
     if(u.email) emailPartsUpdate(partsReqObj, u.email, u.name, 'submitted');
   });
 }
@@ -2704,8 +2746,11 @@ function markFollowup(id) {
 async function confirmOrder(id) {
   const r=PARTS_REQS.find(x=>x.id===id);
   if(!r) return;
-  r.status='ordered'; r.orderedBy = currentUser?.name || 'Linda P.';
+  r.status='ordered'; r.orderedBy = currentUser?.name || '';
   renderPartsList(); toast('Order confirmed — texting tech ✓');
+  try {
+    await apiCall(`/parts/${id}/confirm`, { method:'POST', body:'{}' });
+  } catch(e) { console.warn('[parts] confirm failed:', e.message); toast('Warning: confirm may not have saved — ' + (e.error||e.message), 'warning'); }
   const tech = TECHS_LIST.find(x=>x.name===r.tech);
   if(tech) {
     try {
@@ -2719,6 +2764,9 @@ async function markReceived(id) {
   const r=PARTS_REQS.find(x=>x.id===id);
   if(!r) return;
   r.status='received'; renderPartsList(); toast('Marked received — texting tech ✓');
+  try {
+    await apiCall(`/parts/${id}/received`, { method:'POST', body:'{}' });
+  } catch(e) { console.warn('[parts] received failed:', e.message); toast('Warning: may not have saved — ' + (e.error||e.message), 'warning'); }
   const tech = TECHS_LIST.find(x=>x.name===r.tech);
   if(tech) {
     try {
