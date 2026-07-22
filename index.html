@@ -1388,6 +1388,8 @@ function applyLogin(user) {
     const r2 = document.getElementById('twilio-settings-row');
     if(r1) r1.style.display = 'flex';
     if(r2) r2.style.display = 'flex';
+  }
+  if(user.role === 'admin' || user.role === 'office' || user.role === 'tech') {
     loadInbox();
     // Poll for new messages every 2 minutes
     if(window._inboxPollInterval) clearInterval(window._inboxPollInterval);
