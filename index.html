@@ -2713,8 +2713,8 @@ function renderPartsList() {
       <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border)">
         <span style="font-size:11px;color:var(--text3)">${r.time}</span>
         <div style="display:flex;gap:6px">
-          ${(currentRole==='parts'||currentRole==='admin'||currentRole==='office')?`<button onclick="markFollowup(${r.id})" style="padding:7px 12px;border-radius:var(--r-sm);background:rgba(245,166,35,.12);color:var(--amber);border:1px solid rgba(245,166,35,.3);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">🔔 Follow-up</button>`:''}
-          ${(currentRole==='parts'||currentRole==='admin')?`<button onclick="confirmOrder(${r.id})" style="padding:7px 14px;border-radius:var(--r-sm);background:rgba(62,207,142,.15);color:var(--green);border:1px solid rgba(62,207,142,.3);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">✓ Confirm ordered</button>`:''}
+          ${(currentRole==='parts'||currentRole==='admin'||currentRole==='office')?`<button onclick="markFollowup('${r.id}')" style="padding:7px 12px;border-radius:var(--r-sm);background:rgba(245,166,35,.12);color:var(--amber);border:1px solid rgba(245,166,35,.3);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">🔔 Follow-up</button>`:''}
+          ${(currentRole==='parts'||currentRole==='admin')?`<button onclick="confirmOrder('${r.id}')" style="padding:7px 14px;border-radius:var(--r-sm);background:rgba(62,207,142,.15);color:var(--green);border:1px solid rgba(62,207,142,.3);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">✓ Confirm ordered</button>`:''}
         </div>
       </div>
     </div>`;
@@ -2729,7 +2729,7 @@ function renderPartsList() {
         </div>
         <div>${r.parts.map(p=>`<span class="tag tag-amber">${p}</span>`).join('')}</div>
         <div style="font-size:11px;color:var(--text3);margin-top:8px">Ordered by ${r.orderedBy}</div>
-        ${currentRole==='parts'?`<button onclick="markReceived(${r.id})" style="margin-top:8px;padding:5px 12px;border-radius:var(--r-sm);background:var(--bg3);color:var(--text2);border:1px solid var(--border2);font-size:11px;cursor:pointer;font-family:var(--font)">Mark received</button>`:''}
+        ${currentRole==='parts'?`<button onclick="markReceived('${r.id}')" style="margin-top:8px;padding:5px 12px;border-radius:var(--r-sm);background:var(--bg3);color:var(--text2);border:1px solid var(--border2);font-size:11px;cursor:pointer;font-family:var(--font)">Mark received</button>`:''}
       </div>`;
     });
   }
@@ -5523,7 +5523,7 @@ function renderDesktopParts(el) {
       + '</div>'
       + '<div style="margin-bottom:10px">'+r.parts.map(p=>'<span style="display:inline-block;padding:3px 8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:20px;font-size:11px;color:#b45309;margin:2px">'+p+'</span>').join('')+'</div>'
       + (r.notes ? '<div style="font-size:12px;color:rgba(0,0,0,.4);font-style:italic;margin-bottom:10px">"'+r.notes+'"</div>' : '')
-      + (currentRole==='parts' ? '<button onclick="confirmOrder('+r.id+')" style="padding:7px 14px;border-radius:8px;background:rgba(62,207,142,.15);color:#059669;border:1px solid rgba(62,207,142,.3);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">✓ Confirm ordered</button>' : '')
+      + (currentRole==='parts' ? '<button onclick="confirmOrder(\''+r.id+'\')" style="padding:7px 14px;border-radius:8px;background:rgba(62,207,142,.15);color:#059669;border:1px solid rgba(62,207,142,.3);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)">✓ Confirm ordered</button>' : '')
       + '</div>';
   });
 
@@ -5535,7 +5535,7 @@ function renderDesktopParts(el) {
       + '</div>'
       + '<div style="margin-bottom:8px">'+r.parts.map(p=>'<span style="display:inline-block;padding:3px 8px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:20px;font-size:11px;color:#b45309;margin:2px">'+p+'</span>').join('')+'</div>'
       + '<div style="font-size:11px;color:rgba(0,0,0,.3)">Ordered by '+r.orderedBy+'</div>'
-      + (currentRole==='parts' ? '<button onclick="markReceived('+r.id+')" style="margin-top:10px;padding:5px 12px;border-radius:8px;background:rgba(0,0,0,.05);color:rgba(0,0,0,.5);border:1px solid rgba(0,0,0,.1);font-size:11px;cursor:pointer;font-family:var(--font)">Mark received</button>' : '')
+      + (currentRole==='parts' ? '<button onclick="markReceived(\''+r.id+'\')" style="margin-top:10px;padding:5px 12px;border-radius:8px;background:rgba(0,0,0,.05);color:rgba(0,0,0,.5);border:1px solid rgba(0,0,0,.1);font-size:11px;cursor:pointer;font-family:var(--font)">Mark received</button>' : '')
       + '</div>';
   });
 
